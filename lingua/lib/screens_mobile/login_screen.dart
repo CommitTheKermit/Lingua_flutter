@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/screens/read_screen.dart';
+import 'package:lingua/screens_mobile/read_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
