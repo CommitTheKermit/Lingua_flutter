@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/services/file_process.dart';
 import 'package:lingua/services/sentence_process.dart';
+import 'package:lingua/widgets/dialog_context_widget.dart';
 
 import '../widgets/read_button_widget.dart';
 import '../widgets/text_field_widget.dart';
@@ -65,16 +66,19 @@ class _ReadScreenState extends State<ReadScreen>
                 context: context,
                 barrierDismissible: true,
                 builder: (context) {
-                  return AlertDialog(
-                    contentPadding: EdgeInsets.zero,
-                    insetPadding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 30),
-                    title: Text(FileProcess.titleNovel),
-                    content: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                    ),
-                  );
+                  List<String> contextSentences = [];
+                  int head = 0;
+                  int tail = 0;
+                  int diff = 10;
+
+                  head = index < 5 ? 0 : (index - (diff ~/ 2));
+                  tail = index > originalSentences.length
+                      ? originalSentences.length
+                      : diff - head + index;
+                  for (int i = head; i < tail; i++) {
+                    contextSentences.add(originalSentences[index + i]);
+                  }
+                  return DialogContextWidget(argTextList: contextSentences);
                 },
               );
             },

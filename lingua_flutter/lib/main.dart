@@ -22,6 +22,7 @@ class AppLingua extends StatelessWidget {
           ),
         ),
         cardColor: const Color(0xFFF49349),
+        
       ),
       home: const LoginScreen(),
     );
