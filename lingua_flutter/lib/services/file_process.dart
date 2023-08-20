@@ -4,6 +4,8 @@ import 'package:file_picker/file_picker.dart';
 
 mixin FileProcess {
   static String titleNovel = "";
+  static List<String> originalSentences = [];
+
   Future<String?> fileRead(String path) async {
     try {
       final file = File(path);

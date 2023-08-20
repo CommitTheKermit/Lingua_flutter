@@ -17,7 +17,7 @@ class ReadScreen extends StatefulWidget {
 class _ReadScreenState extends State<ReadScreen>
     with FileProcess, SentenceProcess {
   String originalSingleSentence = "";
-  late List<String> originalSentences = [];
+
   late int index = 0;
   List<String> words = [];
 
@@ -37,9 +37,10 @@ class _ReadScreenState extends State<ReadScreen>
             return [
               PopupMenuItem(
                 onTap: () async {
-                  originalSentences = await filePickAndRead();
+                  FileProcess.originalSentences = await filePickAndRead();
                   setState(() {
-                    originalSingleSentence = originalSentences[index];
+                    originalSingleSentence =
+                        FileProcess.originalSentences[index];
                     words = extractWords(originalSingleSentence);
                   });
                 },
@@ -66,19 +67,7 @@ class _ReadScreenState extends State<ReadScreen>
                 context: context,
                 barrierDismissible: true,
                 builder: (context) {
-                  List<String> contextSentences = [];
-                  int head = 0;
-                  int tail = 0;
-                  int diff = 10;
-
-                  head = index < 5 ? 0 : (index - (diff ~/ 2));
-                  tail = index > originalSentences.length
-                      ? originalSentences.length
-                      : diff - head + index;
-                  for (int i = head; i < tail; i++) {
-                    contextSentences.add(originalSentences[index + i]);
-                  }
-                  return DialogContextWidget(argTextList: contextSentences);
+                  return DialogContextWidget(index: index);
                 },
               );
             },
@@ -101,7 +90,7 @@ class _ReadScreenState extends State<ReadScreen>
           ),
           const TextFieldWidget(
             argText: '번역문 입력칸',
-            flexValue: 20,
+            flexValue: 18,
             tempColor: Colors.blue,
           ),
           Flexible(
@@ -120,7 +109,8 @@ class _ReadScreenState extends State<ReadScreen>
                     onTapFunc: () {
                       setState(() {
                         index -= 1;
-                        originalSingleSentence = originalSentences[index];
+                        originalSingleSentence =
+                            FileProcess.originalSentences[index];
                         words = extractWords(originalSingleSentence);
                       });
                     },
@@ -130,7 +120,8 @@ class _ReadScreenState extends State<ReadScreen>
                     onTapFunc: () {
                       setState(() {
                         index += 1;
-                        originalSingleSentence = originalSentences[index];
+                        originalSingleSentence =
+                            FileProcess.originalSentences[index];
                         words = extractWords(originalSingleSentence);
                       });
                     },
@@ -141,8 +132,28 @@ class _ReadScreenState extends State<ReadScreen>
           ),
           const TextFieldWidget(
             argText: '기계번역문',
-            flexValue: 30,
+            flexValue: 28,
             tempColor: Colors.green,
+          ),
+          Flexible(
+            flex: 4,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  '기계번역콜제한',
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+                Text(
+                  '$index/${FileProcess.originalSentences.length}',
+                  style: const TextStyle(
+                    fontSize: 25,
+                  ),
+                )
+              ],
+            ),
           ),
           Flexible(
             flex: 9,

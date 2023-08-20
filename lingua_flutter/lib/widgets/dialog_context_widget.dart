@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import '../services/file_process.dart';
 
+enum PageState {
+  prev,
+  current,
+  next,
+}
+
 class DialogContextWidget extends StatefulWidget {
-  final List<String> argTextList;
+  final int index;
 
   const DialogContextWidget({
     super.key,
-    required this.argTextList,
+    required this.index,
   });
 
   @override
@@ -15,13 +21,49 @@ class DialogContextWidget extends StatefulWidget {
 
 class _DialogContextWidgetState extends State<DialogContextWidget> {
   final ScrollController _scrollController = ScrollController();
+  late List<String> argTextList;
+  late int head;
+  late int tail;
+
+  List<String> contextChange(PageState pageAction) {
+    List<String> contextSentences = [];
+    int diff = 10;
+
+    switch (pageAction) {
+      case PageState.prev:
+        {
+          tail = head;
+          head = tail - diff;
+          break;
+        }
+      case PageState.next:
+        {
+          head = tail;
+          tail = head + diff;
+          break;
+        }
+      case PageState.current:
+        {
+          head = widget.index;
+          tail = head + diff;
+          break;
+        }
+    }
+
+    head = head < 0 ? 0 : head;
+    tail = tail > FileProcess.originalSentences.length
+        ? FileProcess.originalSentences.length
+        : tail;
+    for (int i = head; i < tail; i++) {
+      contextSentences.add(FileProcess.originalSentences[widget.index + i]);
+    }
+    return contextSentences;
+  }
 
   @override
-  void didUpdateWidget(DialogContextWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.argTextList != oldWidget.argTextList) {
-      _scrollController.jumpTo(0); // 스크롤 위치 초기화
-    }
+  void initState() {
+    super.initState();
+    argTextList = contextChange(PageState.current);
   }
 
   @override
@@ -34,28 +76,44 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                dialogButton(
-                  context,
-                  '이전',
-                  Theme.of(context).cardColor,
+                TextButton(
+                  onPressed: () {
+                    argTextList = contextChange(PageState.prev);
+                    _scrollController.jumpTo(0);
+                    setState(() {});
+                  },
+                  child: Text(
+                    '이전',
+                    style: TextStyle(color: Theme.of(context).cardColor),
+                  ),
                 ),
-                dialogButton(
-                  context,
-                  '다음',
-                  Theme.of(context).cardColor,
+                TextButton(
+                  onPressed: () {
+                    argTextList = contextChange(PageState.next);
+                    _scrollController.jumpTo(0);
+                    setState(() {});
+                  },
+                  child: Text(
+                    '다음',
+                    style: TextStyle(color: Theme.of(context).cardColor),
+                  ),
                 ),
               ],
             ),
-            dialogButton(
-              context,
-              '닫기',
-              Theme.of(context).cardColor,
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                '닫기',
+                style: TextStyle(color: Theme.of(context).cardColor),
+              ),
             ),
           ],
         )
       ],
       contentPadding: EdgeInsets.zero,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
       title: Container(
         margin: const EdgeInsets.only(bottom: 10),
         child: Center(
@@ -83,15 +141,28 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
           controller: _scrollController,
           child: Column(
             children: [
-              for (var argText in widget.argTextList)
+              for (int i = 0; i < argTextList.length; i++)
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Text(
-                    argText,
-                    style: const TextStyle(fontSize: 25),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (head + i).toString(),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 19),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 70,
+                        child: Text(
+                          argTextList[i],
+                          style: const TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                )
             ],
           ),
         ),
