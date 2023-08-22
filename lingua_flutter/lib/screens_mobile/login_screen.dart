@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/util/double_press_exit.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -7,66 +8,57 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(
-          left: 50,
-          right: 50,
-          top: 250,
-        ),
-        child: Column(
-          children: [
-            const Text(
-              'LINGUA',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
-                color: Color(orangeColor),
+    return const Scaffold(
+      body: WillPopScope(
+        onWillPop: onWillPop,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 50,
+            right: 50,
+            top: 250,
+          ),
+          child: Column(
+            children: [
+              Text(
+                'LINGUA',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                  color: Color(orangeColor),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            const LoginField(
-              hintText: "ID",
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const LoginField(
-              hintText: "PW",
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 30,
+              SizedBox(
+                height: 30,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const LoginButton(orangeColor: orangeColor),
-                  Container(
-                    height: 50,
-                    width: 120,
-                    decoration: const BoxDecoration(
-                      color: Color(orangeColor),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
+              LoginField(
+                hintText: "ID",
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              LoginField(
+                hintText: "PW",
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 30,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    LoginButton(
+                      orangeColor: orangeColor,
+                      inButtonText: 'Login',
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                    LoginButton(
+                      orangeColor: orangeColor,
+                      inButtonText: 'Signup',
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -77,15 +69,17 @@ class LoginButton extends StatelessWidget {
   const LoginButton({
     super.key,
     required this.orangeColor,
+    required this.inButtonText,
   });
 
   final int orangeColor;
+  final String inButtonText;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             transitionsBuilder:
@@ -114,10 +108,10 @@ class LoginButton extends StatelessWidget {
             Radius.circular(5),
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
-            'Login',
-            style: TextStyle(
+            inButtonText,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
             ),

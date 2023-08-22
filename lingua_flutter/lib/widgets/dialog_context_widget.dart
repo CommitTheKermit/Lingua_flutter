@@ -169,7 +169,6 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
       ),
     );
   }
-
   TextButton dialogButton(BuildContext context, String argText, Color color) {
     return TextButton(
       child: Text(
