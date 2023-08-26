@@ -14,6 +14,12 @@ class User(models.Model):
     class Meta:
         db_table = 'User'
 
+class UserCallLimit(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    call_limit = models.SmallIntegerField(default=0)
+    
+    class Meta:
+            db_table = 'CallLimit'
 
 class EmailCode(models.Model):
     user_email = models.EmailField(max_length=255, default='none')

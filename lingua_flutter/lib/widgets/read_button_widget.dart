@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class ReadButtonWidget extends StatelessWidget {
   final void Function() onTapFunc;
   final String inButtonText;
+  final bool indexLimit;
   const ReadButtonWidget({
     super.key,
     required this.onTapFunc,
     required this.inButtonText,
+    required this.indexLimit,
   });
 
   @override
@@ -20,7 +22,7 @@ class ReadButtonWidget extends StatelessWidget {
           onTap: onTapFunc,
           child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+              color: indexLimit ? Colors.grey.shade400 : Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(7),
             ),
             child: Center(

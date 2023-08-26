@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
-import 'package:lingua/util/double_press_exit.dart';
+import 'package:lingua/util/exit_confirm.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -8,10 +8,13 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: WillPopScope(
-        onWillPop: onWillPop,
-        child: Padding(
+        onWillPop: () async {
+          return exitConfirm(context);
+        },
+        child: const Padding(
           padding: EdgeInsets.only(
             left: 50,
             right: 50,

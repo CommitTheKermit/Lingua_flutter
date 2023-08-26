@@ -9,12 +9,12 @@ mixin FileProcess {
   Future<String?> fileRead(String path) async {
     try {
       final file = File(path);
-      final pathFrags = file.path.split('/');
-      titleNovel = pathFrags[pathFrags.length - 1].split('.')[0];
+      // final pathFrags = file.path.split('/');
+      // titleNovel = pathFrags[pathFrags.length - 1].split('.')[0];
       String contents = await file.readAsString();
       return contents;
     } catch (e) {
-      print("Error reading file: $e");
+      // print("Error reading file: $e");
       return null;
     }
   }
@@ -26,6 +26,7 @@ mixin FileProcess {
     );
 
     if (result != null) {
+      titleNovel = result.files.single.name.split('.')[0];
       return result.files.single.path;
     } else {
       // 사용자가 선택을 취소한 경우
@@ -40,6 +41,10 @@ mixin FileProcess {
       if (contents != null) {
         // print(contents);
         // 여기서 파일의 내용에 대한 작업을 수행합니다.String content = file.readAsStringSync();
+
+        contents = contents.replaceAllMapped(RegExp(r'([a-zA-Z])’([a-zA-Z])'),
+            (Match m) => '${m[1]}' "'" '${m[2]}');
+
         List<String> sentences = splitIntoSentences(contents);
 
         return sentences; // 혹은 다른 작업을 수행합니다.
@@ -50,15 +55,44 @@ mixin FileProcess {
 
   List<String> splitIntoSentences(String text) {
     // 문장 부호를 기준으로 텍스트를 분리합니다.
-    var sentenceEndings = RegExp(r'[.!?]');
+    var sentenceEndings = RegExp(r'[.!?’]');
     var sentences = <String>[];
     var start = 0;
+    bool commaFlag = false;
+    String lastSentence;
 
     for (var match in sentenceEndings.allMatches(text)) {
       var end = match.end;
       var sentence = text.substring(start, end);
-      if (sentence.isNotEmpty) {
+
+      if (sentence.startsWith('’')) {
+        sentences[sentences.length - 1] =
+            sentences[sentences.length - 1] + sentence;
+        commaFlag = true;
+        start = end;
+
+        continue;
+      } else if (sentence.isNotEmpty) {
         sentences.add(sentence.trim());
+      }
+
+      if (commaFlag) {
+        sentence = sentences.removeLast();
+        sentences[sentences.length - 1] =
+            '${sentences[sentences.length - 1]} $sentence';
+
+        commaFlag = false;
+      }
+
+      while (true) {
+        if (sentences[sentences.length - 1].contains('’') &&
+            !sentences[sentences.length - 1].contains('‘')) {
+          sentence = sentences.removeLast();
+          lastSentence = sentences[sentences.length - 1];
+          sentences[sentences.length - 1] = '$lastSentence $sentence';
+        } else {
+          break;
+        }
       }
 
       start = end;
