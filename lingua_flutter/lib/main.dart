@@ -13,6 +13,7 @@ class AppLingua extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        primaryColor: const Color(0xFF8FC1E4),
         colorScheme: ColorScheme.fromSwatch(
           backgroundColor: const Color(0xFFF49349),
         ),
@@ -22,7 +23,6 @@ class AppLingua extends StatelessWidget {
           ),
         ),
         cardColor: const Color(0xFFF49349),
-        
       ),
       home: const LoginScreen(),
     );

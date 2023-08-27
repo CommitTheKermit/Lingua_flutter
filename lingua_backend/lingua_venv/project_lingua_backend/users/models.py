@@ -7,7 +7,7 @@ class User(models.Model):
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=255, default='none')
     password = models.CharField(max_length=60, default='none')
-    nickname = models.CharField(max_length=15)
+    # nickname = models.CharField(max_length=15)
     phone_no = models.CharField(max_length=20, default='none')
     registration_date = models.DateTimeField(auto_now_add=True)
     

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'dictionary',
+    'users',
+    'translate'
     
 ]
 # 'users',     'dictionary.apps.DictionaryConfig',
