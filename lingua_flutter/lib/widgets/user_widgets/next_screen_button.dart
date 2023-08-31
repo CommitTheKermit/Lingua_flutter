@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 class NextScreenButton extends StatelessWidget {
   const NextScreenButton({
     super.key,
-    required this.orangeColor,
+    required this.buttonColor,
     required this.inButtonText,
     required this.nextScreen,
     required this.navigatorAction,
+    required this.buttonWidth,
+    required this.textColor,
   });
 
-  final int orangeColor;
+  final Color buttonColor;
+  final Color textColor;
   final String inButtonText;
   final Widget nextScreen;
   final int navigatorAction;
+  final double? buttonWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -41,25 +45,11 @@ class NextScreenButton extends StatelessWidget {
                 ),
               );
             },
-            child: Container(
-              height: 50,
-              width: 120,
-              decoration: BoxDecoration(
-                color: Color(orangeColor),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(5),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  inButtonText,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
+            child: LoginButtonContainer(
+                buttonWidth: buttonWidth,
+                buttonColor: buttonColor,
+                textColor: textColor,
+                inButtonText: inButtonText),
           );
         }
       case 1:
@@ -86,29 +76,60 @@ class NextScreenButton extends StatelessWidget {
                 ),
               );
             },
-            child: Container(
-              height: 50,
-              width: 120,
-              decoration: BoxDecoration(
-                color: Color(orangeColor),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(5),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  inButtonText,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
+            child: LoginButtonContainer(
+                buttonWidth: buttonWidth,
+                buttonColor: buttonColor,
+                textColor: textColor,
+                inButtonText: inButtonText),
           );
         }
       default:
         return const SizedBox.expand();
     }
+  }
+}
+
+class LoginButtonContainer extends StatelessWidget {
+  const LoginButtonContainer({
+    super.key,
+    required this.buttonColor,
+    required this.inButtonText,
+    required this.buttonWidth,
+    required this.textColor,
+  });
+
+  final Color buttonColor;
+  final Color textColor;
+  final String inButtonText;
+  final double? buttonWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        height: 50,
+        width: buttonWidth,
+        decoration: BoxDecoration(
+          color: buttonColor,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(5),
+          ),
+          border: Border.all(
+            color: Colors.black,
+            width: 0.5,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            inButtonText,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

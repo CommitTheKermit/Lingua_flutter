@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import LoginView, SignUpView, FindEmailView, FindPwView, EmailSendView
+from .views import LoginView, SignUpView, FindEmailView, FindPwView, ChangePwView, EmailSendView
 from .views import EmailVerifyView
 
 urlpatterns = [
@@ -7,6 +7,7 @@ urlpatterns = [
     path('signup', SignUpView.as_view()),
     path('findemail', FindEmailView.as_view()),
     path('findpw', FindPwView.as_view()),
+    path('changepw', ChangePwView.as_view()),
     path('mailsend', EmailSendView.as_view()),
     path('mailverify',EmailVerifyView.as_view()),
 ]

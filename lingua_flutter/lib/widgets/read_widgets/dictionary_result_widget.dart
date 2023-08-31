@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/word_model.dart';
+import '../../models/word_model.dart';
 
 class DictionaryResultWidget extends StatelessWidget {
   const DictionaryResultWidget({
@@ -71,7 +71,10 @@ class DictionaryResultWidget extends StatelessWidget {
                                         MediaQuery.of(context).size.width * 0.8,
                                     child: Text(
                                       wordMean.meaning,
-                                      style: const TextStyle(fontSize: 20),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        height: 1.3,
+                                      ),
                                     ),
                                   ),
                                 ),

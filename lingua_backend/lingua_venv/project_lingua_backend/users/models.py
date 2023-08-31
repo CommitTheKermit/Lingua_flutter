@@ -1,4 +1,5 @@
 from django.db import models
+from djongo import models as djongo_models
 
 
 
@@ -22,6 +23,7 @@ class UserCallLimit(models.Model):
             db_table = 'CallLimit'
 
 class EmailCode(models.Model):
+    _id = djongo_models.ObjectIdField() # AssertionError: EmailCode object can't be deleted because its id attribute is set to None.의 해결법
     user_email = models.EmailField(max_length=255, default='none')
     user_code = models.CharField(max_length=6)
 

@@ -49,7 +49,10 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Text(
               widget.argText,
-              style: const TextStyle(fontSize: 25),
+              style: const TextStyle(
+                fontSize: 25,
+                height: 1.1,
+              ),
             ),
           ),
         ),

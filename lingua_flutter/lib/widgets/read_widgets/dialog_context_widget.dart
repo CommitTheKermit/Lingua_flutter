@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/file_process.dart';
+import '../../services/file_process.dart';
 
 enum PageState {
   prev,
@@ -84,7 +84,8 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
                   },
                   child: Text(
                     '이전',
-                    style: TextStyle(color: Theme.of(context).cardColor),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.displayLarge!.color),
                   ),
                 ),
                 TextButton(
@@ -95,7 +96,8 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
                   },
                   child: Text(
                     '다음',
-                    style: TextStyle(color: Theme.of(context).cardColor),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.displayLarge!.color),
                   ),
                 ),
               ],
@@ -106,7 +108,8 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
               },
               child: Text(
                 '닫기',
-                style: TextStyle(color: Theme.of(context).cardColor),
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.displayLarge!.color),
               ),
             ),
           ],
@@ -131,7 +134,7 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
           border: Border.symmetric(
             horizontal: BorderSide(
               width: 2,
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ),
@@ -169,13 +172,14 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
       ),
     );
   }
+
   TextButton dialogButton(BuildContext context, String argText, Color color) {
     return TextButton(
       child: Text(
         argText,
         style: TextStyle(
           fontSize: 20,
-          color: Theme.of(context).cardColor,
+          color: Theme.of(context).primaryColor,
         ),
       ),
       onPressed: () {

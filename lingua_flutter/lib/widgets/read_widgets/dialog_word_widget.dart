@@ -22,7 +22,7 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
   @override
   void initState() {
     super.initState();
-    wordMeans = ApiService.dictSearch(widget.argText);
+    wordMeans = ApiUtil.dictSearch(widget.argText);
   }
 
   @override
@@ -38,19 +38,19 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
             //     dialogButton(
             //       context,
             //       '이전',
-            //       Theme.of(context).cardColor,
+            //       Theme.of(context).primaryColor,
             //     ),
             //     dialogButton(
             //       context,
             //       '다음',
-            //       Theme.of(context).cardColor,
+            //       Theme.of(context).primaryColor,
             //     ),
             //   ],
             // ),
             dialogButton(
               context,
               '닫기',
-              Theme.of(context).cardColor,
+              Theme.of(context).primaryColor,
             ),
           ],
         )
@@ -74,13 +74,14 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
           border: Border.symmetric(
             horizontal: BorderSide(
               width: 2,
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: DictionaryResultWidget(wordMeans: wordMeans, scrollController: _scrollController),
+        child: DictionaryResultWidget(
+            wordMeans: wordMeans, scrollController: _scrollController),
       ),
     );
   }
@@ -91,7 +92,7 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
         argText,
         style: TextStyle(
           fontSize: 20,
-          color: Theme.of(context).cardColor,
+          color: Theme.of(context).primaryColor,
         ),
       ),
       onPressed: () {
@@ -100,4 +101,3 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
     );
   }
 }
-

@@ -24,13 +24,12 @@ class LoginView(View):
             customer = User.objects.filter(email = email)
             if customer.exists():
                 customer = customer[0]
+
                 #chekpw 메소드를 이용해 사용자가 입력한 패스워드의 해시 값과 데이터 베이스에 저장된 해시 값을 비교
                 if bcrypt.checkpw(password.encode('utf-8'), customer.password.encode('utf-8')):
-                    serialzer_user = UserSerializer(customer)
+                    # serialzer_user = UserSerializer(customer)
 
-                    return JsonResponse({'message': "LOGIN_SUCCESS",
-                                         'user': serialzer_user.data,}, 
-                                         status=200)
+                    return JsonResponse({'message': "LOGIN_SUCCESS",}, status=200)
                 else:
                     return JsonResponse({"message": "INVALID_PASSWORD"}, status=401)
 
@@ -56,7 +55,6 @@ class SignUpView(View):
             User(
                 email    = data['email'],
                 password    = decoded_hashed_pw,
-                nickname = data['nickname'],
                 phone_no = data['phone_no'],
             ).save()
             
@@ -98,10 +96,19 @@ class FindPwView(View):
     def post(self, request):
         data = json.loads(request.body)
 
-        if User.objects.filter(email = data['email']).exists():
-            user_data = User.objects.get(email = data['email'])
+        if User.objects.filter(email = data['email'], phone_no = data['phone_no']).exists():
 
-        if user_data.phone_no == data['phone_no']:
+            return JsonResponse({'message': "PASSWORD_FIND_SUCCESS"}, status=200)
+        else:
+            return JsonResponse({'message' : "USER_NOT_FOUND"},status =404)
+
+class ChangePwView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+
+        if User.objects.filter(email = data['email'], phone_no = data['phone_no']).exists():
+            user_data = User.objects.get(email = data['email'],  phone_no = data['phone_no'])
+
             # Update fields from request
             hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
             pw = hashed_password.decode('utf-8')
@@ -111,8 +118,7 @@ class FindPwView(View):
             user_data.save()
             return JsonResponse({'message': "PASSWORD_CHANGE_SUCCESS"}, status=200)
         else:
-            return JsonResponse({'message' : "USER_NOT_FOUND"},status =404) 
-
+            return JsonResponse({'message' : "USER_NOT_FOUND"},status =400)
         
 class EmailSendView(View):
     def post(self, request):
@@ -121,6 +127,7 @@ class EmailSendView(View):
         code = ''.join(map(str,code))
         
         existFlag = EmailCode.objects.filter(user_email = data['email']).exists()
+
         if not existFlag:
             EmailCode(
                 user_email    = data['email'],
@@ -135,6 +142,7 @@ class EmailSendView(View):
         
         elif existFlag:
             email_code = EmailCode.objects.get(user_email = data["email"])
+            print(email_code.user_email)
             email_code.delete()
 
             EmailCode(

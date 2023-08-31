@@ -22,12 +22,18 @@ class ReadButtonWidget extends StatelessWidget {
           onTap: onTapFunc,
           child: Container(
             decoration: BoxDecoration(
-              color: indexLimit ? Colors.grey.shade400 : Theme.of(context).cardColor,
+              color: indexLimit
+                  ? Colors.grey.shade400
+                  : Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(7),
             ),
             child: Center(
               child: Text(
                 inButtonText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
               ),
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../models/word_model.dart';
-import '../services/api/api_service.dart';
+import '../../models/word_model.dart';
+import '../../services/api/api_service.dart';
 import 'dictionary_result_widget.dart';
 
 enum PageState {
@@ -49,7 +49,7 @@ class _DialogWordSearchState extends State<DialogWordSearch> {
               },
               child: Text(
                 '닫기',
-                style: TextStyle(color: Theme.of(context).cardColor),
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ),
           ],
@@ -74,20 +74,20 @@ class _DialogWordSearchState extends State<DialogWordSearch> {
             border: InputBorder.none,
             prefixIcon: Icon(
               Icons.search,
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).primaryColor,
               size: 40,
             ),
             suffixIcon: GestureDetector(
               onTap: () {
                 setState(() {
-                  wordMeans = ApiService.dictSearch(_controller.text);
+                  wordMeans = ApiUtil.dictSearch(_controller.text);
                 });
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: Icon(
                   Icons.subdirectory_arrow_left,
-                  color: Theme.of(context).cardColor,
+                  color: Theme.of(context).primaryColor,
                   size: 40,
                 ),
               ),
@@ -101,7 +101,7 @@ class _DialogWordSearchState extends State<DialogWordSearch> {
           border: Border.symmetric(
             horizontal: BorderSide(
               width: 2,
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ),

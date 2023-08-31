@@ -3,12 +3,12 @@ import 'package:lingua/services/file_process.dart';
 import 'package:lingua/services/sentence_process.dart';
 import 'package:lingua/util/exit_confirm.dart';
 import 'package:lingua/util/save_index.dart';
-import 'package:lingua/widgets/dialog_context_widget.dart';
-import 'package:lingua/widgets/dialog_word_search.dart';
 
-import '../widgets/read_button_widget.dart';
-import '../widgets/text_field_widget.dart';
-import '../widgets/word_button_widget.dart';
+import '../widgets/read_widgets/dialog_context_widget.dart';
+import '../widgets/read_widgets/dialog_word_search.dart';
+import '../widgets/read_widgets/read_button_widget.dart';
+import '../widgets/read_widgets/text_field_widget.dart';
+import '../widgets/read_widgets/word_button_widget.dart';
 
 class ReadScreen extends StatefulWidget {
   const ReadScreen({super.key});
@@ -48,7 +48,7 @@ class _ReadScreenState extends State<ReadScreen>
         child: AppBar(
           elevation: 1,
           foregroundColor: Colors.white,
-          backgroundColor: Theme.of(context).textTheme.displayLarge!.color,
+          backgroundColor: Theme.of(context).primaryColor,
           automaticallyImplyLeading: false,
           leading: PopupMenuButton<Text>(
             icon: const Icon(Icons.menu),
@@ -123,7 +123,10 @@ class _ReadScreenState extends State<ReadScreen>
                   FileProcess.titleNovel.isNotEmpty // 파일 제목 출력
                       ? FileProcess.titleNovel
                       : '파일을 선택해주세요.',
-                  style: const TextStyle(fontSize: 22),
+                  style: const TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
                 ),
                 titlePadding:
                     const EdgeInsets.only(left: 50, bottom: 10), // 원하는 위치로 조절

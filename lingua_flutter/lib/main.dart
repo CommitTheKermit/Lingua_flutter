@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'screens_mobile/login_screen.dart';
+import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 
 void main() {
   runApp(const AppLingua());
@@ -13,16 +12,17 @@ class AppLingua extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        fontFamily: 'Neo',
         primaryColor: const Color(0xFF8FC1E4),
+        cardColor: const Color(0xFFF49349),
         colorScheme: ColorScheme.fromSwatch(
           backgroundColor: const Color(0xFFF49349),
         ),
         textTheme: const TextTheme(
           displayLarge: TextStyle(
-            color: Color(0xFFF49349),
+            color: Colors.black,
           ),
         ),
-        cardColor: const Color(0xFFF49349),
       ),
       home: const LoginScreen(),
     );
