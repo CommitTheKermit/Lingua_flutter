@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/screens_mobile/read_mode_screen.dart';
 import 'package:lingua/services/file_process.dart';
 import 'package:lingua/services/sentence_process.dart';
+import 'package:lingua/util/change_screen.dart';
 import 'package:lingua/util/exit_confirm.dart';
 import 'package:lingua/util/save_index.dart';
 
@@ -23,6 +25,8 @@ class _ReadScreenState extends State<ReadScreen>
   late int index;
   List<String> words = [];
   bool isLoaded = false;
+  final _formKey = GlobalKey<FormState>();
+  String translatedSentence = '';
 
   void _loadInitialIndex() async {
     int loadedIndex = await IndexSaveLoad.loadCurrentIndex();
@@ -63,9 +67,17 @@ class _ReadScreenState extends State<ReadScreen>
                   },
                   child: const Text("파일 읽기"),
                 ),
-                const PopupMenuItem(
-                  child: Text(
-                    "2",
+                PopupMenuItem(
+                  onTap: isLoaded
+                      ? () {
+                          changeScreen(
+                            context: context,
+                            nextScreen: const ReadModeScreen(),
+                          );
+                        }
+                      : () {},
+                  child: const Text(
+                    "읽기 모드",
                   ),
                 ),
                 const PopupMenuItem(
@@ -150,13 +162,45 @@ class _ReadScreenState extends State<ReadScreen>
             ),
             const TextFieldWidget(
               argText: '기계번역문',
-              flexValue: 28,
+              flexValue: 23,
               tempColor: Colors.green,
             ),
-            const TextFieldWidget(
-              argText: '번역문 입력칸',
-              flexValue: 18,
-              tempColor: Colors.blue,
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 23,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      width: 2,
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: TextFormField(
+                      style: const TextStyle(
+                        fontSize: 23,
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      key: _formKey,
+                      decoration: const InputDecoration(
+                          hintText: '번역문 입력칸',
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(fontSize: 25)),
+                      validator: (value) {
+                        translatedSentence = value!;
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ),
             Flexible(
               flex: 9,
@@ -225,8 +269,14 @@ class _ReadScreenState extends State<ReadScreen>
                     ),
                     ReadButtonWidget(
                       indexLimit: !isLoaded,
-                      inButtonText: 'TEMP',
-                      onTapFunc: () {},
+                      inButtonText: '입력',
+                      onTapFunc: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                        } else {
+                          return;
+                        }
+                      },
                     ),
                     ReadButtonWidget(
                       indexLimit: index == FileProcess.originalSentences.length,

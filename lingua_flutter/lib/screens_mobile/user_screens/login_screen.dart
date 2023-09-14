@@ -93,48 +93,48 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                const SizedBox(
+                  height: 30,
+                ),
+                buildFormButton(
+                  context: context,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  argText: '로그인',
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      print('$_email $_password');
+                    } else {
+                      return;
+                    }
+                    bool condition = await ApiUser.login();
+
+                    if (condition && mounted) {
+                      changeScreen(
+                        context: context,
+                        nextScreen: const ReadScreen(),
+                      );
+                    } else {
+                      changeScreen(
+                        context: context,
+                        nextScreen: const LoginScreen(),
+                      );
+                      consentDialog(
+                        title: '실패',
+                        content: '아이디와 비밀번호를 다시 확인해보세요',
+                        context: context,
+                      );
+                    }
+                  },
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Column(
                     children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      buildFormButton(
-                        context: context,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        argText: '로그인',
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            print('$_email $_password');
-                          } else {
-                            return;
-                          }
-                          bool condition = await ApiUser.login();
-
-                          if (condition && mounted) {
-                            changeScreen(
-                              context: context,
-                              nextScreen: const ReadScreen(),
-                            );
-                          } else {
-                            changeScreen(
-                              context: context,
-                              nextScreen: const LoginScreen(),
-                            );
-                            consentDialog(
-                              title: '실패',
-                              content: '아이디와 비밀번호를 다시 확인해보세요',
-                              context: context,
-                            );
-                          }
-                        },
-                      ),
-                      const SizedBox(
+                      SizedBox(
                         height: 10,
                       ),
-                      const NextScreenButton(
+                      NextScreenButton(
                         buttonColor: Colors.white,
                         textColor: Colors.black,
                         inButtonText: '회원가입',
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         navigatorAction: 1,
                         buttonWidth: null,
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(
                           top: 20,
                         ),

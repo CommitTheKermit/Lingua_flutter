@@ -56,8 +56,6 @@ class ApiUtil {
     });
   }
 
-
-
   static Future<bool> wordRecord(String argText) async {
     final url = Uri.parse('$baseUrl/users/mailverify');
 
@@ -81,5 +79,55 @@ class ApiUtil {
     );
   }
 
+  static Future<bool> sendTranslatedText(String argText) async {
+    final url = Uri.parse('$baseUrl/users/mailverify');
 
+    return await http
+        .post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'word': argText,
+        'email': UserModel.email,
+      }),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    }).timeout(
+      const Duration(seconds: timeoutSec),
+      onTimeout: () => false, // 3초 후에 실행될 대체값입니다.
+    );
+  }
+
+  static Future<bool> recieveTranslatedText(String argText) async {
+    final url = Uri.parse('$baseUrl/users/mailverify');
+
+    return await http
+        .post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'word': argText,
+        'email': UserModel.email,
+      }),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    }).timeout(
+      const Duration(seconds: timeoutSec),
+      onTimeout: () => false, // 3초 후에 실행될 대체값입니다.
+    );
+  }
 }
