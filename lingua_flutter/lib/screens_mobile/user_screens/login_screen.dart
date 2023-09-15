@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 30,
                 ),
                 buildFormField(
+                  prefixImage: Image.asset('assets/user.png'),
                   isObscure: false,
                   onSaved: (value) => _email = value!,
                   labelText: '이메일',
@@ -78,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10,
                 ),
                 buildFormField(
+                  prefixImage: Image.asset('assets/key.png'),
                   isObscure: true,
                   onSaved: (value) => _password = value!,
                   labelText: '비밀번호',

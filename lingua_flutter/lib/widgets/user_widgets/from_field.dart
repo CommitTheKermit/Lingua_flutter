@@ -5,6 +5,7 @@ Widget buildFormField({
   required String labelText,
   required FormFieldValidator<String> validator,
   required bool isObscure,
+  Image? prefixImage,
   double? horizontalPadding,
   double? verticalPadding,
 }) {
@@ -17,7 +18,29 @@ Widget buildFormField({
       obscureText: isObscure,
       decoration: InputDecoration(
         labelText: labelText,
-        border: const OutlineInputBorder(),
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        prefixIcon: prefixImage != null
+            ? Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    prefixImage,
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Image.asset('assets/divider.png'),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                  ],
+                ),
+              )
+            : null,
       ),
       onSaved: onSaved,
       validator: validator,
