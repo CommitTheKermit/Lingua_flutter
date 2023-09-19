@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 
 void main() {
@@ -24,7 +25,7 @@ class AppLingua extends StatelessWidget {
           ),
         ),
       ),
-      home: const LoginScreen(),
+      home: const ReadScreen(),
     );
   }
 }

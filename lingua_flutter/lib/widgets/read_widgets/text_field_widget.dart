@@ -51,7 +51,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               widget.argText,
               style: const TextStyle(
                 fontSize: 25,
-                height: 1.1,
+                height: 1.7,
               ),
             ),
           ),

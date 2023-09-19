@@ -115,11 +115,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       changeScreen(
                         context: context,
                         nextScreen: const ReadScreen(),
+                        isReplace: true,
                       );
                     } else {
                       changeScreen(
                         context: context,
                         nextScreen: const LoginScreen(),
+                        isReplace: false,
                       );
                       consentDialog(
                         title: '실패',

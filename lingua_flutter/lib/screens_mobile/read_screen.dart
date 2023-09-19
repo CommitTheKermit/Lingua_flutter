@@ -5,6 +5,9 @@ import 'package:lingua/services/sentence_process.dart';
 import 'package:lingua/util/change_screen.dart';
 import 'package:lingua/util/exit_confirm.dart';
 import 'package:lingua/util/save_index.dart';
+import 'package:lingua/widgets/read_widgets/color_change_button_widget.dart';
+import 'package:lingua/widgets/read_widgets/dialog_line_search.dart';
+import 'package:lingua/widgets/read_widgets/read_drawer.dart';
 
 import '../widgets/read_widgets/dialog_context_widget.dart';
 import '../widgets/read_widgets/dialog_word_search.dart';
@@ -27,6 +30,9 @@ class _ReadScreenState extends State<ReadScreen>
   bool isLoaded = false;
   final _formKey = GlobalKey<FormState>();
   String translatedSentence = '';
+  bool isMachineTranslate = false;
+
+  final ScrollController _scrollController = ScrollController();
 
   void _loadInitialIndex() async {
     int loadedIndex = await IndexSaveLoad.loadCurrentIndex();
@@ -54,49 +60,23 @@ class _ReadScreenState extends State<ReadScreen>
           foregroundColor: Colors.white,
           backgroundColor: Theme.of(context).primaryColor,
           automaticallyImplyLeading: false,
-          leading: PopupMenuButton<Text>(
-            icon: const Icon(Icons.menu),
-            color: Colors.white,
-            iconSize: 30,
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  onTap: () async {
-                    FileProcess.originalSentences = await filePickAndRead();
-                    _loadInitialIndex();
-                  },
-                  child: const Text("파일 읽기"),
-                ),
-                PopupMenuItem(
-                  onTap: isLoaded
-                      ? () {
-                          changeScreen(
-                            context: context,
-                            nextScreen: const ReadModeScreen(),
-                          );
-                        }
-                      : () {},
-                  child: const Text(
-                    "읽기 모드",
-                  ),
-                ),
-                const PopupMenuItem(
-                  child: Text(
-                    "3",
-                  ),
-                ),
-              ];
+
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
             },
           ),
+
           actions: [
-            IconButton(
-              iconSize: 30,
-              onPressed: () {},
-              icon: const Icon(
-                Icons.translate_outlined,
-                color: Colors.grey,
-              ),
-              color: Colors.white,
+            GestureDetector(
+              onTap: () => isMachineTranslate = !isMachineTranslate,
+              child: const ColorChangeButtonWidget(),
             ),
             IconButton(
               iconSize: 30,
@@ -146,6 +126,73 @@ class _ReadScreenState extends State<ReadScreen>
             },
           ),
         ),
+      ),
+      drawer: ReadDrawer(
+        listTiles: [
+          ListTile(
+            title: const Text(
+              '파일 읽기',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            onTap: () async {
+              try {
+                FileProcess.originalSentences = await filePickAndRead();
+                _loadInitialIndex();
+              } catch (e) {
+                changeScreen(
+                  context: context,
+                  nextScreen: const ReadScreen(),
+                  isReplace: false,
+                );
+              }
+            },
+          ),
+          ListTile(
+            title: const Text(
+              '읽기 모드',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            onTap: isLoaded
+                ? () {
+                    changeScreen(
+                      context: context,
+                      nextScreen: const ReadModeScreen(),
+                      isReplace: false,
+                    );
+                  }
+                : () {},
+          ),
+          ListTile(
+            title: const Text(
+              '읽기 옵션',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+              title: const Text(
+                '줄 이동',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              onTap: isLoaded
+                  ? () {
+                      lineSearchDialog(
+                        context: context,
+                        index: index,
+                      );
+                    }
+                  : () {}),
+        ],
       ),
       body: WillPopScope(
         onWillPop: () async {
@@ -205,6 +252,7 @@ class _ReadScreenState extends State<ReadScreen>
             Flexible(
               flex: 9,
               child: SingleChildScrollView(
+                controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -264,6 +312,7 @@ class _ReadScreenState extends State<ReadScreen>
                                 originalSingleSentence =
                                     FileProcess.originalSentences[index];
                                 words = extractWords(originalSingleSentence);
+                                _scrollController.jumpTo(0);
                               });
                             },
                     ),
@@ -290,6 +339,7 @@ class _ReadScreenState extends State<ReadScreen>
                                 originalSingleSentence =
                                     FileProcess.originalSentences[index];
                                 words = extractWords(originalSingleSentence);
+                                _scrollController.jumpTo(0);
                               });
                             },
                     ),
@@ -300,6 +350,19 @@ class _ReadScreenState extends State<ReadScreen>
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> lineSearchDialog(
+      {required context, required int index}) async {
+    final result = showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return DialogLineSearch(
+          index: index,
+        );
+      },
     );
   }
 }
