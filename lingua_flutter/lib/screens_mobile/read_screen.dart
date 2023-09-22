@@ -8,6 +8,7 @@ import 'package:lingua/util/save_index.dart';
 import 'package:lingua/widgets/read_widgets/color_change_button_widget.dart';
 import 'package:lingua/widgets/read_widgets/dialog_line_search.dart';
 import 'package:lingua/widgets/read_widgets/read_drawer.dart';
+import 'package:lingua/widgets/read_widgets/zetc/error_toast.dart';
 
 import '../widgets/read_widgets/dialog_context_widget.dart';
 import '../widgets/read_widgets/dialog_word_search.dart';
@@ -138,9 +139,11 @@ class _ReadScreenState extends State<ReadScreen>
             ),
             onTap: () async {
               try {
+                Navigator.pop(context);
                 FileProcess.originalSentences = await filePickAndRead();
                 _loadInitialIndex();
               } catch (e) {
+                Navigator.pop(context);
                 changeScreen(
                   context: context,
                   nextScreen: const ReadScreen(),
@@ -158,13 +161,16 @@ class _ReadScreenState extends State<ReadScreen>
             ),
             onTap: isLoaded
                 ? () {
+                    Navigator.pop(context);
                     changeScreen(
                       context: context,
                       nextScreen: const ReadModeScreen(),
                       isReplace: false,
                     );
                   }
-                : () {},
+                : () {
+                    errorToast(argText: '파일을 먼저 불러와주세요.');
+                  },
           ),
           ListTile(
             title: const Text(
@@ -186,12 +192,15 @@ class _ReadScreenState extends State<ReadScreen>
               ),
               onTap: isLoaded
                   ? () {
+                      Navigator.pop(context);
                       lineSearchDialog(
                         context: context,
-                        index: index,
+                        argIndex: index,
                       );
                     }
-                  : () {}),
+                  : () {
+                      errorToast(argText: '파일을 먼저 불러와주세요.');
+                    }),
         ],
       ),
       body: WillPopScope(
@@ -354,15 +363,23 @@ class _ReadScreenState extends State<ReadScreen>
   }
 
   Future<dynamic> lineSearchDialog(
-      {required context, required int index}) async {
-    final result = showDialog(
+      {required context, required int argIndex}) async {
+    final result = await showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (context) {
         return DialogLineSearch(
-          index: index,
+          index: argIndex,
         );
       },
     );
+
+    setState(() {
+      index = result;
+      IndexSaveLoad.saveCurrentIndex(index);
+      originalSingleSentence = FileProcess.originalSentences[index];
+      words = extractWords(originalSingleSentence);
+      _scrollController.jumpTo(0);
+    });
   }
 }

@@ -42,6 +42,7 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      
       contentPadding: EdgeInsets.zero,
       insetPadding: const EdgeInsets.only(
         left: 10,
@@ -114,9 +115,10 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                             });
                           },
                           decoration: InputDecoration(
+                            border: InputBorder.none,
                             hintText: '${_sliderValue.toInt()}',
                             hintStyle: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 22,
                             ),
                           ),
                         ),
@@ -124,13 +126,28 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                       const SizedBox(
                         height: 5,
                       ),
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.green,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context, _sliderValue.toInt());
+                        },
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF8FC1E4),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          width: 200,
+                          height: 60,
+                          child: const Center(
+                              child: Text(
+                            '이동',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          )),
                         ),
-                        width: 700,
-                        height: 60,
-                        child: const Text('button'),
                       ),
                     ],
                   ),
