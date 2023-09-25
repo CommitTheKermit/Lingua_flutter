@@ -36,6 +36,7 @@ dependencies:
   url_launcher: ^6.1.12
   shared_preferences: ^2.2.0
   fluttertoast: ^8.2.2
+  getwidget: ^4.0.0
 
 
 

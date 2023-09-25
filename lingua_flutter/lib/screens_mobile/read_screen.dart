@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/read_mode_screen.dart';
+import 'package:lingua/screens_mobile/user_screens/etc_screens/read_option_screen.dart';
 import 'package:lingua/services/file_process.dart';
 import 'package:lingua/services/sentence_process.dart';
 import 'package:lingua/util/change_screen.dart';
 import 'package:lingua/util/exit_confirm.dart';
 import 'package:lingua/util/save_index.dart';
 import 'package:lingua/widgets/read_widgets/color_change_button_widget.dart';
+import 'package:lingua/widgets/read_widgets/dialog/read_option.dart';
 import 'package:lingua/widgets/read_widgets/dialog_line_search.dart';
 import 'package:lingua/widgets/read_widgets/read_drawer.dart';
 import 'package:lingua/widgets/read_widgets/zetc/error_toast.dart';
@@ -180,27 +182,40 @@ class _ReadScreenState extends State<ReadScreen>
               ),
             ),
             onTap: () {
-              Navigator.pop(context);
+              changeScreen(
+                  context: context,
+                  nextScreen: const ReadOptionScreen(),
+                  isReplace: false);
             },
           ),
           ListTile(
-              title: const Text(
-                '줄 이동',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+            title: const Text(
+              '줄 이동',
+              style: TextStyle(
+                fontSize: 16,
               ),
-              onTap: isLoaded
-                  ? () {
-                      Navigator.pop(context);
-                      lineSearchDialog(
-                        context: context,
-                        argIndex: index,
-                      );
-                    }
-                  : () {
-                      errorToast(argText: '파일을 먼저 불러와주세요.');
-                    }),
+            ),
+            onTap: isLoaded
+                ? () {
+                    Navigator.pop(context);
+                    lineSearchDialog(
+                      context: context,
+                      argIndex: index,
+                    );
+                  }
+                : () {
+                    errorToast(argText: '파일을 먼저 불러와주세요.');
+                  },
+          ),
+          ListTile(
+            title: const Text(
+              '단어장',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            onTap: isLoaded ? () {} : () {},
+          ),
         ],
       ),
       body: WillPopScope(
