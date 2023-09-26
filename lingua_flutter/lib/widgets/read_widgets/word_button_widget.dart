@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/widgets/read_widgets/dialog/dialog_word_widget.dart';
 
-import 'dialog_word_widget.dart';
 
 // ignore: camel_case_types
 class WordButtonWidget extends StatelessWidget {

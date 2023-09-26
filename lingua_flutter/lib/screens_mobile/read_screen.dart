@@ -7,13 +7,14 @@ import 'package:lingua/util/change_screen.dart';
 import 'package:lingua/util/exit_confirm.dart';
 import 'package:lingua/util/save_index.dart';
 import 'package:lingua/widgets/read_widgets/color_change_button_widget.dart';
-import 'package:lingua/widgets/read_widgets/dialog/read_option.dart';
-import 'package:lingua/widgets/read_widgets/dialog_line_search.dart';
+import 'package:lingua/widgets/read_widgets/dialog/dialog_line_search.dart';
+import 'package:lingua/widgets/read_widgets/dialog/dialog_word_search.dart';
+
 import 'package:lingua/widgets/read_widgets/read_drawer.dart';
 import 'package:lingua/widgets/read_widgets/zetc/error_toast.dart';
 
-import '../widgets/read_widgets/dialog_context_widget.dart';
-import '../widgets/read_widgets/dialog_word_search.dart';
+import '../widgets/read_widgets/dialog/dialog_context_widget.dart';
+
 import '../widgets/read_widgets/read_button_widget.dart';
 import '../widgets/read_widgets/text_field_widget.dart';
 import '../widgets/read_widgets/word_button_widget.dart';
