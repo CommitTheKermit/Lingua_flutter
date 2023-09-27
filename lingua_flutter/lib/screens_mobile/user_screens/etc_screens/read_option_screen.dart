@@ -15,16 +15,45 @@ class ReadOptionScreen extends StatefulWidget {
 class _ReadOptionScreenState extends State<ReadOptionScreen>
     with TickerProviderStateMixin {
   late TabController tabController;
-  late double fontSize;
-  late double fontHeight;
-  late int whichFont;
-  late Color fontColor;
-  late Color backgroundColor;
+  double optFontSize = 20;
+  double optFontHeight = 1;
+  String optFontFamily = 'Neo';
+  Color optFontColor = Colors.black;
+  Color optBackgroundColor = Colors.white;
+
+  String _selectedFont = '';
+  final _fonts = [
+    'Neo',
+    'Gangwon',
+    'Gmarket',
+    'Hakgyo',
+    'Jaemin',
+    'Pretendard',
+  ];
+
+  final backgroundColors = [
+    0xFFFFFFFF,
+    0xFFE9E5DA,
+    0xFF4A4A4A,
+    0xFF2A2A2A,
+    0xFFE4D0BE,
+    0xFFC3B083,
+    0xFFCFCED3,
+    0xFFD1DCEA,
+  ];
+  final fontColors = [
+    0x000000,
+    0x4A4A4A,
+    0xFFFFFF,
+  ];
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
+    setState(() {
+      _selectedFont = _fonts[0];
+    });
   }
 
   @override
@@ -91,64 +120,104 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           ],
         ),
       ),
-      body: GFTabBarView(controller: tabController, children: <Widget>[
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                Container(
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
+      body: GFTabBarView(
+        controller: tabController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  commonDivider(context),
+                  Container(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: optBackgroundColor,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '적용 예시입니다.\n각 칸별 설정이 가능합니다.',
+                        style: TextStyle(
+                          fontSize: optFontSize,
+                          height: optFontHeight,
+                          fontFamily: optFontFamily,
+                          color: optFontColor,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                // Divider(
-                //   height: 10,
-                //   color: Colors.grey.shade400,
-                //   thickness: 0.5,
-                // ),
-                commonDivider(context),
-                optionSingleContainer(
-                  context: context,
-                  containerHeight: 160,
-                  lines: [
-                    optionUpDown(
-                      labelText: '글자 크기',
-                      onTap: () {},
-                    ),
-                    optionUpDown(
-                      labelText: '줄 간격',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                commonDivider(context),
-                optionSingleContainer(
-                  context: context,
-                  containerHeight: 160,
-                  lines: [
-                    // optionSingleLine(
-                    //   labelText: '폰트 선택',
-                    //   onTap: () {},
-                    // ),
-                    // optionSingleLine(
-                    //   labelText: '폰트 색상',
-                    //   onTap: () {},
-                    // ),
-                  ],
-                ),
-              ],
+                  // Divider(
+                  //   height: 10,
+                  //   color: Colors.grey.shade400,
+                  //   thickness: 0.5,
+                  // ),
+                  commonDivider(context),
+                  optionSingleContainer(
+                    context: context,
+                    containerHeight: 160,
+                    lines: [
+                      optionUpDown(
+                        labelText: '글자 크기',
+                        argText: optFontSize.toString(),
+                        upButtonTap: () {
+                          setState(() {
+                            optFontSize += 0.5;
+                          });
+                        },
+                        downButtonTap: () {
+                          setState(() {
+                            optFontSize -= 0.5;
+                          });
+                        },
+                        upButtonVaild: optFontSize < 30 ? true : false,
+                        downButtonValid: optFontSize >= 10 ? true : false,
+                      ),
+                      optionUpDown(
+                        labelText: '줄 간격',
+                        argText: optFontHeight.toStringAsFixed(1),
+                        upButtonTap: () {
+                          setState(() {
+                            optFontHeight += 0.1;
+                          });
+                        },
+                        downButtonTap: () {
+                          setState(() {
+                            optFontHeight -= 0.1;
+                          });
+                        },
+                        upButtonVaild: optFontHeight <= 2.5 ? true : false,
+                        downButtonValid: optFontHeight > 1 ? true : false,
+                      ),
+                    ],
+                  ),
+                  commonDivider(context),
+                  optionSingleContainer(
+                    context: context,
+                    containerHeight: 200,
+                    lines: [
+                      optionFontSelect(labelText: '폰트 선택', argText: 'asd'),
+                      optionFontColorSelect(labelText: '글자색'),
+                      optionBackgroundSelect(labelText: '배경색'),
+                    ],
+                  ),
+                  commonDivider(context),
+                  Expanded(
+                      child: optionSingleContainer(
+                          context: context, containerHeight: 10)),
+                ],
+              ),
             ),
           ),
-        ),
-        const Center(
-          child: Text('Tab 2'),
-        ),
-        const Center(
-          child: Text('Tab 3'),
-        ),
-      ]),
+          const Center(
+            child: Text('Tab 2'),
+          ),
+          const Center(
+            child: Text('Tab 3'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -181,53 +250,59 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
 
   Widget optionUpDown({
     required String labelText,
-    required Function()? onTap,
+    required Function() upButtonTap,
+    required Function() downButtonTap,
+    required String argText,
+    required bool upButtonVaild,
+    required bool downButtonValid,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 17,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 12,
-                left: 15,
-              ),
-              child: Center(
-                child: commonText(
-                  labelText: labelText,
-                  fontSize: 18,
-                ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 17,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+              left: 15,
+            ),
+            child: Center(
+              child: commonText(
+                labelText: labelText,
+                fontSize: 18,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 12,
-                right: 15,
-              ),
-              child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      right: 15,
-                    ),
-                    child: Text(
-                      '15',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+              right: 15,
+            ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    right: 15,
+                  ),
+                  child: Text(
+                    argText,
+                    style: const TextStyle(
+                      fontSize: 20,
                     ),
                   ),
-                  Container(
+                ),
+                InkWell(
+                  onTap: upButtonVaild ? upButtonTap : () {},
+                  child: Container(
                     height: 45,
                     width: 80,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: upButtonVaild
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey.shade400,
                     ),
                     child: Transform.rotate(
                       angle: pi / 2,
@@ -237,14 +312,18 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                       ),
                     ),
                   ),
-                  Container(
+                ),
+                InkWell(
+                  onTap: downButtonValid ? downButtonTap : () {},
+                  child: Container(
                     height: 45,
                     width: 80,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Theme.of(context).primaryColor,
                       ),
-                      color: Colors.white,
+                      color:
+                          downButtonValid ? Colors.white : Colors.grey.shade400,
                     ),
                     child: Transform.rotate(
                       angle: pi + pi / 2,
@@ -254,85 +333,214 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                       ),
                     ),
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
 
-  Widget optionSelect({
+  Widget optionFontSelect({
     required String labelText,
-    required Function()? onTap,
+    required String argText,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 17,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 12,
-                left: 15,
-              ),
-              child: Center(
-                child: commonText(
-                  labelText: labelText,
-                  fontSize: 18,
-                ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 10,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+              left: 15,
+            ),
+            child: Center(
+              child: commonText(
+                labelText: labelText,
+                fontSize: 18,
               ),
             ),
-            Padding(
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+              right: 15,
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 200,
+                  child: DropdownButton(
+                    underline: const SizedBox.shrink(),
+                    isExpanded: true,
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 33,
+                    ),
+                    value: optFontFamily,
+                    items: _fonts
+                        .map((e) => DropdownMenuItem(
+                              value: e, // 선택 시 onChanged 를 통해 반환할 value
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: _fonts[_fonts.indexOf(e)],
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      // items 의 DropdownMenuItem 의 value 반환
+                      setState(() {
+                        optFontFamily = value!;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget optionFontColorSelect({
+    required String labelText,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 10,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+            child: Center(
+              child: commonText(
+                labelText: labelText,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
               padding: const EdgeInsets.only(
                 top: 12,
                 right: 15,
               ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 45,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    child: Transform.rotate(
-                      angle: pi / 2,
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 45,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      color: Colors.white,
-                    ),
-                    child: Transform.rotate(
-                      angle: pi + pi / 2,
-                      child: Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ),
-                ],
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: backgroundColors
+                      .map(
+                        (value) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 1,
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                optFontColor = Color(value);
+                              });
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 0.5,
+                                ),
+                                color: Color(
+                                  value,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
+    );
+  }
+
+  Widget optionBackgroundSelect({
+    required String labelText,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+          child: Center(
+            child: commonText(
+              labelText: labelText,
+              fontSize: 18,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+              right: 15,
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: backgroundColors
+                    .map(
+                      (value) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 1,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              optBackgroundColor = Color(value);
+                            });
+                          },
+                          child: Container(
+                            width: 50,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 0.5,
+                              ),
+                              color: Color(
+                                value,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList()
+                    .reversed
+                    .toList(),
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }

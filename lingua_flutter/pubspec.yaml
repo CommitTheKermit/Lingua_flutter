@@ -88,6 +88,26 @@ flutter:
       fonts:
         - asset: assets/fonts/neo.ttf
           weight: 500
+    - family: Gangwon
+      fonts:
+        - asset: assets/fonts/GANGWONSTATE-SemiBold.ttf
+          weight: 500
+    - family: Gmarket
+      fonts:
+        - asset: assets/fonts/GmarketSansTTFLight.ttf
+          weight: 500
+    - family: Hakgyo
+      fonts:
+        - asset: assets/fonts/HakgyoansimWoojuR.ttf
+          weight: 500
+    - family: Jaemin
+      fonts:
+        - asset: assets/fonts/Jaemin3-Regular.ttf
+          weight: 500
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/PretendardVariable.ttf
+          weight: 500
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
