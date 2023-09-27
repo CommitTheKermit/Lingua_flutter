@@ -183,6 +183,7 @@ class _ReadScreenState extends State<ReadScreen>
               ),
             ),
             onTap: () {
+              Navigator.pop(context);
               changeScreen(
                   context: context,
                   nextScreen: const ReadOptionScreen(),
