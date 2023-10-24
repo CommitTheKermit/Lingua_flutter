@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/services/api/api_service.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_word_widget.dart';
-
 
 // ignore: camel_case_types
 class WordButtonWidget extends StatelessWidget {
@@ -18,6 +18,9 @@ class WordButtonWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         child: GestureDetector(
           onTap: () {
+            // ApiUtil.wordRecord(
+            //   word: inButtonText,
+            // );
             showDialog(
               context: context,
               builder: (context) {

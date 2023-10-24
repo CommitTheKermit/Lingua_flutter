@@ -9,12 +9,9 @@ import 'package:lingua/util/save_index.dart';
 import 'package:lingua/widgets/read_widgets/color_change_button_widget.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_line_search.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_word_search.dart';
-
 import 'package:lingua/widgets/read_widgets/read_drawer.dart';
 import 'package:lingua/widgets/read_widgets/zetc/error_toast.dart';
-
 import '../widgets/read_widgets/dialog/dialog_context_widget.dart';
-
 import '../widgets/read_widgets/read_button_widget.dart';
 import '../widgets/read_widgets/text_field_widget.dart';
 import '../widgets/read_widgets/word_button_widget.dart';
@@ -216,7 +213,9 @@ class _ReadScreenState extends State<ReadScreen>
                 fontSize: 16,
               ),
             ),
-            onTap: isLoaded ? () {} : () {},
+            onTap: () {
+              errorToast(argText: '준비중.');
+            },
           ),
         ],
       ),
@@ -292,7 +291,7 @@ class _ReadScreenState extends State<ReadScreen>
                       : [
                           Container(
                             decoration: const BoxDecoration(
-                              color: Colors.white,
+                              color: Colors.transparent,
                             ),
                           ),
                         ],
@@ -333,12 +332,12 @@ class _ReadScreenState extends State<ReadScreen>
                           ? () {}
                           : () {
                               setState(() {
+                                _scrollController.jumpTo(0);
                                 index -= 1;
                                 IndexSaveLoad.saveCurrentIndex(index);
                                 originalSingleSentence =
                                     FileProcess.originalSentences[index];
                                 words = extractWords(originalSingleSentence);
-                                _scrollController.jumpTo(0);
                               });
                             },
                     ),
@@ -360,12 +359,12 @@ class _ReadScreenState extends State<ReadScreen>
                           ? () {}
                           : () {
                               setState(() {
+                                _scrollController.jumpTo(0);
                                 index += 1;
                                 IndexSaveLoad.saveCurrentIndex(index);
                                 originalSingleSentence =
                                     FileProcess.originalSentences[index];
                                 words = extractWords(originalSingleSentence);
-                                _scrollController.jumpTo(0);
                               });
                             },
                     ),
@@ -392,6 +391,9 @@ class _ReadScreenState extends State<ReadScreen>
     );
 
     setState(() {
+      if (result == 'back') {
+        return;
+      }
       index = result;
       IndexSaveLoad.saveCurrentIndex(index);
       originalSingleSentence = FileProcess.originalSentences[index];

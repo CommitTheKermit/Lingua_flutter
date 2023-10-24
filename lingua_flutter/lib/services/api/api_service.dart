@@ -9,7 +9,7 @@ class ApiUtil {
 
   static Future<List<WordModel>> dictSearch(String argText) async {
     List<dynamic> returnValue;
-    final url = Uri.parse('$baseUrl/dictionary/word/');
+    final url = Uri.parse('$baseUrl/dictionary/word');
     return await http
         .post(
       url,
@@ -23,7 +23,7 @@ class ApiUtil {
         // 서버가 성공적으로 응답하면 JSON을 파싱합니다.
         returnValue = json.decode(response.body);
 
-        ApiUtil.wordRecord(argText);
+        ApiUtil.wordRecord(word: argText);
         return returnValue.map((data) => WordModel.fromJson(data)).toList();
       } else if (response.statusCode == 401) {
         returnValue = json.decode("""[{
@@ -56,8 +56,8 @@ class ApiUtil {
     });
   }
 
-  static Future<bool> wordRecord(String argText) async {
-    final url = Uri.parse('$baseUrl/users/mailverify');
+  static Future<bool> wordRecord({required String word}) async {
+    final url = Uri.parse('$baseUrl/dictionary/wordbook');
 
     return await http
         .post(
@@ -65,7 +65,7 @@ class ApiUtil {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({'word': argText, 'email': UserModel.email}),
+      body: jsonEncode({'word': word, 'email': UserModel.email}),
     )
         .then((response) {
       if (response.statusCode == 200) {

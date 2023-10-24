@@ -5,6 +5,7 @@ import 'dart:convert';
 class ApiUser {
   static const String baseUrl = "http://10.0.2.2:8000";
   static const int timeoutSec = 5;
+  static late String? cookie;
 
   static Future<bool> signUp() {
     final url = Uri.parse('$baseUrl/users/signup');

@@ -8,6 +8,7 @@ Widget buildFormField({
   Image? prefixImage,
   double? horizontalPadding,
   double? verticalPadding,
+  TextEditingController? controller,
 }) {
   return Padding(
     padding: EdgeInsets.symmetric(
@@ -15,7 +16,10 @@ Widget buildFormField({
       vertical: verticalPadding ?? 10,
     ),
     child: TextFormField(
+      controller: controller,
       obscureText: isObscure,
+      onSaved: onSaved,
+      validator: validator,
       decoration: InputDecoration(
         labelText: labelText,
         border: const OutlineInputBorder(
@@ -42,8 +46,6 @@ Widget buildFormField({
               )
             : null,
       ),
-      onSaved: onSaved,
-      validator: validator,
     ),
   );
 }

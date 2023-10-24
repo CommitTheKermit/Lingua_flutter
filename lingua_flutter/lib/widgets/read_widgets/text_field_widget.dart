@@ -46,7 +46,10 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         child: SingleChildScrollView(
           controller: _scrollController,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 10,
+            ),
             child: Text(
               widget.argText,
               style: const TextStyle(

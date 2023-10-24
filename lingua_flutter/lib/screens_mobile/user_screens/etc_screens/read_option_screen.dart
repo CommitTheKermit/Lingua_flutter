@@ -2,11 +2,18 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:lingua/models/read_option.dart';
 import 'package:lingua/widgets/commons/common_divider.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 
 class ReadOptionScreen extends StatefulWidget {
   const ReadOptionScreen({super.key});
+  static ReadOption topOption =
+      ReadOption(25, 1.7, 'Neo', 0xff000000, 0xffffffff);
+  static ReadOption midOption =
+      ReadOption(25, 1.7, 'Neo', 0xff000000, 0xffffffff);
+  static ReadOption botOption =
+      ReadOption(25, 1.7, 'Neo', 0xff000000, 0xffffffff);
 
   @override
   State<ReadOptionScreen> createState() => _ReadOptionScreenState();
@@ -15,12 +22,9 @@ class ReadOptionScreen extends StatefulWidget {
 class _ReadOptionScreenState extends State<ReadOptionScreen>
     with TickerProviderStateMixin {
   late TabController tabController;
-  double optFontSize = 20;
-  double optFontHeight = 1;
-  String optFontFamily = 'Neo';
-  Color optFontColor = Colors.black;
-  Color optBackgroundColor = Colors.white;
+  late Future<String> futureOption;
 
+  bool isInitalized = false;
   String _selectedFont = '';
   final _fonts = [
     'Neo',
@@ -41,16 +45,17 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
     0xFFCFCED3,
     0xFFD1DCEA,
   ];
-  final fontColors = [
-    0x000000,
-    0x4A4A4A,
-    0xFFFFFF,
-  ];
+  // final fontColors = [
+  //   0x000000,
+  //   0x4A4A4A,
+  //   0xFFFFFF,
+  // ];
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
+    futureOption = initOption();
     setState(() {
       _selectedFont = _fonts[0];
     });
@@ -62,161 +67,254 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
     super.dispose();
   }
 
+  Future<String> initOption() async {
+    await ReadOptionScreen.topOption.loadOption(key: 'topOption');
+    await ReadOptionScreen.midOption.loadOption(key: 'midOption');
+    await ReadOptionScreen.botOption.loadOption(key: 'botOption');
+    isInitalized = true;
+    setState(() {});
+
+    return 'done';
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GFAppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: GFSegmentTabs(
-          height: 40,
-          width: 250,
-          tabController: tabController,
-          tabBarColor: GFColors.WHITE,
-          labelColor: GFColors.WHITE,
-          unselectedLabelColor: GFColors.DARK,
-          indicator: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-          ),
-          border: Border.all(color: GFColors.DARK, width: 0.3),
-          length: 3,
-          tabs: const <Widget>[
-            SizedBox(
-              height: 40,
-              child: Center(
-                child: Text(
-                  "상단",
-                  style: TextStyle(fontSize: 16),
-                ),
+    // print("폰트 크기${ReadOptionScreen.topOption.optFontSize}");
+    // print("폰트 높이${ReadOptionScreen.topOption.optFontHeight}");
+    // print("폰트 종류${ReadOptionScreen.topOption.optFontFamily}");
+    // print("폰트 색깔${ReadOptionScreen.topOption.optFontColor}");
+    // print("배경 색깔${ReadOptionScreen.topOption.optBackgroundColor}");
+    return FutureBuilder(
+      future: futureOption,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
               ),
             ),
-            SizedBox(
-              height: 40,
-              child: Center(
-                child: Text(
-                  "중단",
-                  style: TextStyle(fontSize: 16),
+          );
+        } else {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF4F4F4),
+            appBar: GFAppBar(
+              elevation: 0.5,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
                 ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-            ),
-            SizedBox(
-              height: 40,
-              child: Center(
-                child: Text(
-                  "하단",
-                  style: TextStyle(fontSize: 16),
+              backgroundColor: Colors.white,
+              centerTitle: true,
+              title: GFSegmentTabs(
+                height: 40,
+                width: 250,
+                tabController: tabController,
+                tabBarColor: GFColors.WHITE,
+                labelColor: GFColors.WHITE,
+                unselectedLabelColor: GFColors.DARK,
+                indicator: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: GFTabBarView(
-        controller: tabController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  commonDivider(context),
-                  Container(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: optBackgroundColor,
-                    ),
+                border: Border.all(color: GFColors.DARK, width: 0.3),
+                length: 3,
+                tabs: const <Widget>[
+                  SizedBox(
+                    height: 40,
                     child: Center(
                       child: Text(
-                        '적용 예시입니다.\n각 칸별 설정이 가능합니다.',
-                        style: TextStyle(
-                          fontSize: optFontSize,
-                          height: optFontHeight,
-                          fontFamily: optFontFamily,
-                          color: optFontColor,
+                        "상단",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        "중단",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        "하단",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            body: GFTabBarView(
+              controller: tabController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                optionPage(
+                  context: context,
+                  readOption: ReadOptionScreen.topOption,
+                ),
+                optionPage(
+                  context: context,
+                  readOption: ReadOptionScreen.midOption,
+                ),
+                optionPage(
+                  context: context,
+                  readOption: ReadOptionScreen.botOption,
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Center optionPage({
+    required BuildContext context,
+    required ReadOption readOption,
+  }) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            commonDivider(context),
+            Container(
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Color(readOption.optBackgroundColor),
+              ),
+              child: Center(
+                child: Text(
+                  '적용 예시입니다.\n각 칸별 설정이 가능합니다.',
+                  style: TextStyle(
+                    fontSize: readOption.optFontSize,
+                    height: readOption.optFontHeight,
+                    fontFamily: readOption.optFontFamily,
+                    color: Color(readOption.optFontColor),
+                  ),
+                ),
+              ),
+            ),
+            commonDivider(context),
+            optionSingleContainer(
+              context: context,
+              containerHeight: 160,
+              lines: [
+                optionUpDown(
+                  labelText: '글자 크기',
+                  argText: readOption.optFontSize.toString(),
+                  upButtonTap: () {
+                    setState(() {
+                      readOption.optFontSize += 0.5;
+                    });
+                  },
+                  downButtonTap: () {
+                    setState(() {
+                      readOption.optFontSize -= 0.5;
+                    });
+                  },
+                  upButtonVaild: readOption.optFontSize < 30 ? true : false,
+                  downButtonValid: readOption.optFontSize >= 10 ? true : false,
+                ),
+                optionUpDown(
+                  labelText: '줄 간격',
+                  argText: readOption.optFontHeight.toStringAsFixed(1),
+                  upButtonTap: () {
+                    setState(() {
+                      readOption.optFontHeight += 0.1;
+                    });
+                  },
+                  downButtonTap: () {
+                    setState(() {
+                      readOption.optFontHeight -= 0.1;
+                    });
+                  },
+                  upButtonVaild: readOption.optFontHeight <= 2.5 ? true : false,
+                  downButtonValid: readOption.optFontHeight > 1 ? true : false,
+                ),
+              ],
+            ),
+            commonDivider(context),
+            optionSingleContainer(
+              context: context,
+              containerHeight: 200,
+              lines: [
+                optionFontSelect(
+                  labelText: '폰트 선택',
+                  argText: 'asd',
+                  readOption: readOption,
+                ),
+                optionFontColorSelect(
+                  labelText: '글자색',
+                  readOption: readOption,
+                ),
+                optionBackgroundSelect(
+                  labelText: '배경색',
+                  readOption: readOption,
+                ),
+              ],
+            ),
+            commonDivider(context),
+            Expanded(
+                child: optionSingleContainer(
+                    context: context,
+                    containerHeight: 10,
+                    lines: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, right: 20),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          //TODO  옵션 저장 여기서 하기
+                          ReadOptionScreen.topOption
+                              .saveOption(key: 'topOption');
+                          ReadOptionScreen.midOption
+                              .saveOption(key: 'midOption');
+                          ReadOptionScreen.botOption
+                              .saveOption(key: 'botOption');
+                        },
+                        child: Container(
+                          width: 70,
+                          height: 37,
+                          decoration: ShapeDecoration(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                width: 1,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '저장',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 15,
+                                height: 0,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  // Divider(
-                  //   height: 10,
-                  //   color: Colors.grey.shade400,
-                  //   thickness: 0.5,
-                  // ),
-                  commonDivider(context),
-                  optionSingleContainer(
-                    context: context,
-                    containerHeight: 160,
-                    lines: [
-                      optionUpDown(
-                        labelText: '글자 크기',
-                        argText: optFontSize.toString(),
-                        upButtonTap: () {
-                          setState(() {
-                            optFontSize += 0.5;
-                          });
-                        },
-                        downButtonTap: () {
-                          setState(() {
-                            optFontSize -= 0.5;
-                          });
-                        },
-                        upButtonVaild: optFontSize < 30 ? true : false,
-                        downButtonValid: optFontSize >= 10 ? true : false,
-                      ),
-                      optionUpDown(
-                        labelText: '줄 간격',
-                        argText: optFontHeight.toStringAsFixed(1),
-                        upButtonTap: () {
-                          setState(() {
-                            optFontHeight += 0.1;
-                          });
-                        },
-                        downButtonTap: () {
-                          setState(() {
-                            optFontHeight -= 0.1;
-                          });
-                        },
-                        upButtonVaild: optFontHeight <= 2.5 ? true : false,
-                        downButtonValid: optFontHeight > 1 ? true : false,
-                      ),
-                    ],
-                  ),
-                  commonDivider(context),
-                  optionSingleContainer(
-                    context: context,
-                    containerHeight: 200,
-                    lines: [
-                      optionFontSelect(labelText: '폰트 선택', argText: 'asd'),
-                      optionFontColorSelect(labelText: '글자색'),
-                      optionBackgroundSelect(labelText: '배경색'),
-                    ],
-                  ),
-                  commonDivider(context),
-                  Expanded(
-                      child: optionSingleContainer(
-                          context: context, containerHeight: 10)),
-                ],
-              ),
-            ),
-          ),
-          const Center(
-            child: Text('Tab 2'),
-          ),
-          const Center(
-            child: Text('Tab 3'),
-          ),
-        ],
+                ])),
+          ],
+        ),
       ),
     );
   }
@@ -345,6 +443,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
   Widget optionFontSelect({
     required String labelText,
     required String argText,
+    required ReadOption readOption,
   }) {
     return Padding(
       padding: const EdgeInsets.only(
@@ -382,7 +481,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                       Icons.keyboard_arrow_down,
                       size: 33,
                     ),
-                    value: optFontFamily,
+                    value: readOption.optFontFamily,
                     items: _fonts
                         .map((e) => DropdownMenuItem(
                               value: e, // 선택 시 onChanged 를 통해 반환할 value
@@ -398,7 +497,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                     onChanged: (value) {
                       // items 의 DropdownMenuItem 의 value 반환
                       setState(() {
-                        optFontFamily = value!;
+                        readOption.optFontFamily = value!;
                       });
                     },
                   ),
@@ -413,6 +512,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
 
   Widget optionFontColorSelect({
     required String labelText,
+    required ReadOption readOption,
   }) {
     return Padding(
       padding: const EdgeInsets.only(
@@ -451,11 +551,11 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                           child: InkWell(
                             onTap: () {
                               setState(() {
-                                optFontColor = Color(value);
+                                readOption.optFontColor = value;
                               });
                             },
                             child: Container(
-                              width: 50,
+                              width: 53,
                               height: 30,
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -481,6 +581,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
 
   Widget optionBackgroundSelect({
     required String labelText,
+    required ReadOption readOption,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -515,11 +616,11 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                         child: InkWell(
                           onTap: () {
                             setState(() {
-                              optBackgroundColor = Color(value);
+                              readOption.optBackgroundColor = value;
                             });
                           },
                           child: Container(
-                            width: 50,
+                            width: 53,
                             height: 30,
                             decoration: BoxDecoration(
                               border: Border.all(

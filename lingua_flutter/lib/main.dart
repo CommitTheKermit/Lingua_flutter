@@ -31,7 +31,7 @@ class AppLingua extends StatelessWidget {
           ),
         ),
       ),
-      home: const ReadScreen(),
+      home: const LoginScreen(),
     );
   }
 }
