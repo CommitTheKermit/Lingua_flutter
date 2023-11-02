@@ -17,6 +17,11 @@ class ReadOption {
   ReadOption(this.optFontSize, this.optFontHeight, this.optFontFamily,
       this.optFontColor, this.optBackgroundColor);
 
+  ReadOption clone() {
+    return ReadOption(optFontSize, optFontHeight, optFontFamily, optFontColor,
+        optBackgroundColor);
+  }
+
   Future<void> loadOption({required String key}) async {
     String? jsonString = await PreferenceManager.getValue(key);
 
@@ -51,7 +56,5 @@ class ReadOption {
       _$ReadOptionFromJson(json);
   Map<String, dynamic> toJson() => _$ReadOptionToJson(this);
 }
-
-
 // 옵션을 전부 저장하는 함수 하나 만들고
 // 각각의 옵션을 세팅하는 세터에 그 함수에서 위 함수를 부르자

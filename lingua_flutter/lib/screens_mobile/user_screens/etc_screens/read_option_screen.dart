@@ -3,17 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:lingua/models/read_option.dart';
+import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/widgets/commons/common_divider.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 
 class ReadOptionScreen extends StatefulWidget {
   const ReadOptionScreen({super.key});
-  static ReadOption topOption =
-      ReadOption(25, 1.7, 'Neo', 0xff000000, 0xffffffff);
-  static ReadOption midOption =
-      ReadOption(25, 1.7, 'Neo', 0xff000000, 0xffffffff);
-  static ReadOption botOption =
-      ReadOption(25, 1.7, 'Neo', 0xff000000, 0xffffffff);
 
   @override
   State<ReadOptionScreen> createState() => _ReadOptionScreenState();
@@ -22,9 +17,13 @@ class ReadOptionScreen extends StatefulWidget {
 class _ReadOptionScreenState extends State<ReadOptionScreen>
     with TickerProviderStateMixin {
   late TabController tabController;
-  late Future<String> futureOption;
+  ReadOption topOption = ReadScreen.topOption.clone();
+  ReadOption midOption = ReadScreen.midOption.clone();
+  ReadOption botOption = ReadScreen.botOption.clone();
 
-  bool isInitalized = false;
+  bool isChanged = false;
+  bool isSaved = false;
+
   String _selectedFont = '';
   final _fonts = [
     'Neo',
@@ -55,7 +54,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
-    futureOption = initOption();
+
     setState(() {
       _selectedFont = _fonts[0];
     });
@@ -67,114 +66,163 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
     super.dispose();
   }
 
-  Future<String> initOption() async {
-    await ReadOptionScreen.topOption.loadOption(key: 'topOption');
-    await ReadOptionScreen.midOption.loadOption(key: 'midOption');
-    await ReadOptionScreen.botOption.loadOption(key: 'botOption');
-    isInitalized = true;
-    setState(() {});
-
-    return 'done';
-  }
-
   @override
   Widget build(BuildContext context) {
-    // print("폰트 크기${ReadOptionScreen.topOption.optFontSize}");
-    // print("폰트 높이${ReadOptionScreen.topOption.optFontHeight}");
-    // print("폰트 종류${ReadOptionScreen.topOption.optFontFamily}");
-    // print("폰트 색깔${ReadOptionScreen.topOption.optFontColor}");
-    // print("배경 색깔${ReadOptionScreen.topOption.optBackgroundColor}");
-    return FutureBuilder(
-      future: futureOption,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-          );
-        } else {
-          return Scaffold(
-            backgroundColor: const Color(0xFFF4F4F4),
-            appBar: GFAppBar(
-              elevation: 0.5,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              backgroundColor: Colors.white,
-              centerTitle: true,
-              title: GFSegmentTabs(
-                height: 40,
-                width: 250,
-                tabController: tabController,
-                tabBarColor: GFColors.WHITE,
-                labelColor: GFColors.WHITE,
-                unselectedLabelColor: GFColors.DARK,
-                indicator: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),
-                border: Border.all(color: GFColors.DARK, width: 0.3),
-                length: 3,
-                tabs: const <Widget>[
-                  SizedBox(
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        "상단",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
+    return WillPopScope(
+      onWillPop: () async {
+        if (isChanged && !isSaved) {
+          final result = await showDialog<String>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('확인 필요'),
+                content: const Text('변경사항이 존재하지만, 저장하지 않았습니다.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('나가기'),
+                    onPressed: () {
+                      Navigator.of(context).pop('exit');
+                    },
                   ),
-                  SizedBox(
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        "중단",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        "하단",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
+                  TextButton(
+                    child: const Text('저장'),
+                    onPressed: () async {
+                      await topOption.saveOption(key: 'topOption');
+                      await midOption.saveOption(key: 'midOption');
+                      await botOption.saveOption(key: 'botOption');
+
+                      ReadScreen.topOption = topOption;
+                      ReadScreen.midOption = midOption;
+                      ReadScreen.botOption = botOption;
+                      Navigator.of(context).pop('save');
+                    },
                   ),
                 ],
-              ),
-            ),
-            body: GFTabBarView(
-              controller: tabController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                optionPage(
-                  context: context,
-                  readOption: ReadOptionScreen.topOption,
-                ),
-                optionPage(
-                  context: context,
-                  readOption: ReadOptionScreen.midOption,
-                ),
-                optionPage(
-                  context: context,
-                  readOption: ReadOptionScreen.botOption,
-                ),
-              ],
-            ),
+              );
+            },
           );
+
+          if (result == 'exit') {
+            Navigator.of(context).pop();
+          }
+        } else {
+          Navigator.of(context).pop('saved');
         }
+        return false;
       },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF4F4F4),
+        appBar: GFAppBar(
+          elevation: 0.5,
+          leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              onPressed: () async {
+                if (isChanged && !isSaved) {
+                  final result = await showDialog<String>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('확인 필요'),
+                        content: const Text('변경사항이 존재하지만, 저장하지 않았습니다.'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('나가기'),
+                            onPressed: () {
+                              Navigator.of(context).pop('exit');
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('저장'),
+                            onPressed: () async {
+                              await topOption.saveOption(key: 'topOption');
+                              await midOption.saveOption(key: 'midOption');
+                              await botOption.saveOption(key: 'botOption');
+
+                              ReadScreen.topOption = topOption;
+                              ReadScreen.midOption = midOption;
+                              ReadScreen.botOption = botOption;
+                              Navigator.of(context).pop('save');
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (result == 'exit') {
+                    Navigator.of(context).pop();
+                  }
+                } else {
+                  Navigator.of(context).pop('saved');
+                }
+              }),
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: GFSegmentTabs(
+            height: 40,
+            width: 250,
+            tabController: tabController,
+            tabBarColor: GFColors.WHITE,
+            labelColor: GFColors.WHITE,
+            unselectedLabelColor: GFColors.DARK,
+            indicator: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+            ),
+            border: Border.all(color: GFColors.DARK, width: 0.3),
+            length: 3,
+            tabs: const <Widget>[
+              SizedBox(
+                height: 40,
+                child: Center(
+                  child: Text(
+                    "상단",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: Center(
+                  child: Text(
+                    "중단",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: Center(
+                  child: Text(
+                    "하단",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: GFTabBarView(
+          controller: tabController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: <Widget>[
+            optionPage(
+              context: context,
+              readOption: topOption,
+            ),
+            optionPage(
+              context: context,
+              readOption: midOption,
+            ),
+            optionPage(
+              context: context,
+              readOption: botOption,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -216,11 +264,13 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                   argText: readOption.optFontSize.toString(),
                   upButtonTap: () {
                     setState(() {
+                      !isChanged ? isChanged = true : isChanged;
                       readOption.optFontSize += 0.5;
                     });
                   },
                   downButtonTap: () {
                     setState(() {
+                      !isChanged ? isChanged = true : isChanged;
                       readOption.optFontSize -= 0.5;
                     });
                   },
@@ -232,11 +282,13 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                   argText: readOption.optFontHeight.toStringAsFixed(1),
                   upButtonTap: () {
                     setState(() {
+                      !isChanged ? isChanged = true : isChanged;
                       readOption.optFontHeight += 0.1;
                     });
                   },
                   downButtonTap: () {
                     setState(() {
+                      !isChanged ? isChanged = true : isChanged;
                       readOption.optFontHeight -= 0.1;
                     });
                   },
@@ -276,14 +328,11 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
-                        onTap: () {
-                          //TODO  옵션 저장 여기서 하기
-                          ReadOptionScreen.topOption
-                              .saveOption(key: 'topOption');
-                          ReadOptionScreen.midOption
-                              .saveOption(key: 'midOption');
-                          ReadOptionScreen.botOption
-                              .saveOption(key: 'botOption');
+                        onTap: () async {
+                          isSaved = true;
+                          await topOption.saveOption(key: 'topOption');
+                          await midOption.saveOption(key: 'midOption');
+                          await botOption.saveOption(key: 'botOption');
                         },
                         child: Container(
                           width: 70,
@@ -497,6 +546,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                     onChanged: (value) {
                       // items 의 DropdownMenuItem 의 value 반환
                       setState(() {
+                        !isChanged ? isChanged = true : isChanged;
                         readOption.optFontFamily = value!;
                       });
                     },
@@ -551,6 +601,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                           child: InkWell(
                             onTap: () {
                               setState(() {
+                                !isChanged ? isChanged = true : isChanged;
                                 readOption.optFontColor = value;
                               });
                             },
@@ -616,6 +667,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                         child: InkWell(
                           onTap: () {
                             setState(() {
+                              !isChanged ? isChanged = true : isChanged;
                               readOption.optBackgroundColor = value;
                             });
                           },

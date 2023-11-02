@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/models/word_model.dart';
-import 'package:lingua/services/api/api_service.dart';
+import 'package:lingua/services/api/api_util.dart';
 import 'package:lingua/widgets/read_widgets/dictionary_result_widget.dart';
-
-
 
 class DialogWordWidget extends StatefulWidget {
   final String argText;

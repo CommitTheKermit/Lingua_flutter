@@ -97,10 +97,10 @@ class ApiUser {
     );
   }
 
-  static Future<bool> login() async {
+  static Future<bool> login() {
     final url = Uri.parse('$baseUrl/users/login');
 
-    return await http
+    return http
         .post(
       url,
       headers: <String, String>{

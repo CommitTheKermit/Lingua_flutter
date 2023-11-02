@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:http/http.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/models/word_model.dart';
 import 'package:http/http.dart' as http;
@@ -5,7 +8,8 @@ import 'dart:convert';
 
 class ApiUtil {
   static const String baseUrl = "http://10.0.2.2:8000";
-  static const int timeoutSec = 5;
+  static const int timeoutSec = 8;
+  late final String API_KEY;
 
   static Future<List<WordModel>> dictSearch(String argText) async {
     List<dynamic> returnValue;
@@ -82,7 +86,7 @@ class ApiUtil {
   static Future<bool> sendTranslatedText(String argText) async {
     final url = Uri.parse('$baseUrl/users/mailverify');
 
-    return await http
+    return http
         .post(
       url,
       headers: <String, String>{
@@ -105,8 +109,49 @@ class ApiUtil {
     );
   }
 
-  static Future<bool> recieveTranslatedText(String argText) async {
-    final url = Uri.parse('$baseUrl/users/mailverify');
+  Future<String> requestTranslatedText(String argText) async {
+    String apiKey = API_KEY; // 환경 변수나 별도 설정 파일에서 불러와야 함
+
+    if (Platform.isAndroid) {}
+    final url = Uri.parse('https://api-free.deepl.com/v2/translate');
+
+    try {
+      final response = await http
+          .post(
+            url,
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': 'DeepL-Auth-Key $apiKey', // 오타 수정
+              'User-Agent': 'lingua/1.2.3',
+            },
+            body: jsonEncode({
+              "text": [argText], // 함수 인자로 받은 텍스트
+              "source_lang": "EN",
+              "target_lang": "KO",
+              "preserve_formatting": true,
+            }),
+          )
+          .timeout(
+            const Duration(seconds: timeoutSec),
+          );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> result = jsonDecode(response.body);
+        String decodedData = utf8.decode(response.bodyBytes);
+        int start = decodedData.indexOf('"text":');
+        decodedData = decodedData.substring(start + 8, decodedData.length - 4);
+        // print(decodedData);
+        return decodedData;
+      } else {
+        return 'error Failed with status code ${response.statusCode}';
+      }
+    } catch (e) {
+      return 'error Request failed with error: $e';
+    }
+  }
+
+  Future<bool> getApiKey() async {
+    final url = Uri.parse('$baseUrl/users/getapikey');
 
     return await http
         .post(
@@ -114,13 +159,11 @@ class ApiUtil {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({
-        'word': argText,
-        'email': UserModel.email,
-      }),
+      body: jsonEncode({'email': 'thing'}),
     )
         .then((response) {
       if (response.statusCode == 200) {
+        API_KEY = json.decode(response.body)['api_key'];
         return true;
       } else {
         return false;

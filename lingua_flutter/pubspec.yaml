@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   file_picker: ^5.3.3
-  http: ^1.1.0
+  http: ^0.13.6
   url_launcher: ^6.1.12
   shared_preferences: ^2.2.0
   fluttertoast: ^8.2.2

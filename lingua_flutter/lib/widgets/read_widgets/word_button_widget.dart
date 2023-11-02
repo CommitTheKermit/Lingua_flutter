@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/services/api/api_service.dart';
+import 'package:lingua/services/api/api_util.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_word_widget.dart';
 
 // ignore: camel_case_types

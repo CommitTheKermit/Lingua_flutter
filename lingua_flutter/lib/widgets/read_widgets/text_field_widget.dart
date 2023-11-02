@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/models/read_option.dart';
 
 class TextFieldWidget extends StatefulWidget {
   final int flexValue;
-  final Color tempColor;
   final String argText;
+  final ReadOption readOption;
 
   const TextFieldWidget({
     super.key,
     required this.flexValue,
-    required this.tempColor,
     required this.argText,
+    required this.readOption,
   });
 
   @override
@@ -35,7 +36,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          color: widget.tempColor,
+          color: Color(widget.readOption.optBackgroundColor),
           border: Border(
             bottom: BorderSide(
               width: 2,
@@ -52,9 +53,11 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             ),
             child: Text(
               widget.argText,
-              style: const TextStyle(
-                fontSize: 25,
-                height: 1.7,
+              style: TextStyle(
+                fontSize: widget.readOption.optFontSize,
+                height: widget.readOption.optFontHeight,
+                color: Color(widget.readOption.optFontColor),
+                fontFamily: widget.readOption.optFontFamily,
               ),
             ),
           ),

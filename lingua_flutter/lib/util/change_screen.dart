@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-void changeScreen({
+Future<void> changeScreen({
   required BuildContext context,
   required Widget nextScreen,
   required bool isReplace,
-}) {
+}) async {
   isReplace
       ? Navigator.pushReplacement(
           context,

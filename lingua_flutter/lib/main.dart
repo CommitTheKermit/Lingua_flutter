@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
+import 'package:lingua/services/api/api_util.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,8 +10,14 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  // init();
   runApp(const AppLingua());
 }
+
+// Future<void> init() async {
+//   ApiUtil apiUtil = ApiUtil();
+//   apiUtil.getApiKey();
+// }
 
 class AppLingua extends StatelessWidget {
   const AppLingua({super.key});
@@ -31,7 +38,7 @@ class AppLingua extends StatelessWidget {
           ),
         ),
       ),
-      home: const LoginScreen(),
+      home: const ReadScreen(),
     );
   }
 }
