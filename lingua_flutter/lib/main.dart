@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
-import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
-import 'package:lingua/services/api/api_util.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +23,7 @@ class AppLingua extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Neo',
         primaryColor: const Color(0xFF8FC1E4),

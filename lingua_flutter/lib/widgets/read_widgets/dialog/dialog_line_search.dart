@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/services/file_process.dart';
+import 'package:lingua/util/file_process.dart';
 
 enum PageState {
   prev,
@@ -42,7 +42,6 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      
       contentPadding: EdgeInsets.zero,
       insetPadding: const EdgeInsets.only(
         left: 10,

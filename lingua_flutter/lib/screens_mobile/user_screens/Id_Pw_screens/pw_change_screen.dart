@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:lingua/models/user_model.dart';
+import 'package:lingua/util/api/api_user.dart';
 
-import '../../../services/api/api_user.dart';
 import '../../../widgets/user_widgets/from_field.dart';
 import '../login_screen.dart';
 
@@ -112,7 +112,7 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                         } else {
                           return;
                         }
-                        
+
                         ApiUser.pwChange(
                           phoneNo: widget.phoneNo,
                           email: widget.email,
@@ -186,5 +186,4 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
       ),
     );
   }
-
 }

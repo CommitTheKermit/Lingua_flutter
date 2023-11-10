@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../services/file_process.dart';
+import 'package:lingua/util/file_process.dart';
 
 enum PageState {
   prev,

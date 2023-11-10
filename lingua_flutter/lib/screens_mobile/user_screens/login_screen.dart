@@ -3,7 +3,7 @@ import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/signup_screens/signup_screen_first.dart';
-import 'package:lingua/services/api/api_user.dart';
+import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/util/change_screen.dart';
 
 import 'package:lingua/util/exit_confirm.dart';

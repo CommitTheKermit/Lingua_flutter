@@ -163,7 +163,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           centerTitle: true,
           title: GFSegmentTabs(
             height: 40,
-            width: 250,
+            width: MediaQuery.of(context).size.width / 1.8,
             tabController: tabController,
             tabBarColor: GFColors.WHITE,
             labelColor: GFColors.WHITE,
@@ -237,7 +237,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           children: [
             commonDivider(context),
             Container(
-              height: 100,
+              height: MediaQuery.of(context).size.height * 0.2,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 color: Color(readOption.optBackgroundColor),
@@ -257,7 +257,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             commonDivider(context),
             optionSingleContainer(
               context: context,
-              containerHeight: 160,
+              containerHeight: MediaQuery.of(context).size.height * 0.23,
               lines: [
                 optionUpDown(
                   labelText: '글자 크기',
@@ -300,7 +300,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             commonDivider(context),
             optionSingleContainer(
               context: context,
-              containerHeight: 200,
+              containerHeight: MediaQuery.of(context).size.height * 0.27,
               lines: [
                 optionFontSelect(
                   labelText: '폰트 선택',
@@ -320,48 +320,51 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             commonDivider(context),
             Expanded(
                 child: optionSingleContainer(
-                    context: context,
-                    containerHeight: 10,
-                    lines: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, right: 20),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                        onTap: () async {
-                          isSaved = true;
-                          await topOption.saveOption(key: 'topOption');
-                          await midOption.saveOption(key: 'midOption');
-                          await botOption.saveOption(key: 'botOption');
-                        },
-                        child: Container(
-                          width: 70,
-                          height: 37,
-                          decoration: ShapeDecoration(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                width: 1,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
+              context: context,
+              containerHeight: 10,
+              lines: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, right: 20),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () async {
+                        isSaved = true;
+                        await topOption.saveOption(key: 'topOption');
+                        await midOption.saveOption(key: 'midOption');
+                        await botOption.saveOption(key: 'botOption');
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.18,
+                        height: MediaQuery.of(context).size.height * 0.045,
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              width: 1,
+                              color: Theme.of(context).primaryColor,
                             ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Center(
-                            child: Text(
-                              '저장',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 15,
-                                height: 0,
-                              ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '저장',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize:
+                                  MediaQuery.of(context).size.height * 0.018,
+                              height: 0,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ])),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+            )),
           ],
         ),
       ),
@@ -372,6 +375,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
     required BuildContext context,
     required double containerHeight,
     List<Widget>? lines,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
   }) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -388,6 +392,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
         ],
       ),
       child: Column(
+        mainAxisAlignment: mainAxisAlignment,
         children: [
           if (lines != null) ...lines,
         ],
@@ -419,7 +424,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: Center(
               child: commonText(
                 labelText: labelText,
-                fontSize: 18,
+                fontSize: MediaQuery.of(context).size.height * 0.024,
               ),
             ),
           ),
@@ -436,16 +441,16 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                   ),
                   child: Text(
                     argText,
-                    style: const TextStyle(
-                      fontSize: 20,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.023,
                     ),
                   ),
                 ),
                 InkWell(
                   onTap: upButtonVaild ? upButtonTap : () {},
                   child: Container(
-                    height: 45,
-                    width: 80,
+                    height: MediaQuery.of(context).size.height * 0.053,
+                    width: MediaQuery.of(context).size.width * 0.2,
                     decoration: BoxDecoration(
                       color: upButtonVaild
                           ? Theme.of(context).primaryColor
@@ -463,8 +468,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                 InkWell(
                   onTap: downButtonValid ? downButtonTap : () {},
                   child: Container(
-                    height: 45,
-                    width: 80,
+                    height: MediaQuery.of(context).size.height * 0.053,
+                    width: MediaQuery.of(context).size.width * 0.2,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Theme.of(context).primaryColor,
@@ -522,13 +527,13 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: Row(
               children: [
                 SizedBox(
-                  width: 200,
+                  width: MediaQuery.of(context).size.width * 0.45,
                   child: DropdownButton(
                     underline: const SizedBox.shrink(),
                     isExpanded: true,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.keyboard_arrow_down,
-                      size: 33,
+                      size: MediaQuery.of(context).size.height * 0.04,
                     ),
                     value: readOption.optFontFamily,
                     items: _fonts
@@ -537,7 +542,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                               child: Text(
                                 e,
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: MediaQuery.of(context).size.height *
+                                      0.021,
                                   fontFamily: _fonts[_fonts.indexOf(e)],
                                 ),
                               ),
@@ -606,8 +612,9 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                               });
                             },
                             child: Container(
-                              width: 53,
-                              height: 30,
+                              width: MediaQuery.of(context).size.width * 0.13,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.036,
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 0.5,
@@ -672,8 +679,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                             });
                           },
                           child: Container(
-                            width: 53,
-                            height: 30,
+                            width: MediaQuery.of(context).size.width * 0.13,
+                            height: MediaQuery.of(context).size.height * 0.036,
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 0.5,

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/screens_mobile/read_mode_screen.dart';
-import 'package:lingua/screens_mobile/user_screens/etc_screens/read_option_screen.dart';
-import 'package:lingua/services/api/api_util.dart';
-import 'package:lingua/services/file_process.dart';
-import 'package:lingua/services/sentence_process.dart';
+import 'package:lingua/screens_mobile/etc_screens/read_option_screen.dart';
+
+import 'package:lingua/util/api/api_util.dart';
 import 'package:lingua/util/change_screen.dart';
 import 'package:lingua/util/exit_confirm.dart';
+import 'package:lingua/util/file_process.dart';
 import 'package:lingua/util/save_index.dart';
+import 'package:lingua/util/sentence_process.dart';
 import 'package:lingua/widgets/read_widgets/color_change_button_widget.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_line_search.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_word_search.dart';
@@ -20,6 +21,7 @@ import '../widgets/read_widgets/text_field_widget.dart';
 import '../widgets/read_widgets/word_button_widget.dart';
 
 class ReadScreen extends StatefulWidget {
+  static bool isAllowTranslate = false;
   const ReadScreen({super.key});
   static ReadOption topOption =
       ReadOption(25, 1.7, 'Neo', 0xff000000, 0xffffffff);
@@ -40,7 +42,7 @@ class _ReadScreenState extends State<ReadScreen>
   bool isLoaded = false;
   final _formKey = GlobalKey<FormState>();
   String translatedSentence = '';
-  bool isMachineTranslate = false;
+
   late Future<String> futureOption;
   bool isInitalized = false;
   ApiUtil apiUtil = ApiUtil();
@@ -50,7 +52,6 @@ class _ReadScreenState extends State<ReadScreen>
   ValueNotifier<String> machineTranslated = ValueNotifier('');
 
   Future<String> initOption() async {
-    apiUtil.getApiKey();
     await ReadScreen.topOption.loadOption(key: 'topOption');
     await ReadScreen.midOption.loadOption(key: 'midOption');
     await ReadScreen.botOption.loadOption(key: 'botOption');
@@ -74,10 +75,13 @@ class _ReadScreenState extends State<ReadScreen>
     originalSingleSentence = FileProcess.originalSentences[index];
     words = extractWords(originalSingleSentence);
     setState(() {});
-    String rawString =
-        await apiUtil.requestTranslatedText(originalSingleSentence);
-    rawString = rawString.replaceAll(r'\n', '\n').replaceAll(r'\t', '\t');
-    machineTranslated.value = rawString;
+
+    if (ReadScreen.isAllowTranslate) {
+      String rawString =
+          await apiUtil.requestTranslatedText(originalSingleSentence);
+      rawString = rawString.replaceAll(r'\n', '\n').replaceAll(r'\t', '\t');
+      machineTranslated.value = rawString;
+    }
   }
 
   @override
@@ -100,7 +104,8 @@ class _ReadScreenState extends State<ReadScreen>
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(50.0),
+              preferredSize:
+                  Size.fromHeight(MediaQuery.of(context).size.height * 0.06),
               child: readAppBar(context),
             ),
             drawer: readDrawer(context),
@@ -123,7 +128,9 @@ class _ReadScreenState extends State<ReadScreen>
                     child: ValueListenableBuilder(
                       valueListenable: machineTranslated,
                       builder: (context, value, child) {
-                        if (value.isEmpty && isLoaded) {
+                        if (value.isEmpty &&
+                            isLoaded &&
+                            ReadScreen.isAllowTranslate) {
                           return Stack(
                             children: [
                               TranslatedFieldWidget(
@@ -149,7 +156,7 @@ class _ReadScreenState extends State<ReadScreen>
                           );
                         } else {
                           return TranslatedFieldWidget(
-                            argText: value,
+                            argText: value.isEmpty ? '번역 출력 부분' : value,
                             readOption: ReadScreen.midOption,
                           );
                         }
@@ -230,16 +237,16 @@ class _ReadScreenState extends State<ReadScreen>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           '기계번역콜제한',
                           style: TextStyle(
-                            fontSize: 25,
+                            fontSize: MediaQuery.of(context).size.height / 30,
                           ),
                         ),
                         Text(
                           '$index/${FileProcess.originalSentences.length}',
-                          style: const TextStyle(
-                            fontSize: 25,
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.height / 30,
                           ),
                         )
                       ],
@@ -430,9 +437,8 @@ class _ReadScreenState extends State<ReadScreen>
       ),
 
       actions: [
-        GestureDetector(
-          onTap: () => isMachineTranslate = !isMachineTranslate,
-          child: const ColorChangeButtonWidget(),
+        ColorChangeButtonWidget(
+          apiUtil: apiUtil,
         ),
         IconButton(
           iconSize: 30,
@@ -467,17 +473,21 @@ class _ReadScreenState extends State<ReadScreen>
       flexibleSpace: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           return FlexibleSpaceBar(
-            title: Text(
-              FileProcess.titleNovel.isNotEmpty // 파일 제목 출력
-                  ? FileProcess.titleNovel
-                  : '파일을 선택해주세요.',
-              style: const TextStyle(
-                fontSize: 22,
-                color: Colors.white,
+            title: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                FileProcess.titleNovel.isNotEmpty // 파일 제목 출력
+                    ? FileProcess.titleNovel
+                    : '파일을 선택해주세요.',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.03,
+                  color: Colors.white,
+                ),
               ),
             ),
-            titlePadding:
-                const EdgeInsets.only(left: 50, bottom: 10), // 원하는 위치로 조절
+            titlePadding: EdgeInsets.only(
+                left: 50,
+                top: MediaQuery.of(context).size.height * 0.03), // 원하는 위치로 조절
           );
         },
       ),

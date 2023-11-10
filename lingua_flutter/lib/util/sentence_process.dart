@@ -1,4 +1,4 @@
-import 'package:lingua/services/stopword.dart';
+import 'package:lingua/util/stopword.dart';
 
 mixin SentenceProcess {
   List<String> extractWords(String sentence) {

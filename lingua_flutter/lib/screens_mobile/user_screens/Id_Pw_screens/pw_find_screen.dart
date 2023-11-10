@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_change_screen.dart';
+import 'package:lingua/util/api/api_user.dart';
 
-import '../../../services/api/api_user.dart';
 import '../../../widgets/user_widgets/consent_dialog.dart';
 import '../../../widgets/user_widgets/form_button.dart';
 import '../../../widgets/user_widgets/from_field.dart';

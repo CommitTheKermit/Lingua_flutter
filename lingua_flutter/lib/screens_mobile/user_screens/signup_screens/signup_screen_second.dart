@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:lingua/models/user_model.dart';
-
-import '../../../services/api/api_user.dart';
+import 'package:lingua/util/api/api_user.dart';
 import '../../../widgets/user_widgets/from_field.dart';
 import '../login_screen.dart';
 

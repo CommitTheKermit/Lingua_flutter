@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/util/api/api_util.dart';
 
 class ColorChangeButtonWidget extends StatefulWidget {
-  const ColorChangeButtonWidget({super.key});
+  final ApiUtil apiUtil;
+  const ColorChangeButtonWidget({
+    super.key,
+    required this.apiUtil,
+  });
 
   @override
   State<ColorChangeButtonWidget> createState() =>
@@ -41,9 +47,14 @@ class _ColorChangeButtonWidgetState extends State<ColorChangeButtonWidget>
     return IconButton(
       iconSize: 30,
       onPressed: () {
-        setState(() {
+        setState(() async {
           isPressed ? _controller.reverse() : _controller.forward();
           isPressed = !isPressed;
+
+          ReadScreen.isAllowTranslate = !ReadScreen.isAllowTranslate;
+          if (ReadScreen.isAllowTranslate && widget.apiUtil.API_KEY.isEmpty) {
+            await widget.apiUtil.getApiKey();
+          }
         }); // 화면을 다시 그립니다.
       },
       icon: Icon(
