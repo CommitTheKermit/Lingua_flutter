@@ -1,9 +1,11 @@
+import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiUser {
-  static const String baseUrl = "http://10.0.2.2:8000";
+  // static const String baseUrl = "http://10.0.2.2:8000";
+  static const String baseUrl = "http://43.201.60.160:8000";
   static const int timeoutSec = 5;
   static late String? cookie;
 
@@ -57,7 +59,7 @@ class ApiUser {
     );
   }
 
-  static Future<bool> emailVerify(String email, String code) async {
+  static Future<String> emailVerify(String email, String code) async {
     final url = Uri.parse('$baseUrl/users/mailverify');
     // final response = await http.post(
     //   url,
@@ -86,14 +88,10 @@ class ApiUser {
       }),
     )
         .then((response) {
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
+      return response.statusCode.toString();
     }).timeout(
       const Duration(seconds: timeoutSec),
-      onTimeout: () => false, // 3초 후에 실행될 대체값입니다.
+      onTimeout: () => '400', // 3초 후에 실행될 대체값입니다.
     );
   }
 
@@ -203,6 +201,76 @@ class ApiUser {
         .then((response) {
       if (response.statusCode == 200) {
         // 서버가 성공적으로 응답하면 JSON을 파싱합니다.
+        return true;
+      } else {
+        // 서버가 200 이외의 상태 코드로 응답하면 예외를 발생시킵니다.
+
+        return false;
+      }
+    }).timeout(const Duration(seconds: timeoutSec), onTimeout: () {
+      return false;
+    });
+  }
+
+  static Future<int> periodicRefresh({
+    //TODO
+    required String email,
+  }) async {
+    final url = Uri.parse('$baseUrl/users/refreshclient');
+
+    return await http
+        .post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'email': email,
+      }),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        // 서버가 성공적으로 응답하면 JSON을 파싱합니다.
+        Map<String, dynamic> answerJson;
+        answerJson = jsonDecode(response.body);
+        int requestQuota = answerJson['request_quota'];
+
+        AppLingua.requestQuota = requestQuota;
+
+        return requestQuota;
+      } else {
+        // 서버가 200 이외의 상태 코드로 응답하면 예외를 발생시킵니다.
+
+        return 0;
+      }
+    }).timeout(const Duration(seconds: timeoutSec), onTimeout: () {
+      return 0;
+    });
+  }
+
+  static Future<bool> setQuota({
+    //TODO
+    required String email,
+    required int argQuota,
+  }) async {
+    final url = Uri.parse('$baseUrl/users/refreshclient');
+
+    return await http
+        .post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'email': email,
+        'request_qouta': argQuota,
+      }),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        // 서버가 성공적으로 응답하면 JSON을 파싱합니다.
+        AppLingua.requestQuota = argQuota;
+
         return true;
       } else {
         // 서버가 200 이외의 상태 코드로 응답하면 예외를 발생시킵니다.

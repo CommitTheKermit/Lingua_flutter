@@ -4,7 +4,7 @@ Text commonText({
   required String labelText,
   double? fontSize,
   Color? fontColor,
-  FontWeight? fontWeight,
+  FontWeight? fontWeight = FontWeight.w600,
 }) {
   return Text(
     labelText,
@@ -13,7 +13,7 @@ Text commonText({
       color: fontColor ?? const Color(0xFF363639),
       fontSize: fontSize ?? 12,
       fontFamily: 'Noto Sans KR',
-      fontWeight: fontWeight ?? FontWeight.w500,
+      fontWeight: fontWeight,
       height: 0,
     ),
   );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/user_screens/signup_screens/signup_screen_second.dart';
@@ -151,17 +153,23 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
       return null;
     }
 
-    bool condition;
+    String condition;
     condition = await ApiUser.emailVerify(
       UserModel.email,
       textEditingController.text,
     );
 
-    if (condition && mounted) {
+    if (condition == '200' && mounted) {
       isSent = true;
       consentDialog(
         title: '성공',
         content: '인증 성공',
+        context: context,
+      );
+    } else if (condition == '404') {
+      consentDialog(
+        title: '중복',
+        content: '이미 존재하는 이메일입니다.',
         context: context,
       );
     } else {

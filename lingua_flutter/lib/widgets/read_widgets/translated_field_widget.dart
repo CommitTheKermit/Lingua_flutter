@@ -32,12 +32,6 @@ class _TranslatedFieldWidgetState extends State<TranslatedFieldWidget> {
       constraints: const BoxConstraints.expand(),
       decoration: BoxDecoration(
         color: Color(widget.readOption.optBackgroundColor),
-        border: Border(
-          bottom: BorderSide(
-            width: 2,
-            color: Colors.grey.withOpacity(0.5),
-          ),
-        ),
       ),
       child: SingleChildScrollView(
         controller: _scrollController,

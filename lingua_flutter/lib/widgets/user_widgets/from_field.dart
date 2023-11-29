@@ -37,7 +37,7 @@ Widget buildFormField({
                     const SizedBox(
                       width: 16,
                     ),
-                    Image.asset('assets/divider.png'),
+                    Image.asset('assets/images/divider.png'),
                     const SizedBox(
                       width: 16,
                     ),

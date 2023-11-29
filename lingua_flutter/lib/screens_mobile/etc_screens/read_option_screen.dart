@@ -26,6 +26,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
 
   String _selectedFont = '';
   final _fonts = [
+    'Noto Sans',
     'Neo',
     'Gangwon',
     'Gmarket',

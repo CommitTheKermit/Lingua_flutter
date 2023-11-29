@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_word_widget.dart';
 
 // ignore: camel_case_types
@@ -11,11 +12,9 @@ class WordButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      flex: 10,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-        child: GestureDetector(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      child: GestureDetector(
           onTap: () {
             // ApiUtil.wordRecord(
             //   word: inButtonText,
@@ -30,22 +29,22 @@ class WordButtonWidget extends StatelessWidget {
             );
           },
           child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(7),
+            height: MediaQuery.of(context).size.height * 0.05,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            clipBehavior: Clip.antiAlias,
+            decoration: ShapeDecoration(
+              color: const Color(0xFF1E4A75),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Center(
-                child: Text(
-                  inButtonText,
-                  style: const TextStyle(fontSize: 18, color: Colors.white),
-                ),
+            child: Center(
+              child: commonText(
+                labelText: inButtonText,
+                fontColor: const Color(0xFFF8F9FA),
+                fontSize: MediaQuery.of(context).size.height * 0.02,
               ),
             ),
-          ),
-        ),
-      ),
+          )),
     );
   }
 }

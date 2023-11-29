@@ -7,9 +7,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiUtil {
-  static const String baseUrl = "http://10.0.2.2:8000";
+  // static const String baseUrl = "http://10.0.2.2:8000";
+  static const String baseUrl = "http://43.201.60.160:8000";
   static const int timeoutSec = 8;
-  late final String API_KEY;
+  String API_KEY = '';
 
   static Future<List<WordModel>> dictSearch(String argText) async {
     List<dynamic> returnValue;
@@ -151,17 +152,14 @@ class ApiUtil {
   }
 
   Future<bool> getApiKey() async {
-    final url = Uri.parse('$baseUrl/users/getapikey');
+    final url = Uri.parse('$baseUrl/util/getapikey');
 
-    return await http
-        .post(
+    return await http.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({'email': 'thing'}),
-    )
-        .then((response) {
+    ).then((response) {
       if (response.statusCode == 200) {
         API_KEY = json.decode(response.body)['api_key'];
         return true;

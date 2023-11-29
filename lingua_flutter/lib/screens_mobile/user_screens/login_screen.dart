@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
@@ -70,6 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log("width ${MediaQuery.of(context).size.width.toString()}");
+    log("height ${MediaQuery.of(context).size.height.toString()}");
     return FutureBuilder(
       future: futureOption,
       builder: (context, snapshot) {
@@ -81,10 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 return exitConfirm(context);
               },
               child: Padding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   left: 10,
                   right: 10,
-                  top: 250,
+                  top: MediaQuery.of(context).size.height * 0.25,
                 ),
                 child: Form(
                   key: _formKey,
@@ -98,12 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Color(LoginScreen.orangeColor),
                         ),
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
                       buildFormField(
                         controller: controller,
-                        prefixImage: Image.asset('assets/user.png'),
+                        prefixImage: Image.asset('assets/images/user.png'),
                         isObscure: false,
                         onSaved: (value) => _email = value!,
                         labelText: '이메일',
@@ -118,11 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
                       buildFormField(
-                        prefixImage: Image.asset('assets/key.png'),
+                        prefixImage: Image.asset('assets/images/key.png'),
                         isObscure: true,
                         onSaved: (value) => _password = value!,
                         labelText: '비밀번호',
@@ -154,7 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01),
                       buildFormButton(
                         context: context,
                         backgroundColor: Theme.of(context).primaryColor,
@@ -194,14 +193,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Column(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            NextScreenButton(
+                            const NextScreenButton(
                               buttonColor: Colors.white,
                               textColor: Colors.black,
                               inButtonText: '회원가입',
@@ -211,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                top: 20,
+                                top: MediaQuery.of(context).size.height * 0.025,
                               ),
                               child: Row(
                                 mainAxisAlignment:
@@ -221,17 +220,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                     buttonColor: Colors.white,
                                     textColor: Colors.black,
                                     inButtonText: '아이디 찾기',
-                                    nextScreen: IdFindScreen(),
+                                    nextScreen: const IdFindScreen(),
                                     navigatorAction: 1,
-                                    buttonWidth: 140,
+                                    buttonWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.35,
                                   ),
                                   NextScreenButton(
                                     buttonColor: Colors.white,
                                     textColor: Colors.black,
                                     inButtonText: '비밀번호 찾기',
-                                    nextScreen: PwFindScreen(),
+                                    nextScreen: const PwFindScreen(),
                                     navigatorAction: 1,
-                                    buttonWidth: 140,
+                                    buttonWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.35,
                                   )
                                 ],
                               ),
