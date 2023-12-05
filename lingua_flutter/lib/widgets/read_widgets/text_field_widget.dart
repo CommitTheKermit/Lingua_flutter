@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 
@@ -39,7 +40,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       fit: FlexFit.tight,
       flex: widget.flexValue,
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: AppLingua.width,
         decoration: BoxDecoration(
           color: Color(widget.readOption.optBackgroundColor),
         ),
@@ -52,23 +53,23 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.04,
-                    top: MediaQuery.of(context).size.height * 0.01,
+                    left: AppLingua.width * 0.04,
+                    top: AppLingua.height * 0.01,
                   ),
                   child: commonText(
                     labelText: '원문',
-                    fontSize: MediaQuery.of(context).size.height * 0.02,
+                    fontSize: AppLingua.height * 0.02,
                     fontColor: const Color(0xFF868E96),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    right: MediaQuery.of(context).size.width * 0.04,
-                    top: MediaQuery.of(context).size.height * 0.01,
+                    right: AppLingua.width * 0.04,
+                    top: AppLingua.height * 0.01,
                   ),
                   child: commonText(
                       labelText: '${widget.currentIndex}/${widget.endIndex}',
-                      fontSize: MediaQuery.of(context).size.height * 0.02,
+                      fontSize: AppLingua.height * 0.02,
                       fontColor: const Color(0xFF1E4A75)),
                 ),
               ],
@@ -78,8 +79,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                 controller: _scrollController,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.01,
-                    horizontal: MediaQuery.of(context).size.width * 0.02,
+                    vertical: AppLingua.height * 0.01,
+                    horizontal: AppLingua.width * 0.02,
                   ),
                   child: Text(
                     widget.argText,

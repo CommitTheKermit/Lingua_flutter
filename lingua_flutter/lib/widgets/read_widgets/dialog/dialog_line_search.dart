@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/util/file_process.dart';
+import 'package:lingua/main.dart';
+import 'package:lingua/util/etc/file_process.dart';
 
 enum PageState {
   prev,
@@ -52,8 +53,8 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
       content: Stack(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 1.7,
+            width: AppLingua.width,
+            height: AppLingua.height / 1.7,
             decoration: BoxDecoration(
               border: Border.symmetric(
                 horizontal: BorderSide(
@@ -99,11 +100,11 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                   },
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.2,
+                  width: AppLingua.width / 1.2,
                   child: Column(
                     children: [
                       SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.2,
+                        width: AppLingua.width / 1.2,
                         child: TextField(
                           textAlign: TextAlign.center,
                           onChanged: (value) {

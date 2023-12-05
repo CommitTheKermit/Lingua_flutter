@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 import 'package:lingua/models/word_model.dart';
 import 'package:lingua/util/api/api_util.dart';
 import 'package:lingua/widgets/read_widgets/dictionary_result_widget.dart';
@@ -29,7 +30,7 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
     return AlertDialog(
       actions: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,24 +62,25 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
         child: Center(
           child: Text(
             widget.argText,
-            style: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w600,
+            style: TextStyle(
+              color: const Color(0xFF43698F),
+              fontSize: AppLingua.height * 0.035,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
       ),
       content: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           border: Border.symmetric(
             horizontal: BorderSide(
-              width: 2,
-              color: Theme.of(context).primaryColor,
+              width: 1,
+              color: Color(0xFFDEE2E6),
             ),
           ),
         ),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: AppLingua.width,
+        height: AppLingua.height,
         child: DictionaryResultWidget(
             wordMeans: wordMeans, scrollController: _scrollController),
       ),
@@ -90,8 +92,11 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
       child: Text(
         argText,
         style: TextStyle(
-          fontSize: 20,
-          color: Theme.of(context).primaryColor,
+          color: const Color(0xFF43698F),
+          fontSize: AppLingua.height * 0.0225,
+          fontWeight: FontWeight.w700,
+          fontFamily: 'Noto Sans KR',
+          height: 0,
         ),
       ),
       onPressed: () {

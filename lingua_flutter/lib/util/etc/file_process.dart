@@ -5,14 +5,15 @@ import 'package:file_picker/file_picker.dart';
 mixin FileProcess {
   static String titleNovel = "";
   static List<String> originalSentences = [];
+  static String stringContents = "";
 
   Future<String?> fileRead(String path) async {
     try {
       final file = File(path);
       // final pathFrags = file.path.split('/');
       // titleNovel = pathFrags[pathFrags.length - 1].split('.')[0];
-      String contents = await file.readAsString();
-      return contents;
+      FileProcess.stringContents = await file.readAsString();
+      return FileProcess.stringContents;
     } catch (e) {
       // print("Error reading file: $e");
       return null;

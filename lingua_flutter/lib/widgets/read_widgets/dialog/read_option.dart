@@ -12,13 +12,13 @@
 //         content: Column(
 //           children: [
 //             Container(
-//               width: MediaQuery.of(context).size.width,
+//               width: AppLingua.width,
 //               height: 100,
 //               decoration: const BoxDecoration(color: Colors.green),
 //             ),
 //             SizedBox(
 //               height: 400,
-//               width: MediaQuery.of(context).size.width,
+//               width: AppLingua.width,
 //               child: const DefaultTabController(
 //                 length: 3,
 //                 child: Column(

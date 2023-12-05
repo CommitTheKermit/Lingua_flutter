@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/util/file_process.dart';
+import 'package:lingua/main.dart';
+import 'package:lingua/util/etc/file_process.dart';
 
 enum PageState {
   prev,
@@ -138,8 +139,8 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
             ),
           ),
         ),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: AppLingua.width,
+        height: AppLingua.height,
         child: SingleChildScrollView(
           controller: _scrollController,
           child: Column(
@@ -157,7 +158,7 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
                             const TextStyle(color: Colors.grey, fontSize: 19),
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width - 70,
+                        width: AppLingua.width - 70,
                         child: Text(
                           argTextList[i],
                           style: const TextStyle(fontSize: 25),

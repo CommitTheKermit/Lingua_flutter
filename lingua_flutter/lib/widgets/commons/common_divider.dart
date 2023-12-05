@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 
-Container commonDivider (BuildContext context) {
+Container commonDivider(BuildContext context) {
   return Container(
-    width: MediaQuery.of(context).size.width,
+    width: AppLingua.width,
     height: 8,
     decoration: const ShapeDecoration(
       color: Color(0xFFF4F4F4),

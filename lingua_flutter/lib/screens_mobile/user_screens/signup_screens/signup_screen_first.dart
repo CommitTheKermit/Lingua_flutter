@@ -1,17 +1,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
+import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/signup_screens/signup_screen_second.dart';
 import 'package:lingua/util/api/api_user.dart';
+import 'package:lingua/util/etc/validators.dart';
+import 'package:lingua/widgets/commons/common_appbar.dart';
+import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
 
-import '../../../widgets/user_widgets/consent_dialog.dart';
+import '../../../widgets/read_widgets/dialog/consent_dialog.dart';
 import '../../../widgets/user_widgets/next_join_button.dart';
-
-class StringConstants {
-  static const String email = '이메일';
-  static const String emailCode = '인증번호';
-}
 
 class SignUpScreenFirst extends StatefulWidget {
   const SignUpScreenFirst({super.key});
@@ -27,68 +28,87 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
   bool isSent = false;
   bool isFormComplete = false;
   bool isLoading = false;
+  bool isEmailSent = false;
 
   String _email = '';
+  final String _password = '';
+  String _passwordCheck = '';
+  String _phoneNo = '';
+
+  final _domains = [
+    'naver.com',
+    'gmail.com',
+    'daum.net',
+    'nate.com',
+    'hanmail.net',
+    '직접입력',
+  ];
+  String _selectedDomain = '';
+
+  bool _isShowTextField = false;
+  bool isShowEmail = false;
+  bool isValidEmail = false;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _selectedDomain = _domains[0];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        shadowColor: Colors.white,
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            size: 35,
-            color: Colors.grey.shade600,
-          ),
-        ),
-      ),
+      resizeToAvoidBottomInset: false,
+      appBar: commonAppBar(context: context, argText: '회원가입'),
       body: Stack(
         children: [
           Form(
             key: _formKey,
             child: Column(
-              children: <Widget>[
-                _buildFormField(
-                  onSaved: (value) => _email = value!,
-                  labelText: StringConstants.email,
+              children: [
+                SizedBox(height: AppLingua.height * 0.015),
+                emailField(
+                  argText: '이메일 인증',
+                ),
+                emailCode(),
+                labeledFormField(
+                    onSaved: (value) => _email = value!,
+                    argText: '비밀번호',
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return '비밀번호를 입력해주세요.';
+                      }
+                      if (value.length < 10) {
+                        return '비밀번호는 10자 이상이어야 합니다.';
+                      }
+                      UserModel.password = value;
+                      return null;
+                    }),
+                labeledFormField(
+                  onSaved: (value) => _passwordCheck = value!,
+                  argText: '비밀번호 확인',
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return '이메일을 입력해주세요.';
-                    }
-                    if (!_isValidEmail(value)) {
-                      return '올바른 이메일 형식을 입력해주세요.';
+                    if (value != UserModel.password) {
+                      return '비밀번호가 동일하지 않습니다.';
                     }
                     return null;
                   },
                 ),
-                buildFormButton(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  onPressed: _emailSubmit,
-                  argText: '이메일 인증',
-                ),
-                const SizedBox(height: 20.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 26.0, vertical: 10),
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      labelText: StringConstants.emailCode,
-                      border: OutlineInputBorder(),
-                    ),
-                    controller: textEditingController,
-                  ),
-                ),
-                buildFormButton(
-                  backgroundColor:
-                      isVerifeid ? Theme.of(context).primaryColor : Colors.grey,
-                  onPressed: isVerifeid ? _codeSubmit : () {},
-                  argText: '인증번호 확인',
+                labeledFormField(
+                  onSaved: (value) => _phoneNo = value!,
+                  argText: '휴대폰 번호',
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return '전화번호를 입력해주세요.';
+                    }
+                    if (!Validators.isValidPhoneNumber(value)) {
+                      return '올바른 전화번호 형식을 입력해주세요.';
+                    }
+                    UserModel.phoneNo = value;
+                    return null;
+                  },
                 ),
                 Expanded(
                   child: Align(
@@ -96,7 +116,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                     child: NextJoinButton(
                       isSent: isSent,
                       inButtonText: '다음',
-                      nextScreen: const SignUpScreenSecond(),
+                      nextScreen: const LoginScreen(),
                     ),
                   ),
                 ),
@@ -186,55 +206,382 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
     });
   }
 
-  bool _isValidEmail(String email) {
-    final RegExp regex =
-        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
-    return regex.hasMatch(email);
-  }
-
-  Widget _buildFormField({
-    required FormFieldSetter<String> onSaved,
-    required String labelText,
-    required FormFieldValidator<String> validator,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 10),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: labelText,
-          border: const OutlineInputBorder(),
-        ),
-        onSaved: onSaved,
-        validator: validator,
-      ),
-    );
-  }
-
   Widget buildFormButton({
     required Color backgroundColor,
     required void Function() onPressed,
     required String argText,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 2),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-        ),
-        onPressed: onPressed,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 50,
-          child: Center(
-            child: Text(
-              argText,
-              style: const TextStyle(
-                fontSize: 20,
-                fontFamily: 'Neo',
-              ),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+      ),
+      onPressed: onPressed,
+      child: SizedBox(
+        width: AppLingua.width * 0.9,
+        height: AppLingua.height * 0.0625,
+        child: Center(
+          child: Text(
+            argText,
+            style: const TextStyle(
+              fontSize: 20,
+              fontFamily: 'Neo',
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget emailCode() {
+    return Padding(
+      padding: EdgeInsets.only(
+          top: AppLingua.height * 0.01, bottom: AppLingua.height * 0.015),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: AppLingua.width * 0.9,
+            height: AppLingua.height * 0.06,
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: AppLingua.width * 0.53,
+                  height: AppLingua.height * 0.06,
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF8F9FA),
+                    shape: RoundedRectangleBorder(
+                      side:
+                          const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppLingua.height * 0.011),
+                    child: TextFormField(
+                      style: TextStyle(
+                        color: const Color(0xFF868E96),
+                        fontSize: AppLingua.height * 0.02,
+                      ),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: AppLingua.width * 0.02,
+                ),
+                !isEmailSent
+                    ? GestureDetector(
+                        onTap: () {
+                          _emailSubmit();
+                          isEmailSent = true;
+                        },
+                        child: Container(
+                          width: AppLingua.width * 0.35,
+                          height: AppLingua.height * 0.06,
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFF43698F),
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  width: 1, color: Color(0xFFDEE2E6)),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '인증메일발송',
+                              style: TextStyle(
+                                  color: const Color(0xFFF8F9FA),
+                                  fontSize: AppLingua.height * 0.022,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          _codeSubmit();
+                        },
+                        child: Container(
+                          width: AppLingua.width * 0.35,
+                          height: AppLingua.height * 0.06,
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFF43698F),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '인증확인',
+                              style: TextStyle(
+                                  color: const Color(0xFFF8F9FA),
+                                  fontSize: AppLingua.height * 0.022,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget emailField({
+    required String argText,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(top: AppLingua.height * 0.015),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: AppLingua.height * 0.01,
+            ),
+            child: Text(
+              argText,
+              style: TextStyle(
+                color: const Color(0xFF868E96),
+                fontSize: AppLingua.height * 0.02,
+                fontFamily: 'Noto Sans KR',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          Container(
+            width: AppLingua.width * 0.9,
+            height: AppLingua.height * 0.06,
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
+            child: !_isShowTextField
+                ? Row(
+                    children: [
+                      Container(
+                        width: AppLingua.width * 0.4,
+                        decoration: ShapeDecoration(
+                          color: const Color(0xFFF8F9FA),
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                width: 1, color: Color(0xFFDEE2E6)),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: TextFormField(
+                          onSaved: (value) =>
+                              _email = '${value!}@$_selectedDomain',
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              isValidEmail = false;
+                              return null;
+                            }
+                            if (!Validators.isValidEmail(
+                                '$value@$_selectedDomain')) {
+                              isValidEmail = false;
+                              return null;
+                            }
+                            isValidEmail = true;
+                            return null;
+                          },
+                          onChanged: (p0) {
+                            setState(() {
+                              _formKey.currentState!.validate();
+                              _formKey.currentState!.save();
+                            });
+                          },
+                          onTap: () {
+                            setState(() {
+                              isShowEmail = true;
+                            });
+                          },
+                          style: TextStyle(
+                            color: const Color(0xFF868E96),
+                            fontSize: AppLingua.height * 0.02,
+                          ),
+                          decoration: const InputDecoration(
+                            filled: true,
+                            fillColor: Colors.transparent,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: AppLingua.width * 0.1,
+                        child: Center(
+                          child: Text(
+                            '@',
+                            style: TextStyle(
+                              color: const Color(0xFF868E96),
+                              fontSize: AppLingua.height * 0.02,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: AppLingua.width * 0.4,
+                        decoration: ShapeDecoration(
+                          color: const Color(0xFFF8F9FA),
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                width: 1, color: Color(0xFFDEE2E6)),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: DropdownButton(
+                          underline: const SizedBox.shrink(),
+                          isExpanded: true,
+                          icon: Image.asset(
+                            'assets/images/dropbox_down.png',
+                            height: AppLingua.height * 0.02,
+                          ),
+                          value: _selectedDomain,
+                          items: _domains
+                              .map((e) => DropdownMenuItem(
+                                    value: e, // 선택 시 onChanged 를 통해 반환할 value
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        left: AppLingua.width * 0.02,
+                                      ),
+                                      child: Text(
+                                        e,
+                                        style: TextStyle(
+                                          color: const Color(0xFF868E96),
+                                          fontSize: AppLingua.height * 0.02,
+                                        ),
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            // items 의 DropdownMenuItem 의 value 반환
+                            setState(() {
+                              _selectedDomain = value!;
+                              if (_selectedDomain == '직접입력') {
+                                _isShowTextField = true;
+                                _email = '';
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                : Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Row(
+                          children: [
+                            Container(
+                              width: AppLingua.width * 0.9,
+                              decoration: ShapeDecoration(
+                                color: const Color(0xFFF8F9FA),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      width: 1, color: Color(0xFFDEE2E6)),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: TextFormField(
+                                onSaved: (value) => _email = value!,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    isValidEmail = false;
+                                    return null;
+                                  }
+                                  if (!Validators.isValidEmail(value)) {
+                                    isValidEmail = false;
+                                    return null;
+                                  }
+                                  isValidEmail = true;
+                                  return null;
+                                },
+                                onChanged: (p0) {
+                                  setState(() {
+                                    _formKey.currentState!.validate();
+                                  });
+                                },
+                                style: TextStyle(
+                                  color: const Color(0xFF868E96),
+                                  fontSize: AppLingua.height * 0.02,
+                                ),
+                                decoration: InputDecoration(
+                                  fillColor: Colors.transparent,
+                                  hintText: '이메일',
+                                  hintStyle: TextStyle(
+                                    color: const Color(0xFF868E96),
+                                    fontSize: AppLingua.height * 0.02,
+                                    fontWeight: FontWeight.w400,
+                                    height: 0.5,
+                                  ),
+                                  border: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned.fill(
+                        left: AppLingua.width * 0.5,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: AppLingua.width * 0.333,
+                            child: DropdownButton(
+                              underline: const SizedBox.shrink(),
+                              isExpanded: true,
+                              icon: Image.asset(
+                                'assets/images/dropbox_down.png',
+                                height: AppLingua.height * 0.02,
+                              ),
+                              value: !_isShowTextField ? _selectedDomain : null,
+                              items: _domains
+                                  .map((e) => DropdownMenuItem(
+                                        value:
+                                            e, // 선택 시 onChanged 를 통해 반환할 value
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: AppLingua.width * 0.02,
+                                          ),
+                                          child: Text(
+                                            e,
+                                            style: TextStyle(
+                                              color: const Color(0xFF868E96),
+                                              fontSize: AppLingua.height * 0.02,
+                                            ),
+                                          ),
+                                        ),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                // items 의 DropdownMenuItem 의 value 반환
+                                setState(() {
+                                  _selectedDomain = value!;
+                                  if (_selectedDomain != '직접입력') {
+                                    _isShowTextField = false;
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
       ),
     );
   }

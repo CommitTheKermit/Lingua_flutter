@@ -12,7 +12,6 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
   ]);
 
   runApp(const AppLingua());
@@ -22,25 +21,21 @@ class AppLingua extends StatelessWidget {
   const AppLingua({super.key});
 
   static int requestQuota = 0;
+  static Size size = const Size(0, 0);
+  static double width = 0;
+  static double height = 0;
 
   @override
   Widget build(BuildContext context) {
+    AppLingua.size = MediaQuery.of(context).size;
+    AppLingua.width = MediaQuery.of(context).size.width;
+    AppLingua.height = MediaQuery.of(context).size.height;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Noto Sans',
-        primaryColor: const Color(0xFF8FC1E4),
-        cardColor: const Color(0xFFF49349),
-        colorScheme: ColorScheme.fromSwatch(
-          backgroundColor: const Color(0xFFF49349),
-        ),
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            color: Colors.black,
-          ),
-        ),
+        fontFamily: 'Noto Sans KR',
       ),
-      home: const LoginScreen(),
+      home: const ReadScreen(),
     );
   }
 }

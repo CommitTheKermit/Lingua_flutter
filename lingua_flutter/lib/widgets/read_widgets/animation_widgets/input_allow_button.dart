@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/util/api/api_util.dart';
+import 'package:lingua/util/shared_preferences/preference_manager.dart';
 
 class InputAllowButton extends StatefulWidget {
   final ApiUtil apiUtil;
@@ -21,31 +22,31 @@ class InputAllowButton extends StatefulWidget {
 
 class _InputAllowButtonState extends State<InputAllowButton>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<Color?> _colorAnimation;
+  // late AnimationController _controller;
+  // late Animation<Color?> _colorAnimation;
   bool isPressed = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        milliseconds: 200,
-      ),
-    )..addListener(() {
-        setState(() {}); // 화면을 다시 그립니다.
-      });
+    // _controller = AnimationController(
+    //   vsync: this,
+    //   duration: const Duration(
+    //     milliseconds: 200,
+    //   ),
+    // )..addListener(() {
+    //     setState(() {}); // 화면을 다시 그립니다.
+    //   });
 
-    _colorAnimation = ColorTween(
-      begin: const Color(0xFF44698F),
-      end: const Color(0xFF868e96),
-    ).animate(_controller);
+    // _colorAnimation = ColorTween(
+    //   begin: const Color(0xFF44698F),
+    //   end: const Color(0xFF868e96),
+    // ).animate(_controller);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    // _controller.dispose();
     super.dispose();
   }
 
@@ -55,17 +56,19 @@ class _InputAllowButtonState extends State<InputAllowButton>
       iconSize: 20,
       onPressed: () {
         setState(() {
+          // ReadScreen.isAllowInput ? _controller.reverse() : _controller.forward();
           ReadScreen.isAllowInput = !ReadScreen.isAllowInput;
-          ReadScreen.isAllowInput
-              ? _controller.reverse()
-              : _controller.forward();
-        }); // 화면을 다시 그립니다.
+          PreferenceManager.saveBoolValue(
+              'isAllowInput', ReadScreen.isAllowInput);
+        });
         widget.onPressedCallback();
       },
       icon: Image.asset(
         widget.assetName,
         height: widget.iconSize,
-        color: _colorAnimation.value,
+        color: ReadScreen.isAllowInput
+            ? const Color(0xFF44698F)
+            : const Color(0xFF868e96),
       ),
       color: Colors.white,
     );

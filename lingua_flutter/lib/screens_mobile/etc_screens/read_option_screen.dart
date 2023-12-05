@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:lingua/main.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/widgets/commons/common_divider.dart';
@@ -164,7 +165,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           centerTitle: true,
           title: GFSegmentTabs(
             height: 40,
-            width: MediaQuery.of(context).size.width / 1.8,
+            width: AppLingua.width / 1.8,
             tabController: tabController,
             tabBarColor: GFColors.WHITE,
             labelColor: GFColors.WHITE,
@@ -238,8 +239,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           children: [
             commonDivider(context),
             Container(
-              height: MediaQuery.of(context).size.height * 0.2,
-              width: MediaQuery.of(context).size.width,
+              height: AppLingua.height * 0.2,
+              width: AppLingua.width,
               decoration: BoxDecoration(
                 color: Color(readOption.optBackgroundColor),
               ),
@@ -258,7 +259,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             commonDivider(context),
             optionSingleContainer(
               context: context,
-              containerHeight: MediaQuery.of(context).size.height * 0.23,
+              containerHeight: AppLingua.height * 0.23,
               lines: [
                 optionUpDown(
                   labelText: '글자 크기',
@@ -301,7 +302,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             commonDivider(context),
             optionSingleContainer(
               context: context,
-              containerHeight: MediaQuery.of(context).size.height * 0.27,
+              containerHeight: AppLingua.height * 0.27,
               lines: [
                 optionFontSelect(
                   labelText: '폰트 선택',
@@ -336,8 +337,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                         await botOption.saveOption(key: 'botOption');
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.18,
-                        height: MediaQuery.of(context).size.height * 0.045,
+                        width: AppLingua.width * 0.18,
+                        height: AppLingua.height * 0.045,
                         decoration: ShapeDecoration(
                           shape: RoundedRectangleBorder(
                             side: BorderSide(
@@ -353,8 +354,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
-                              fontSize:
-                                  MediaQuery.of(context).size.height * 0.018,
+                              fontSize: AppLingua.height * 0.018,
                               height: 0,
                             ),
                           ),
@@ -379,7 +379,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
     MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
   }) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: AppLingua.width,
       height: containerHeight,
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -425,7 +425,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: Center(
               child: commonText(
                 labelText: labelText,
-                fontSize: MediaQuery.of(context).size.height * 0.024,
+                fontSize: AppLingua.height * 0.024,
               ),
             ),
           ),
@@ -443,15 +443,15 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                   child: Text(
                     argText,
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.023,
+                      fontSize: AppLingua.height * 0.023,
                     ),
                   ),
                 ),
                 InkWell(
                   onTap: upButtonVaild ? upButtonTap : () {},
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.053,
-                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: AppLingua.height * 0.053,
+                    width: AppLingua.width * 0.2,
                     decoration: BoxDecoration(
                       color: upButtonVaild
                           ? Theme.of(context).primaryColor
@@ -469,8 +469,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                 InkWell(
                   onTap: downButtonValid ? downButtonTap : () {},
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.053,
-                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: AppLingua.height * 0.053,
+                    width: AppLingua.width * 0.2,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Theme.of(context).primaryColor,
@@ -528,13 +528,13 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: Row(
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
+                  width: AppLingua.width * 0.45,
                   child: DropdownButton(
                     underline: const SizedBox.shrink(),
                     isExpanded: true,
                     icon: Icon(
                       Icons.keyboard_arrow_down,
-                      size: MediaQuery.of(context).size.height * 0.04,
+                      size: AppLingua.height * 0.04,
                     ),
                     value: readOption.optFontFamily,
                     items: _fonts
@@ -543,8 +543,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                               child: Text(
                                 e,
                                 style: TextStyle(
-                                  fontSize: MediaQuery.of(context).size.height *
-                                      0.021,
+                                  fontSize: AppLingua.height * 0.021,
                                   fontFamily: _fonts[_fonts.indexOf(e)],
                                 ),
                               ),
@@ -613,9 +612,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                               });
                             },
                             child: Container(
-                              width: MediaQuery.of(context).size.width * 0.13,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.036,
+                              width: AppLingua.width * 0.13,
+                              height: AppLingua.height * 0.036,
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 0.5,
@@ -680,8 +678,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                             });
                           },
                           child: Container(
-                            width: MediaQuery.of(context).size.width * 0.13,
-                            height: MediaQuery.of(context).size.height * 0.036,
+                            width: AppLingua.width * 0.13,
+                            height: AppLingua.height * 0.036,
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 0.5,

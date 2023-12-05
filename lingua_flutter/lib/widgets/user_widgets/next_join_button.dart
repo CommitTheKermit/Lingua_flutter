@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
+import 'package:lingua/widgets/commons/common_text.dart';
 
 class NextJoinButton extends StatelessWidget {
   const NextJoinButton({
@@ -38,20 +40,25 @@ class NextJoinButton extends StatelessWidget {
               );
             }
           : () {},
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 60,
-        decoration: BoxDecoration(
-          color: isSent ? Theme.of(context).primaryColor : Colors.grey,
-        ),
-        child: Center(
-            child: Text(
-          inButtonText,
-          style: const TextStyle(
-            fontSize: 20,
-            fontFamily: 'Neo',
+      child: Padding(
+        padding: EdgeInsets.only(bottom: AppLingua.height * 0.03),
+        child: Container(
+          width: AppLingua.width * 0.9,
+          height: AppLingua.height * 0.0625,
+          decoration: ShapeDecoration(
+            color: const Color(0xFF1E4A75),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           ),
-        )),
+          child: Center(
+            child: commonText(
+              labelText: inButtonText,
+              fontSize: AppLingua.height * 0.0225,
+              fontWeight: FontWeight.w700,
+              fontColor: const Color(0xFFF8F9FA),
+            ),
+          ),
+        ),
       ),
     );
   }

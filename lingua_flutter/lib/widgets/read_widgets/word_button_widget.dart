@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_word_widget.dart';
 
@@ -29,7 +30,7 @@ class WordButtonWidget extends StatelessWidget {
             );
           },
           child: Container(
-            height: MediaQuery.of(context).size.height * 0.05,
+            height: AppLingua.height * 0.05,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             clipBehavior: Clip.antiAlias,
             decoration: ShapeDecoration(
@@ -41,7 +42,7 @@ class WordButtonWidget extends StatelessWidget {
               child: commonText(
                 labelText: inButtonText,
                 fontColor: const Color(0xFFF8F9FA),
-                fontSize: MediaQuery.of(context).size.height * 0.02,
+                fontSize: AppLingua.height * 0.02,
               ),
             ),
           )),

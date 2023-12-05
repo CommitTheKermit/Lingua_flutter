@@ -1,8 +1,12 @@
 // ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/util/api/api_user.dart';
+import 'package:lingua/widgets/commons/common_appbar.dart';
+import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
+import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
 
 import '../../../widgets/user_widgets/from_field.dart';
 import '../login_screen.dart';
@@ -41,21 +45,7 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        shadowColor: Colors.white,
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            size: 35,
-            color: Colors.grey.shade600,
-          ),
-        ),
-      ),
+      appBar: commonAppBar(context: context, argText: ''),
       body: Stack(
         children: [
           const Padding(
@@ -75,10 +65,9 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-                buildFormField(
-                  isObscure: true,
+                labeledFormField(
                   onSaved: (value) => _password = value!,
-                  labelText: StringConstants.password,
+                  argText: StringConstants.password,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return '비밀번호를 입력해주세요.';
@@ -91,10 +80,9 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                     return null;
                   },
                 ),
-                buildFormField(
-                  isObscure: true,
+                labeledFormField(
                   onSaved: (value) => _passwordCheck = value!,
-                  labelText: StringConstants.passwordCheck,
+                  argText: StringConstants.passwordCheck,
                   validator: (value) {
                     if (value != UserModel.password) {
                       return '비밀번호가 동일하지 않습니다.';
@@ -139,26 +127,13 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                           ),
                         );
 
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('성공'),
-                              content: const Text('비밀번호 변경 완료, 로그인하여 진행하세요.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('확인'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // 알림 창을 닫습니다.
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                        consentDialog(
+                            title: '성공',
+                            content: '비밀번호 변경 완료, 로그인하여 진행하세요.',
+                            context: context);
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width,
+                        width: AppLingua.width,
                         height: 60,
                         decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,

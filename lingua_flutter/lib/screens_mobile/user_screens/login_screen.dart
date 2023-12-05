@@ -1,16 +1,19 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/id_pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/signup_screens/signup_screen_first.dart';
 import 'package:lingua/util/api/api_user.dart';
-import 'package:lingua/util/change_screen.dart';
+import 'package:lingua/util/etc/change_screen.dart';
 
-import 'package:lingua/util/exit_confirm.dart';
+import 'package:lingua/util/etc/exit_confirm.dart';
 import 'package:lingua/util/shared_preferences/preference_manager.dart';
-import 'package:lingua/widgets/user_widgets/consent_dialog.dart';
+import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
 
 import '../../widgets/user_widgets/form_button.dart';
 import '../../widgets/user_widgets/from_field.dart';
@@ -72,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log("width ${MediaQuery.of(context).size.width.toString()}");
-    log("height ${MediaQuery.of(context).size.height.toString()}");
+    log("width ${AppLingua.width.toString()}");
+    log("height ${AppLingua.height.toString()}");
     return FutureBuilder(
       future: futureOption,
       builder: (context, snapshot) {
@@ -88,75 +91,133 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: EdgeInsets.only(
                   left: 10,
                   right: 10,
-                  top: MediaQuery.of(context).size.height * 0.25,
+                  top: AppLingua.height * 0.165,
                 ),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
-                      const Text(
-                        'LINGUA',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                          color: Color(LoginScreen.orangeColor),
-                        ),
+                      commonText(
+                        labelText: 'lingua',
+                        fontSize: AppLingua.height * 0.0425,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      SizedBox(
+                        height: AppLingua.height * 0.1375,
                       ),
                       buildFormField(
                         controller: controller,
-                        prefixImage: Image.asset('assets/images/user.png'),
                         isObscure: false,
                         onSaved: (value) => _email = value!,
                         labelText: '이메일',
                         validator: (value) {
-                          if (value!.isEmpty) {
-                            return '이메일을 입력해주세요.';
+                          // if (value!.isEmpty) {
+                          //   return '이메일을 입력해주세요.';
+                          // }
+                          // if (!_isValidEmail(value)) {
+                          //   return '올바른 이메일 형식을 입력해주세요.';
+                          // }
+                          if (value != null && value.isNotEmpty) {
+                            UserModel.email = value.toLowerCase();
+                            return null;
                           }
-                          if (!_isValidEmail(value)) {
-                            return '올바른 이메일 형식을 입력해주세요.';
-                          }
-                          UserModel.email = value.toLowerCase();
                           return null;
                         },
                       ),
+                      SizedBox(
+                        height: AppLingua.height * 0.01,
+                      ),
                       buildFormField(
-                        prefixImage: Image.asset('assets/images/key.png'),
                         isObscure: true,
                         onSaved: (value) => _password = value!,
                         labelText: '비밀번호',
                         validator: (value) {
-                          if (value!.isEmpty) {
-                            return '비밀번호를 입력해주세요.';
-                          }
-                          if (value.length < 10) {
-                            return '비밀번호는 10자 이상이어야 합니다.';
-                          }
+                          // if (value!.isEmpty) {
+                          //   return '비밀번호를 입력해주세요.';
+                          // }
+                          // if (value.length < 10) {
+                          //   return '비밀번호는 10자 이상이어야 합니다.';
+                          // }
                           // 기타 다른 검증 로직들 (예: _isValidEmail 함수)이 있다면, 그 아래에 추가
-                          UserModel.password = value;
+                          if (value != null && value.isNotEmpty) {
+                            UserModel.password = value;
+                            return null;
+                          }
                           return null;
                         },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              value: isEmailRecord,
-                              onChanged: (value) {
-                                setState(() {
-                                  isEmailRecord = value!;
-                                });
-                              },
-                            ),
-                            const Text('이메일 기억하기'),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Checkbox(
+                                side: const BorderSide(
+                                    width: 1, color: Color(0xFF43698F)),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      width: 1, color: Color(0xFF43698F)),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                activeColor: const Color(0xFF44698F),
+                                checkColor: Colors.white,
+                                value: isEmailRecord,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isEmailRecord = value!;
+                                  });
+                                },
+                              ),
+                              commonText(
+                                labelText: '이메일 저장',
+                                fontColor: const Color(0xFF868E96),
+                                fontSize: AppLingua.height * 0.0175,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  changeScreen(
+                                      context: context,
+                                      nextScreen: const IDPWFindScreen(),
+                                      isReplace: false);
+                                },
+                                child: commonText(
+                                  labelText: '아이디',
+                                  fontColor: const Color(0xFF868E96),
+                                  fontSize: AppLingua.height * 0.0175,
+                                ),
+                              ),
+                              SizedBox(
+                                height: AppLingua.height * 0.01375,
+                                child: VerticalDivider(
+                                  thickness: 2,
+                                  width: AppLingua.width * 0.04,
+                                  color: const Color(0xFF868E96),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  changeScreen(
+                                      context: context,
+                                      nextScreen: const PwFindScreen(),
+                                      isReplace: false);
+                                },
+                                child: commonText(
+                                  labelText: '비밀번호 찾기',
+                                  fontColor: const Color(0xFF868E96),
+                                  fontSize: AppLingua.height * 0.0175,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
                       ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01),
+                      SizedBox(height: AppLingua.height * 0.05),
                       buildFormButton(
-                        context: context,
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: const Color(0xFF1E4A75),
                         argText: '로그인',
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -165,8 +226,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           } else {
                             return;
                           }
-                          bool condition = await ApiUser.login();
-
+                          // bool condition = await ApiUser.login();
+                          bool condition = false;
                           if (condition && mounted) {
                             if (isEmailRecord && recordedEmail!.isEmpty) {
                               PreferenceManager.saveBoolValue(
@@ -187,60 +248,33 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                             consentDialog(
                               title: '실패',
-                              content: '아이디와 비밀번호를 다시 확인해보세요',
+                              content: '입력 정보를 다시 확인해보세요.',
                               context: context,
                             );
                           }
                         },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const NextScreenButton(
-                              buttonColor: Colors.white,
-                              textColor: Colors.black,
-                              inButtonText: '회원가입',
-                              nextScreen: SignUpScreenFirst(),
-                              navigatorAction: 1,
-                              buttonWidth: null,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.025,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  NextScreenButton(
-                                    buttonColor: Colors.white,
-                                    textColor: Colors.black,
-                                    inButtonText: '아이디 찾기',
-                                    nextScreen: const IdFindScreen(),
-                                    navigatorAction: 1,
-                                    buttonWidth:
-                                        MediaQuery.of(context).size.width *
-                                            0.35,
-                                  ),
-                                  NextScreenButton(
-                                    buttonColor: Colors.white,
-                                    textColor: Colors.black,
-                                    inButtonText: '비밀번호 찾기',
-                                    nextScreen: const PwFindScreen(),
-                                    navigatorAction: 1,
-                                    buttonWidth:
-                                        MediaQuery.of(context).size.width *
-                                            0.35,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                      SizedBox(
+                        height: AppLingua.height * 0.06,
+                      ),
+                      commonText(
+                          labelText: '아직 링구아 회원이 아니신가요?',
+                          fontColor: const Color(0xFF868E96),
+                          fontSize: AppLingua.height * 0.0175),
+                      SizedBox(
+                        height: AppLingua.height * 0.01375,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          changeScreen(
+                              context: context,
+                              nextScreen: const SignUpScreenFirst(),
+                              isReplace: false);
+                        },
+                        child: commonText(
+                            labelText: '회원가입',
+                            fontColor: const Color(0xFF1E4A75),
+                            fontSize: AppLingua.height * 0.0175),
                       ),
                     ],
                   ),
@@ -253,11 +287,5 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
     );
-  }
-
-  bool _isValidEmail(String email) {
-    final RegExp regex =
-        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
-    return regex.hasMatch(email);
   }
 }

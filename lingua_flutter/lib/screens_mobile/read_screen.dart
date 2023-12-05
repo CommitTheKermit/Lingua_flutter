@@ -10,14 +10,16 @@ import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 import 'package:lingua/util/api/api_user.dart';
 
 import 'package:lingua/util/api/api_util.dart';
-import 'package:lingua/util/change_screen.dart';
-import 'package:lingua/util/exit_confirm.dart';
-import 'package:lingua/util/file_process.dart';
-import 'package:lingua/util/save_index.dart';
-import 'package:lingua/util/sentence_process.dart';
+import 'package:lingua/util/etc/change_screen.dart';
+import 'package:lingua/util/etc/exit_confirm.dart';
+import 'package:lingua/util/etc/file_process.dart';
+import 'package:lingua/util/shared_preferences/save_index.dart';
+import 'package:lingua/util/string_process/sentence_process.dart';
+import 'package:lingua/util/shared_preferences/preference_manager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/widgets/read_widgets/animation_widgets/input_allow_button.dart';
 import 'package:lingua/widgets/read_widgets/animation_widgets/translate_allow_button.dart';
+import 'package:lingua/widgets/read_widgets/dialog/dialog_context_widget.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_line_search.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_word_search.dart';
 import 'package:lingua/widgets/read_widgets/read_drawer.dart';
@@ -48,6 +50,8 @@ class _ReadScreenState extends State<ReadScreen>
         SentenceProcess,
         WidgetsBindingObserver,
         SingleTickerProviderStateMixin {
+  bool STOP_REFRESH = true;
+
   String originalSingleSentence = '';
   String translatedSentence = '';
   late int index;
@@ -84,6 +88,11 @@ class _ReadScreenState extends State<ReadScreen>
     await ReadScreen.topOption.loadOption(key: 'topOption');
     await ReadScreen.midOption.loadOption(key: 'midOption');
     await ReadScreen.botOption.loadOption(key: 'botOption');
+    ReadScreen.isAllowTranslate =
+        await PreferenceManager.getBoolValue('isAllowTranslate') ?? false;
+    ReadScreen.isAllowInput =
+        await PreferenceManager.getBoolValue('isAllowInput') ?? true;
+
     isInitalized = true;
     setState(() {});
 
@@ -140,9 +149,12 @@ class _ReadScreenState extends State<ReadScreen>
       case AppLifecycleState.paused:
         break;
       case AppLifecycleState.resumed:
-        ApiUser.periodicRefresh(email: UserModel.email).then((value) {
-          requestQuota.value = value;
-        });
+        if (!STOP_REFRESH) {
+          ApiUser.periodicRefresh(email: UserModel.email).then((value) {
+            requestQuota.value = value;
+          });
+        }
+
         break;
 
       default:
@@ -150,54 +162,51 @@ class _ReadScreenState extends State<ReadScreen>
   }
 
   void schedulePeriodicTask() {
-    // 현재 시간을 가져옵니다.
-    DateTime now = DateTime.now();
+    if (!STOP_REFRESH) {
+      DateTime now = DateTime.now();
+      DateTime nextRun = now.add(Duration(
+          seconds: refreshPeriodSecond -
+              now.second -
+              (now.minute % refreshPeriodMinute) * 60));
 
-    // 다음 2분 간격 시점을 계산합니다.
+      Duration initialDelay = nextRun.difference(now);
+      remainingTime.value = initialDelay.inSeconds;
 
-    DateTime nextRun = now.add(Duration(
-        seconds: refreshPeriodSecond -
-            now.second -
-            (now.minute % refreshPeriodMinute) * 60));
-
-    // 다음 실행까지 남은 시간을 계산합니다.
-    Duration initialDelay = nextRun.difference(now);
-    remainingTime.value = initialDelay.inSeconds;
-
-    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-      setState(() {
-        if (remainingTime.value > 0) {
-          remainingTime.value--;
-        }
+      countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+        setState(() {
+          if (remainingTime.value > 0) {
+            remainingTime.value--;
+          }
+        });
       });
-    });
 
-    // 처음 실행을 지연시킨 후, 이후에는 매 2분마다 반복합니다.
-    Timer(initialDelay, () {
-      // 여기에 주기적으로 실행할 작업을 넣습니다.
-      ApiUser.periodicRefresh(email: UserModel.email).then((value) {
-        requestQuota.value = value;
-      });
-      remainingTime.value = refreshPeriodSecond;
-
-      // 이후 매 2분마다 작업을 반복합니다.
-      serverRequestTimer =
-          Timer.periodic(Duration(minutes: refreshPeriodMinute), (Timer t) {
+      Timer(initialDelay, () {
         ApiUser.periodicRefresh(email: UserModel.email).then((value) {
           requestQuota.value = value;
         });
         remainingTime.value = refreshPeriodSecond;
+
+        serverRequestTimer =
+            Timer.periodic(Duration(minutes: refreshPeriodMinute), (Timer t) {
+          ApiUser.periodicRefresh(email: UserModel.email).then((value) {
+            requestQuota.value = value;
+          });
+          remainingTime.value = refreshPeriodSecond;
+        });
       });
-    });
+    }
   }
 
   @override
   void initState() {
     super.initState();
     refreshPeriodSecond = refreshPeriodMinute * 60;
-    ApiUser.periodicRefresh(email: UserModel.email).then((value) {
-      requestQuota.value = value;
-    });
+    if (!STOP_REFRESH) {
+      ApiUser.periodicRefresh(email: UserModel.email).then((value) {
+        requestQuota.value = value;
+      });
+    }
+
     WidgetsBinding.instance.addObserver(this);
     index = 0;
     futureOption = initOption();
@@ -231,8 +240,7 @@ class _ReadScreenState extends State<ReadScreen>
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: PreferredSize(
-              preferredSize:
-                  Size.fromHeight(MediaQuery.of(context).size.height * 0.06),
+              preferredSize: Size.fromHeight(AppLingua.height * 0.06),
               child: readAppBar(context),
             ),
             drawer: readDrawer(context),
@@ -308,7 +316,7 @@ class _ReadScreenState extends State<ReadScreen>
                           fit: FlexFit.tight,
                           flex: inputFieldFlex,
                           child: Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: AppLingua.width,
                             decoration: BoxDecoration(
                               color: Color(
                                   ReadScreen.botOption.optBackgroundColor),
@@ -351,8 +359,8 @@ class _ReadScreenState extends State<ReadScreen>
                   Flexible(
                     flex: wordsScrollFlex,
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: AppLingua.width,
+                      height: AppLingua.height * 0.08,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
@@ -387,13 +395,13 @@ class _ReadScreenState extends State<ReadScreen>
                       controller: _scrollTimerController,
                       scrollDirection: Axis.horizontal,
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 2.1,
+                        width: AppLingua.width * 2.1,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              height: MediaQuery.of(context).size.height * 0.05,
+                              width: AppLingua.width * 0.8,
+                              height: AppLingua.height * 0.05,
                               decoration: const BoxDecoration(
                                 color: Colors.white,
                               ),
@@ -403,15 +411,12 @@ class _ReadScreenState extends State<ReadScreen>
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                      left: MediaQuery.of(context).size.width *
-                                          0.05,
+                                      left: AppLingua.width * 0.05,
                                     ),
                                     child: commonText(
                                       labelText: '번역 제한',
                                       fontColor: const Color(0xFF868E96),
-                                      fontSize:
-                                          MediaQuery.of(context).size.height *
-                                              0.02,
+                                      fontSize: AppLingua.height * 0.02,
                                     ),
                                   ),
                                   ValueListenableBuilder(
@@ -442,11 +447,11 @@ class _ReadScreenState extends State<ReadScreen>
                             VerticalDivider(
                               thickness: 0,
                               color: Colors.transparent,
-                              width: MediaQuery.of(context).size.width * 0,
+                              width: AppLingua.width * 0,
                             ),
                             Container(
-                              width: MediaQuery.of(context).size.width * 1.25,
-                              height: MediaQuery.of(context).size.height * 0.05,
+                              width: AppLingua.width * 1.25,
+                              height: AppLingua.height * 0.05,
                               decoration: const BoxDecoration(
                                 color: Colors.white,
                               ),
@@ -464,13 +469,10 @@ class _ReadScreenState extends State<ReadScreen>
 
                                       Future.delayed(const Duration(seconds: 3),
                                           () {
-                                        if (_scrollTimerController.offset >
-                                            452) {
-                                          _scrollTimerController.animateTo(0,
-                                              duration: const Duration(
-                                                  milliseconds: 700),
-                                              curve: Curves.easeInOut);
-                                        }
+                                        _scrollTimerController.animateTo(0,
+                                            duration: const Duration(
+                                                milliseconds: 700),
+                                            curve: Curves.easeInOut);
                                       });
                                     },
                                     child: Padding(
@@ -481,22 +483,17 @@ class _ReadScreenState extends State<ReadScreen>
                                               0.05),
                                       child: Image.asset(
                                         "assets/images/timer.png",
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.033,
+                                        height: AppLingua.height * 0.033,
                                       ),
                                     ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
-                                      left: MediaQuery.of(context).size.width *
-                                          0.12,
+                                      left: AppLingua.width * 0.12,
                                     ),
                                     child: Image.asset(
                                       "assets/images/timer_colored.png",
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.033,
+                                      height: AppLingua.height * 0.033,
                                     ),
                                   ),
                                   Expanded(
@@ -560,7 +557,7 @@ class _ReadScreenState extends State<ReadScreen>
                     flex: buttonsFlex,
                     child: Container(
                       height: double.infinity,
-                      width: MediaQuery.of(context).size.width,
+                      width: AppLingua.width,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
@@ -624,8 +621,8 @@ class _ReadScreenState extends State<ReadScreen>
   Divider commonDivider(BuildContext context) {
     return Divider(
       color: Colors.transparent,
-      thickness: MediaQuery.of(context).size.height * 0.005,
-      height: MediaQuery.of(context).size.height * 0.005,
+      thickness: AppLingua.height * 0.005,
+      height: AppLingua.height * 0.005,
     );
   }
 
@@ -633,6 +630,10 @@ class _ReadScreenState extends State<ReadScreen>
     return ReadDrawer(
       listTiles: [
         ListTile(
+          leading: Image.asset(
+            'assets/images/icon_file_read.png',
+            width: AppLingua.height * 0.03,
+          ),
           title: const Text(
             '파일 읽기',
             style: TextStyle(
@@ -648,6 +649,10 @@ class _ReadScreenState extends State<ReadScreen>
           },
         ),
         ListTile(
+          leading: Image.asset(
+            'assets/images/icon_read_mode.png',
+            width: AppLingua.height * 0.03,
+          ),
           title: const Text(
             '읽기 모드',
             style: TextStyle(
@@ -668,6 +673,10 @@ class _ReadScreenState extends State<ReadScreen>
                 },
         ),
         ListTile(
+          leading: Image.asset(
+            'assets/images/icon_read_setting.png',
+            width: AppLingua.height * 0.03,
+          ),
           title: const Text(
             '읽기 옵션',
             style: TextStyle(
@@ -701,6 +710,10 @@ class _ReadScreenState extends State<ReadScreen>
           },
         ),
         ListTile(
+          leading: Image.asset(
+            'assets/images/icon_line_change.png',
+            width: AppLingua.height * 0.03,
+          ),
           title: const Text(
             '줄 이동',
             style: TextStyle(
@@ -720,6 +733,10 @@ class _ReadScreenState extends State<ReadScreen>
                 },
         ),
         ListTile(
+          leading: Image.asset(
+            'assets/images/icon_wordbook.png',
+            width: AppLingua.height * 0.03,
+          ),
           title: const Text(
             '단어장',
             style: TextStyle(
@@ -755,7 +772,7 @@ class _ReadScreenState extends State<ReadScreen>
           return IconButton(
             icon: Image.asset(
               "assets/images/sort_button.png",
-              height: MediaQuery.of(context).size.height * 0.03,
+              height: AppLingua.height * 0.03,
             ),
             onPressed: () {
               Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
@@ -771,7 +788,7 @@ class _ReadScreenState extends State<ReadScreen>
             setState(() {});
           },
           assetName: "assets/images/edit_button.png",
-          iconSize: MediaQuery.of(context).size.height * 0.03,
+          iconSize: AppLingua.height * 0.03,
         ),
         TranslateAllowButton(
           apiUtil: apiUtil,
@@ -782,7 +799,7 @@ class _ReadScreenState extends State<ReadScreen>
             }
           },
           assetName: "assets/images/translate_button.png",
-          iconSize: MediaQuery.of(context).size.height * 0.03,
+          iconSize: AppLingua.height * 0.03,
         ),
         IconButton(
           iconSize: 20,
@@ -797,23 +814,23 @@ class _ReadScreenState extends State<ReadScreen>
           },
           icon: Image.asset(
             "assets/images/search_button.png",
-            height: MediaQuery.of(context).size.height * 0.03,
+            height: AppLingua.height * 0.03,
           ),
         ),
-        // IconButton(
-        //   iconSize: 30,
-        //   onPressed: () {
-        //     showDialog(
-        //       context: context,
-        //       barrierDismissible: true,
-        //       builder: (context) {
-        //         return DialogContextWidget(index: index);
-        //       },
-        //     );
-        //   },
-        //   icon: const Icon(Icons.menu_book_rounded),
-        //   color: Colors.white,
-        // ),
+        IconButton(
+          iconSize: 30,
+          onPressed: () {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return DialogContextWidget(index: index);
+              },
+            );
+          },
+          icon: const Icon(Icons.menu_book_rounded),
+          color: Colors.white,
+        ),
       ],
       title: null, // title을 null로 설정
       flexibleSpace: LayoutBuilder(
@@ -822,14 +839,14 @@ class _ReadScreenState extends State<ReadScreen>
             title: Align(
               alignment: Alignment.centerLeft,
               child: SizedBox(
-                width: MediaQuery.of(context).size.width / 2,
+                width: AppLingua.width / 2,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: commonText(
                     labelText: FileProcess.titleNovel.isNotEmpty // 파일 제목 출력
                         ? FileProcess.titleNovel
                         : '파일을 선택해주세요.',
-                    fontSize: MediaQuery.of(context).size.height * 0.025,
+                    fontSize: AppLingua.height * 0.025,
                     fontColor: const Color(0xFF1E4A75),
                     fontWeight: FontWeight.w500,
                   ),
@@ -837,8 +854,7 @@ class _ReadScreenState extends State<ReadScreen>
               ),
             ),
             titlePadding: EdgeInsets.only(
-                left: 50,
-                top: MediaQuery.of(context).size.height * 0.03), // 원하는 위치로 조절
+                left: 50, top: AppLingua.height * 0.03), // 원하는 위치로 조절
           );
         },
       ),

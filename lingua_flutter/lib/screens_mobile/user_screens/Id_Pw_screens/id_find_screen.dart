@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_find_screen.dart';
 import 'package:lingua/util/api/api_user.dart';
+import 'package:lingua/util/etc/validators.dart';
+import 'package:lingua/widgets/commons/common_appbar.dart';
+import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
 
-import '../../../widgets/user_widgets/consent_dialog.dart';
+import '../../../widgets/read_widgets/dialog/consent_dialog.dart';
 import '../../../widgets/user_widgets/form_button.dart';
 import '../../../widgets/user_widgets/from_field.dart';
 
@@ -18,110 +21,76 @@ class IdFindScreen extends StatefulWidget {
 class _IdFindScreenState extends State<IdFindScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController textEditingController = TextEditingController();
-
+  bool isPhoneNumberValid = false;
   bool isVerifeid = false;
-
   bool isSent = false;
-
   bool isFormComplete = false;
-
   bool isLoading = false;
 
   String _email = '';
   String _phoneNo = '';
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        shadowColor: Colors.white,
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            size: 35,
-            color: Colors.grey.shade600,
-          ),
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
+      child: Center(
         child: Stack(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                top: 20,
-              ),
-              child: Text(
-                '아이디 찾기',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
-              ),
-            ),
             Form(
               key: _formKey,
               child: Column(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  buildFormField(
-                    isObscure: false,
+                children: [
+                  labeledFormField(
+                    argText: '휴대폰 번호',
+                    hintText: '‘-’를 제외한 숫자만 입력해 주세요.',
                     onSaved: (value) => _email = value!,
-                    labelText: '전화번호',
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return '전화번호를 입력해주세요.';
+                        return '';
                       }
-                      if (!_isValidPhoneNumber(value)) {
-                        return '올바른 전화번호를 입력해주세요.';
+                      if (!Validators.isValidPhoneNumber(value)) {
+                        return '';
                       }
+
                       _phoneNo = value;
                       return null;
                     },
+                    onChanged: (p0) {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          isPhoneNumberValid = true;
+                        });
+                      } else {
+                        setState(() {
+                          isPhoneNumberValid = false;
+                        });
+                      }
+                    },
                   ),
-                  buildFormButton(
-                    context: context,
-                    backgroundColor: Theme.of(context).primaryColor,
-                    onPressed: _submit,
-                    argText: '찾기',
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: buildFormButton(
+                        backgroundColor: isPhoneNumberValid
+                            ? const Color(0xFF1E4A75)
+                            : const Color(0xFFDEE2E6),
+                        onPressed: _submit,
+                        argText: '찾기',
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
-                  ),
-                  buildFormButton(
-                    context: context,
-                    backgroundColor: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        PageRouteBuilder(
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            var begin = const Offset(0.0, 0.0);
-                            var end = Offset.zero;
-                            var curve = Curves.ease;
-                            var tween = Tween(begin: begin, end: end)
-                                .chain(CurveTween(curve: curve));
-                            return SlideTransition(
-                              position: animation.drive(tween),
-                              child: child,
-                            );
-                          },
-                          pageBuilder:
-                              (context, anmation, secondaryAnimation) =>
-                                  const PwFindScreen(),
-                        ),
-                      );
-                    },
-                    argText: '비밀번호 찾기',
                   ),
                 ],
               ),
@@ -170,15 +139,5 @@ class _IdFindScreenState extends State<IdFindScreen> {
     setState(() {
       isLoading = false;
     });
-  }
-
-  bool _isValidPhoneNumber(String phoneNo) {
-    final RegExp regex =
-        RegExp(r"^(01[016789])-?([0-9]{3,4})-?([0-9]{4})$"); // 휴대전화
-    // final RegExp regex2 =
-    //     RegExp(r"^(0[2-9]{1,2})-?([0-9]{3,4})-?([0-9]{4})$"); // 일반 전화
-
-    // return regex.hasMatch(phoneNo) || regex2.hasMatch(phoneNo);
-    return regex.hasMatch(phoneNo);
   }
 }

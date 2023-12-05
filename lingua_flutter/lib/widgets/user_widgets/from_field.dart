@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 
 Widget buildFormField({
   required FormFieldSetter<String> onSaved,
@@ -10,41 +11,31 @@ Widget buildFormField({
   double? verticalPadding,
   TextEditingController? controller,
 }) {
-  return Padding(
-    padding: EdgeInsets.symmetric(
-      horizontal: horizontalPadding ?? 26.0,
-      vertical: verticalPadding ?? 10,
+  return Container(
+    width: AppLingua.width * 0.9,
+    height: AppLingua.height * 0.07,
+    decoration: ShapeDecoration(
+      color: const Color(0xFFF8F9FA),
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
+        borderRadius: BorderRadius.circular(5),
+      ),
     ),
-    child: TextFormField(
-      controller: controller,
-      obscureText: isObscure,
-      onSaved: onSaved,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: labelText,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isObscure,
+        onSaved: onSaved,
+        validator: validator,
+        decoration: InputDecoration(
+          hintText: labelText,
+          border: InputBorder.none,
+          hintStyle: TextStyle(
+            color: const Color(0xFFADB5BD),
+            fontSize: AppLingua.height * 0.02,
           ),
         ),
-        prefixIcon: prefixImage != null
-            ? Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    prefixImage,
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Image.asset('assets/images/divider.png'),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                  ],
-                ),
-              )
-            : null,
       ),
     ),
   );
