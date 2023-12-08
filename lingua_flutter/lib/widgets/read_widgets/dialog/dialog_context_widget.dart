@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/util/etc/file_process.dart';
 
 enum PageState {
   prev,
@@ -52,11 +51,11 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
     }
 
     head = head < 0 ? 0 : head;
-    tail = tail > FileProcess.originalSentences.length
-        ? FileProcess.originalSentences.length
+    tail = tail > AppLingua.originalSentences.length
+        ? AppLingua.originalSentences.length
         : tail;
     for (int i = head; i < tail; i++) {
-      contextSentences.add(FileProcess.originalSentences[widget.index + i]);
+      contextSentences.add(AppLingua.originalSentences[widget.index + i]);
     }
     return contextSentences;
   }
@@ -122,7 +121,7 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
         margin: const EdgeInsets.only(bottom: 10),
         child: Center(
           child: Text(
-            FileProcess.titleNovel,
+            AppLingua.titleNovel,
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w600,

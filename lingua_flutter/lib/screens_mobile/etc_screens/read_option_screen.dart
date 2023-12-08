@@ -5,11 +5,13 @@ import 'package:getwidget/getwidget.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:lingua/widgets/commons/common_divider.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 
 class ReadOptionScreen extends StatefulWidget {
-  const ReadOptionScreen({super.key});
+  final int startingTab;
+  const ReadOptionScreen({super.key, required this.startingTab});
 
   @override
   State<ReadOptionScreen> createState() => _ReadOptionScreenState();
@@ -21,14 +23,15 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
   ReadOption topOption = ReadScreen.topOption.clone();
   ReadOption midOption = ReadScreen.midOption.clone();
   ReadOption botOption = ReadScreen.botOption.clone();
+  ReadOption readModeOption = ReadScreen.readModeOption.clone();
 
   bool isChanged = false;
   bool isSaved = false;
 
   String _selectedFont = '';
   final _fonts = [
-    'Noto Sans',
     'Neo',
+    'Noto Sans',
     'Gangwon',
     'Gmarket',
     'Hakgyo',
@@ -38,26 +41,39 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
 
   final backgroundColors = [
     0xFFFFFFFF,
-    0xFFE9E5DA,
     0xFF4A4A4A,
     0xFF2A2A2A,
+    0xFFE9E5DA,
     0xFFE4D0BE,
     0xFFC3B083,
     0xFFCFCED3,
     0xFFD1DCEA,
   ];
-  // final fontColors = [
-  //   0x000000,
-  //   0x4A4A4A,
-  //   0xFFFFFF,
-  // ];
+  final fontColors = [
+    0xFFFFFFFF,
+    0xFF4A4A4A,
+    0xFF2A2A2A,
+    0xFF716B5D,
+    0xFF7B6755,
+    0xFF645636,
+    0xFF514D63,
+    0xFF465568
+  ];
+
+  Color getComplementaryColor(Color color) {
+    int r = 255 - color.red;
+    int g = 255 - color.green;
+    int b = 255 - color.blue;
+    return Color.fromRGBO(r, g, b, 1); // Alpha 값을 1로 설정하여 완전 불투명하게 만듭니다.
+  }
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
 
     setState(() {
+      tabController.animateTo(widget.startingTab);
       _selectedFont = _fonts[0];
     });
   }
@@ -70,159 +86,235 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (isChanged && !isSaved) {
-          final result = await showDialog<String>(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('확인 필요'),
-                content: const Text('변경사항이 존재하지만, 저장하지 않았습니다.'),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('나가기'),
-                    onPressed: () {
-                      Navigator.of(context).pop('exit');
-                    },
-                  ),
-                  TextButton(
-                    child: const Text('저장'),
-                    onPressed: () async {
-                      await topOption.saveOption(key: 'topOption');
-                      await midOption.saveOption(key: 'midOption');
-                      await botOption.saveOption(key: 'botOption');
-
-                      ReadScreen.topOption = topOption;
-                      ReadScreen.midOption = midOption;
-                      ReadScreen.botOption = botOption;
-                      Navigator.of(context).pop('save');
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-
-          if (result == 'exit') {
-            Navigator.of(context).pop();
-          }
-        } else {
-          Navigator.of(context).pop('saved');
-        }
-        return false;
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF4F4F4),
-        appBar: GFAppBar(
-          elevation: 0.5,
-          leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: commonText(
+          labelText: '읽기 옵션',
+          fontColor: const Color(0xFF171A1D),
+          fontSize: AppLingua.height * 0.0225,
+          fontWeight: FontWeight.w700,
+        ),
+        actions: [
+          TextButton(
               onPressed: () async {
-                if (isChanged && !isSaved) {
-                  final result = await showDialog<String>(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text('확인 필요'),
-                        content: const Text('변경사항이 존재하지만, 저장하지 않았습니다.'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('나가기'),
-                            onPressed: () {
-                              Navigator.of(context).pop('exit');
-                            },
-                          ),
-                          TextButton(
-                            child: const Text('저장'),
-                            onPressed: () async {
-                              await topOption.saveOption(key: 'topOption');
-                              await midOption.saveOption(key: 'midOption');
-                              await botOption.saveOption(key: 'botOption');
+                isSaved = true;
+                await topOption.saveOption(key: 'topOption');
+                await midOption.saveOption(key: 'midOption');
+                await botOption.saveOption(key: 'botOption');
+                await readModeOption.saveOption(key: 'readModeOption');
+              },
+              child: Text(
+                '저장',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isChanged
+                      ? const Color(0xFF1E4A75)
+                      : const Color(0xFF868E96),
+                  fontSize: AppLingua.height * 0.02,
+                ),
+              ))
+        ],
+        shadowColor: Colors.white,
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leading: IconButton(
+          onPressed: () async {
+            String? result = '';
+            if (isChanged && !isSaved) {
+              result = await askDialog(context);
 
-                              ReadScreen.topOption = topOption;
-                              ReadScreen.midOption = midOption;
-                              ReadScreen.botOption = botOption;
-                              Navigator.of(context).pop('save');
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
+              if (result == 'exit') {
+                Navigator.of(context).pop();
+              } else {
+                Navigator.of(context).pop('saved');
+              }
+            } else {
+              Navigator.of(context).pop('unchanged');
+            }
+          },
+          icon: Image.asset(
+            'assets/images/icon_back.png',
+            width: AppLingua.height * 0.0275,
+          ),
+        ),
+      ),
+      body: WillPopScope(
+        onWillPop: () async {
+          String? result = '';
+          if (isChanged && !isSaved) {
+            result = await askDialog(context);
+            if (result == 'exit') {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context).pop('saved');
+            }
+          } else {
+            Navigator.of(context).pop('unchanged');
+          }
 
-                  if (result == 'exit') {
-                    Navigator.of(context).pop();
-                  }
-                } else {
-                  Navigator.of(context).pop('saved');
-                }
-              }),
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          title: GFSegmentTabs(
-            height: 40,
-            width: AppLingua.width / 1.8,
-            tabController: tabController,
-            tabBarColor: GFColors.WHITE,
-            labelColor: GFColors.WHITE,
-            unselectedLabelColor: GFColors.DARK,
-            indicator: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF4F4F4),
+          appBar: GFAppBar(
+            automaticallyImplyLeading: false,
+            elevation: 0.5,
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            titleSpacing: 0,
+            title: GFSegmentTabs(
+              height: AppLingua.height * 0.0675,
+              width: AppLingua.width,
+              tabController: tabController,
+              tabBarColor: GFColors.WHITE,
+              labelColor: GFColors.WHITE,
+              unselectedLabelColor: GFColors.DARK,
+              indicator: const BoxDecoration(
+                color: Color(0xFF44698F),
+              ),
+              border: Border.all(color: GFColors.DARK, width: 0.3),
+              length: 4,
+              tabs: [
+                _singleTabButton(argText: '상단'),
+                _singleTabButton(argText: '중단'),
+                _singleTabButton(argText: '하단'),
+                _singleTabButton(argText: '뷰어'),
+              ],
             ),
-            border: Border.all(color: GFColors.DARK, width: 0.3),
-            length: 3,
-            tabs: const <Widget>[
-              SizedBox(
-                height: 40,
-                child: Center(
-                  child: Text(
-                    "상단",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
+          ),
+          body: GFTabBarView(
+            controller: tabController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: <Widget>[
+              optionPage(
+                context: context,
+                readOption: topOption,
               ),
-              SizedBox(
-                height: 40,
-                child: Center(
-                  child: Text(
-                    "중단",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
+              optionPage(
+                context: context,
+                readOption: midOption,
               ),
-              SizedBox(
-                height: 40,
-                child: Center(
-                  child: Text(
-                    "하단",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
+              optionPage(
+                context: context,
+                readOption: botOption,
+              ),
+              optionPage(
+                context: context,
+                readOption: readModeOption,
               ),
             ],
           ),
         ),
-        body: GFTabBarView(
-          controller: tabController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: <Widget>[
-            optionPage(
-              context: context,
-              readOption: topOption,
+      ),
+    );
+  }
+
+  Future<String?> askDialog(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          actionsPadding: EdgeInsets.zero,
+          title: Text(
+            '확인 필요',
+            style: TextStyle(
+              color: const Color(0xFF171A1D),
+              fontSize: AppLingua.height * 0.0225,
+              fontWeight: FontWeight.w700,
             ),
-            optionPage(
-              context: context,
-              readOption: midOption,
+          ),
+          content: SizedBox(
+            width: AppLingua.width * 0.8,
+            height: AppLingua.height * 0.08,
+            child: Text(
+              '변경사항이 존재하지만, 저장하지 않았습니다.',
+              style: TextStyle(
+                color: const Color(0xFF171A1D),
+                fontSize: AppLingua.height * 0.02,
+              ),
             ),
-            optionPage(
-              context: context,
-              readOption: botOption,
+          ),
+          actions: [
+            Container(
+              height: AppLingua.height * 0.0675,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 1.5, color: Color(0xFFDEE2E6)),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop('exit');
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                                width: 1.5, color: Color(0xFFDEE2E6)),
+                          ),
+                        ),
+                        child: Center(
+                            child: Text(
+                          '나가기',
+                          style: TextStyle(
+                            color: const Color(0xFF43698F),
+                            fontSize: AppLingua.height * 0.0225,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )),
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () async {
+                        await topOption.saveOption(key: 'topOption');
+                        await midOption.saveOption(key: 'midOption');
+                        await botOption.saveOption(key: 'botOption');
+                        await readModeOption.saveOption(key: 'readModeOption');
+
+                        ReadScreen.topOption = topOption;
+                        ReadScreen.midOption = midOption;
+                        ReadScreen.botOption = botOption;
+                        ReadScreen.readModeOption = readModeOption;
+                        Navigator.of(context).pop('save');
+                      },
+                      child: SizedBox(
+                        height: AppLingua.height * 0.0675,
+                        child: Center(
+                            child: Text(
+                          '저장',
+                          style: TextStyle(
+                            color: const Color(0xFF43698F),
+                            fontSize: AppLingua.height * 0.0225,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
+        );
+      },
+    );
+    return result;
+  }
+
+  SizedBox _singleTabButton({required String argText}) {
+    return SizedBox(
+      child: Center(
+        child: Text(
+          argText,
+          style: TextStyle(fontSize: AppLingua.height * 0.02125),
         ),
       ),
     );
@@ -233,20 +325,37 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
     required ReadOption readOption,
   }) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            commonDivider(context),
-            Container(
-              height: AppLingua.height * 0.2,
-              width: AppLingua.width,
-              decoration: BoxDecoration(
-                color: Color(readOption.optBackgroundColor),
+      child: Column(
+        children: [
+          Container(
+            width: AppLingua.width,
+            height: AppLingua.height * 0.045,
+            decoration: const BoxDecoration(color: Colors.transparent),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: AppLingua.width * 0.03),
+                child: Text(
+                  '설정 미리보기',
+                  style: TextStyle(
+                    color: const Color(0xFF868E96),
+                    fontSize: AppLingua.height * 0.0175,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
+            ),
+          ),
+          Container(
+            height: AppLingua.height * 0.26,
+            width: AppLingua.width,
+            decoration: BoxDecoration(
+              color: Color(readOption.optBackgroundColor),
+            ),
+            child: SingleChildScrollView(
               child: Center(
                 child: Text(
-                  '적용 예시입니다.\n각 칸별 설정이 가능합니다.',
+                  '적용 예시입니다.\n각 칸별 설정이 가능합니다.\n\nThis is an application example.\nEach column can be set',
                   style: TextStyle(
                     fontSize: readOption.optFontSize,
                     height: readOption.optFontHeight,
@@ -256,10 +365,55 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                 ),
               ),
             ),
-            commonDivider(context),
-            optionSingleContainer(
+          ),
+          commonDivider(),
+          Container(
+            width: AppLingua.width,
+            height: AppLingua.height * 0.045,
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8F9FA),
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: AppLingua.width * 0.03),
+                child: Text(
+                  '폰트 설정',
+                  style: TextStyle(
+                    color: const Color(0xFF868E96),
+                    fontSize: AppLingua.height * 0.0175,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          optionSingleContainer(
+            mainAxisAlignment: MainAxisAlignment.start,
+            context: context,
+            containerHeight: AppLingua.height * 0.25,
+            lines: [
+              optionFontSelect(
+                labelText: '폰트 선택',
+                argText: '',
+                readOption: readOption,
+              ),
+              optionBackgroundSelect(
+                labelText: '배경색',
+                readOption: readOption,
+              ),
+              optionFontColorSelect(
+                labelText: '글자색',
+                readOption: readOption,
+              ),
+            ],
+          ),
+          commonDivider(),
+          Expanded(
+            child: optionSingleContainer(
+              mainAxisAlignment: MainAxisAlignment.start,
               context: context,
-              containerHeight: AppLingua.height * 0.23,
+              containerHeight: AppLingua.height * 0.15,
               lines: [
                 optionUpDown(
                   labelText: '글자 크기',
@@ -299,75 +453,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                 ),
               ],
             ),
-            commonDivider(context),
-            optionSingleContainer(
-              context: context,
-              containerHeight: AppLingua.height * 0.27,
-              lines: [
-                optionFontSelect(
-                  labelText: '폰트 선택',
-                  argText: 'asd',
-                  readOption: readOption,
-                ),
-                optionFontColorSelect(
-                  labelText: '글자색',
-                  readOption: readOption,
-                ),
-                optionBackgroundSelect(
-                  labelText: '배경색',
-                  readOption: readOption,
-                ),
-              ],
-            ),
-            commonDivider(context),
-            Expanded(
-                child: optionSingleContainer(
-              context: context,
-              containerHeight: 10,
-              lines: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, right: 20),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () async {
-                        isSaved = true;
-                        await topOption.saveOption(key: 'topOption');
-                        await midOption.saveOption(key: 'midOption');
-                        await botOption.saveOption(key: 'botOption');
-                      },
-                      child: Container(
-                        width: AppLingua.width * 0.18,
-                        height: AppLingua.height * 0.045,
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              width: 1,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '저장',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: AppLingua.height * 0.018,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.start,
-            )),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -382,7 +469,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
       width: AppLingua.width,
       height: containerHeight,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFF8F9FA),
         boxShadow: [
           BoxShadow(
             color: Color(0x0A000000),
@@ -394,6 +481,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
       ),
       child: Column(
         mainAxisAlignment: mainAxisAlignment,
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (lines != null) ...lines,
         ],
@@ -411,82 +499,52 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
   }) {
     return Padding(
       padding: const EdgeInsets.only(
-        bottom: 17,
+        bottom: 0,
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-              top: 12,
+            padding: EdgeInsets.only(
+              top: AppLingua.height * 0.0125,
               left: 15,
             ),
             child: Center(
               child: commonText(
                 labelText: labelText,
-                fontSize: AppLingua.height * 0.024,
+                fontSize: AppLingua.height * 0.02,
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              top: 12,
+            padding: EdgeInsets.only(
+              top: AppLingua.height * 0.0125,
               right: 15,
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 15,
-                  ),
-                  child: Text(
-                    argText,
-                    style: TextStyle(
-                      fontSize: AppLingua.height * 0.023,
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: upButtonVaild ? upButtonTap : () {},
-                  child: Container(
-                    height: AppLingua.height * 0.053,
-                    width: AppLingua.width * 0.2,
-                    decoration: BoxDecoration(
-                      color: upButtonVaild
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey.shade400,
-                    ),
-                    child: Transform.rotate(
-                      angle: pi / 2,
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
+                IconButton(
+                    onPressed: downButtonValid ? downButtonTap : () {},
+                    icon: downButtonValid
+                        ? Image.asset('assets/images/valid_minus.png')
+                        : Image.asset('assets/images/invalid_minus.png')),
+                SizedBox(
+                  width: AppLingua.width * 0.2,
+                  child: Center(
+                    child: Text(
+                      argText,
+                      style: TextStyle(
+                        fontSize: AppLingua.height * 0.023,
                       ),
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: downButtonValid ? downButtonTap : () {},
-                  child: Container(
-                    height: AppLingua.height * 0.053,
-                    width: AppLingua.width * 0.2,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      color:
-                          downButtonValid ? Colors.white : Colors.grey.shade400,
-                    ),
-                    child: Transform.rotate(
-                      angle: pi + pi / 2,
-                      child: Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
+                IconButton(
+                    onPressed: upButtonVaild ? upButtonTap : () {},
+                    icon: upButtonVaild
+                        ? Image.asset('assets/images/valid_add.png')
+                        : Image.asset('assets/images/invalid_add.png')),
               ],
             ),
           )
@@ -510,25 +568,31 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
         children: [
           Padding(
             padding: const EdgeInsets.only(
-              top: 12,
               left: 15,
             ),
             child: Center(
               child: commonText(
                 labelText: labelText,
-                fontSize: 18,
+                fontSize: AppLingua.height * 0.02,
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
-              top: 12,
               right: 15,
             ),
             child: Row(
               children: [
-                SizedBox(
-                  width: AppLingua.width * 0.45,
+                Container(
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF8F9FA),
+                    shape: RoundedRectangleBorder(
+                      side:
+                          const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  width: AppLingua.width * 0.65,
                   child: DropdownButton(
                     underline: const SizedBox.shrink(),
                     isExpanded: true,
@@ -541,7 +605,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                         .map((e) => DropdownMenuItem(
                               value: e, // 선택 시 onChanged 를 통해 반환할 value
                               child: Text(
-                                e,
+                                '     $e',
                                 style: TextStyle(
                                   fontSize: AppLingua.height * 0.021,
                                   fontFamily: _fonts[_fonts.indexOf(e)],
@@ -583,11 +647,12 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: Center(
               child: commonText(
                 labelText: labelText,
-                fontSize: 18,
+                fontSize: AppLingua.height * 0.02,
               ),
             ),
           ),
-          Expanded(
+          SizedBox(
+            width: AppLingua.width * 0.7,
             child: Padding(
               padding: const EdgeInsets.only(
                 top: 12,
@@ -597,7 +662,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: backgroundColors
+                  children: fontColors
                       .map(
                         (value) => Padding(
                           padding: const EdgeInsets.symmetric(
@@ -611,17 +676,30 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                                 readOption.optFontColor = value;
                               });
                             },
-                            child: Container(
-                              width: AppLingua.width * 0.13,
-                              height: AppLingua.height * 0.036,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 0.5,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Container(
+                                  width: AppLingua.width * 0.13,
+                                  height: AppLingua.height * 0.036,
+                                  decoration: ShapeDecoration(
+                                    color: Color(
+                                      value,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      side: const BorderSide(width: 0.5),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
                                 ),
-                                color: Color(
-                                  value,
-                                ),
-                              ),
+                                readOption.optFontColor == value
+                                    ? Icon(
+                                        Icons.check,
+                                        color:
+                                            getComplementaryColor(Color(value)),
+                                      )
+                                    : const SizedBox.shrink(),
+                              ],
                             ),
                           ),
                         ),
@@ -649,11 +727,12 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           child: Center(
             child: commonText(
               labelText: labelText,
-              fontSize: 18,
+              fontSize: AppLingua.height * 0.02,
             ),
           ),
         ),
-        Expanded(
+        SizedBox(
+          width: AppLingua.width * 0.7,
           child: Padding(
             padding: const EdgeInsets.only(
               top: 12,
@@ -662,40 +741,50 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: backgroundColors
-                    .map(
-                      (value) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
-                          vertical: 1,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              !isChanged ? isChanged = true : isChanged;
-                              readOption.optBackgroundColor = value;
-                            });
-                          },
-                          child: Container(
-                            width: AppLingua.width * 0.13,
-                            height: AppLingua.height * 0.036,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 0.5,
-                              ),
-                              color: Color(
-                                value,
-                              ),
+                  mainAxisSize: MainAxisSize.min,
+                  children: backgroundColors
+                      .map(
+                        (value) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 1,
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                !isChanged ? isChanged = true : isChanged;
+                                readOption.optBackgroundColor = value;
+                              });
+                            },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Container(
+                                  width: AppLingua.width * 0.13,
+                                  height: AppLingua.height * 0.036,
+                                  decoration: ShapeDecoration(
+                                    color: Color(
+                                      value,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      side: const BorderSide(width: 0.5),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ),
+                                readOption.optBackgroundColor == value
+                                    ? Icon(
+                                        Icons.check,
+                                        color:
+                                            getComplementaryColor(Color(value)),
+                                      )
+                                    : const SizedBox.shrink(),
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                    )
-                    .toList()
-                    .reversed
-                    .toList(),
-              ),
+                      )
+                      .toList()),
             ),
           ),
         )

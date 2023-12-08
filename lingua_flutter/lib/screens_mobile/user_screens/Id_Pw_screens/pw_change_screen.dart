@@ -8,7 +8,6 @@ import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
 
-import '../../../widgets/user_widgets/from_field.dart';
 import '../login_screen.dart';
 
 class StringConstants {

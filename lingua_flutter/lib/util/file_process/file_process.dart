@@ -1,19 +1,17 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:lingua/main.dart';
+import 'package:lingua/util/file_process/translate_input_process.dart';
 
 mixin FileProcess {
-  static String titleNovel = "";
-  static List<String> originalSentences = [];
-  static String stringContents = "";
-
   Future<String?> fileRead(String path) async {
     try {
       final file = File(path);
       // final pathFrags = file.path.split('/');
       // titleNovel = pathFrags[pathFrags.length - 1].split('.')[0];
-      FileProcess.stringContents = await file.readAsString();
-      return FileProcess.stringContents;
+      AppLingua.stringContents = await file.readAsString();
+      return AppLingua.stringContents;
     } catch (e) {
       // print("Error reading file: $e");
       return null;
@@ -27,7 +25,7 @@ mixin FileProcess {
     );
 
     if (result != null) {
-      titleNovel = result.files.single.name.split('.')[0];
+      AppLingua.titleNovel = result.files.single.name.split('.')[0];
       return result.files.single.path;
     } else {
       // 사용자가 선택을 취소한 경우
@@ -38,6 +36,15 @@ mixin FileProcess {
   Future<List<String>> filePickAndRead() async {
     String? filePath = await filePick();
     if (filePath != null) {
+      loadMapFromFile(filename: '${AppLingua.titleNovel}_input.json')
+          .then((value) {
+        AppLingua.inputJson = value;
+      });
+      loadMapFromFile(filename: '${AppLingua.titleNovel}_translated.json')
+          .then((value) {
+        AppLingua.trasJson = value;
+      });
+
       String? contents = await fileRead(filePath);
       if (contents != null) {
         // print(contents);

@@ -1,9 +1,6 @@
-import 'dart:developer' as dev;
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:lingua/util/etc/file_process.dart';
 
 // List<String> paginateText({
 //   required String text,
@@ -88,17 +85,17 @@ List<String> paginateText({
 
       currentPageStartIndex = currentPageEndIndex;
       currentPageBottom = top + screenSize.height;
-      dev.log(pageText);
+      // dev.log(pageText);
       // log(pageText.length.toString());
-      lengths.add(pageText.length);
+      // lengths.add(pageText.length);
     }
   }
 
   final lastPageText = text.substring(currentPageStartIndex);
   pages.add(lastPageText);
 
-  dev.log(lengths.fold(0, max).toString());
-  dev.log(lengths.indexOf(lengths.fold(0, max)).toString());
+  // dev.log(lengths.fold(0, max).toString());
+  // dev.log(lengths.indexOf(lengths.fold(0, max)).toString());
 
   return pages;
 }

@@ -40,56 +40,56 @@ class _DialogWordSearchState extends State<DialogWordSearch> {
   Widget build(BuildContext context) {
     return AlertDialog(
       actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            TextButton(
+        Center(
+          child: TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               child: Text(
                 '닫기',
-                style: TextStyle(color: Theme.of(context).primaryColor),
-              ),
-            ),
-          ],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: const Color(0xFF43698F),
+                  fontSize: AppLingua.height * 0.0225,
+                  fontWeight: FontWeight.w700,
+                ),
+              )),
         )
       ],
       contentPadding: EdgeInsets.zero,
       insetPadding:
           const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
       title: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(15.0),
+        margin: EdgeInsets.only(bottom: AppLingua.height * 0.0125),
+        decoration: ShapeDecoration(
+          color: const Color(0xFFE9ECEF),
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(width: 1, color: Color(0xFF43698F)),
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         child: Center(
             child: TextField(
           controller: _controller,
-          style: const TextStyle(fontSize: 22),
+          style: TextStyle(fontSize: AppLingua.height * 0.025),
           autocorrect: true,
           decoration: InputDecoration(
-            hintText: '검색...',
-            border: InputBorder.none,
-            prefixIcon: Icon(
-              Icons.search,
-              color: Theme.of(context).primaryColor,
-              size: 40,
+            hintText: '영단어를 입력해 주세요.',
+            hintStyle: TextStyle(
+              color: const Color(0xFFADB5BD),
+              fontSize: AppLingua.height * 0.025,
+              fontFamily: 'Noto Sans KR',
             ),
+            border: InputBorder.none,
             suffixIcon: GestureDetector(
               onTap: () {
                 setState(() {
                   wordMeans = ApiUtil.dictSearch(_controller.text);
                 });
               },
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Icon(
-                  Icons.subdirectory_arrow_left,
-                  color: Theme.of(context).primaryColor,
-                  size: 40,
-                ),
+              child: Image.asset(
+                "assets/images/icon_magnifier.png",
+                scale: 1.3,
               ),
             ),
             contentPadding: const EdgeInsets.all(15.0),
@@ -97,16 +97,13 @@ class _DialogWordSearchState extends State<DialogWordSearch> {
         )),
       ),
       content: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           border: Border.symmetric(
-            horizontal: BorderSide(
-              width: 2,
-              color: Theme.of(context).primaryColor,
-            ),
+            horizontal: BorderSide(width: 1, color: Color(0xFFDEE2E6)),
           ),
         ),
         width: AppLingua.width,
-        height: AppLingua.height,
+        height: AppLingua.height * 0.7,
         child: SingleChildScrollView(
             controller: _scrollController,
             child: DictionaryResultWidget(

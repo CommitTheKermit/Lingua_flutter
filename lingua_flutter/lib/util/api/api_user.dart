@@ -1,12 +1,13 @@
 import 'package:lingua/main.dart';
+import 'package:lingua/models/server_info.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiUser {
   // static const String baseUrl = "http://10.0.2.2:8000";
-  static const String baseUrl = "http://43.201.60.160:8000";
-  static const int timeoutSec = 5;
+  static const String baseUrl = ServerInfo.baseUrl;
+  static const int timeoutSec = ServerInfo.timeoutSec;
   static late String? cookie;
 
   static Future<bool> signUp() {

@@ -54,7 +54,7 @@ class _IDPWFindScreenState extends State<IDPWFindScreen>
               color: Color(0xFF44698F),
             ),
             border: Border.all(color: GFColors.DARK, width: 0.3),
-            length: 3,
+            length: 2,
             tabs: [
               SizedBox(
                 height: 40,

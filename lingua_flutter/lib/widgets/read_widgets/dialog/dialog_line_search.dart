@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/util/etc/file_process.dart';
 
 enum PageState {
   prev,
@@ -43,6 +42,35 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      title: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                AppLingua.titleNovel,
+                style: TextStyle(
+                  color: const Color(0xFF43698F),
+                  fontSize: AppLingua.height * 0.03,
+                  fontFamily: 'Noto Sans KR',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop('back');
+                },
+                icon: Image.asset("assets/images/icon_close.png",
+                    height: AppLingua.height * 0.1),
+              ),
+            ),
+          ],
+        ),
+      ),
       contentPadding: EdgeInsets.zero,
       insetPadding: const EdgeInsets.only(
         left: 10,
@@ -50,46 +78,49 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
         top: 20,
         bottom: 10,
       ),
-      content: Stack(
-        children: [
-          Container(
-            width: AppLingua.width,
-            height: AppLingua.height / 1.7,
-            decoration: BoxDecoration(
-              border: Border.symmetric(
-                horizontal: BorderSide(
-                  width: 2,
-                  color: Theme.of(context).primaryColor,
+      content: SizedBox(
+        width: AppLingua.width,
+        height: AppLingua.height * 0.45,
+        child: Column(
+          children: [
+            Container(
+              height: AppLingua.height * 0.015,
+              decoration: const BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(width: 1, color: Color(0xFFDEE2E6)))),
+            ),
+            Container(
+              height: AppLingua.height * 0.25,
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppLingua.width * 0.04,
+                ),
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Text(
+                    AppLingua.originalSentences[index],
+                    style: TextStyle(
+                      fontSize: AppLingua.height * 0.03,
+                      height: 1.7,
+                    ),
+                  ),
                 ),
               ),
             ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 15,
-                  ),
-                  child: Container(
-                    height: 300,
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
-                    ),
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Text(
-                        FileProcess.originalSentences[index],
-                        style: const TextStyle(
-                          fontSize: 25,
-                          height: 1.7,
-                        ),
-                      ),
-                    ),
-                  ),
+            SizedBox(
+              child: SliderTheme(
+                data: SliderThemeData(
+                  thumbShape: RoundSliderThumbShape(
+                      enabledThumbRadius: AppLingua.height * 0.01),
+                  trackHeight: AppLingua.height * 0.01,
                 ),
-                Slider(
-                  min: 0,
-                  max: FileProcess.originalSentences.length.toDouble(),
+                child: Slider(
+                  activeColor: const Color(0xFF44698F),
+                  thumbColor: const Color(0xFF1F4A76),
+                  inactiveColor: const Color(0xFFDEE2E6),
                   value: _sliderValue,
                   onChanged: (value) {
                     setState(() {
@@ -98,78 +129,70 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                       _scrollController.jumpTo(0);
                     });
                   },
+                  min: 0,
+                  max: AppLingua.originalSentences.length.toDouble(),
                 ),
-                SizedBox(
-                  width: AppLingua.width / 1.2,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: AppLingua.width / 1.2,
-                        child: TextField(
-                          textAlign: TextAlign.center,
-                          onChanged: (value) {
-                            setState(() {
-                              _sliderValue = int.parse(value).toDouble();
-                              index = _sliderValue.toInt();
-                              _scrollController.jumpTo(0);
-                            });
-                          },
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '${_sliderValue.toInt()}',
-                            hintStyle: const TextStyle(
-                              fontSize: 22,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context, _sliderValue.toInt());
-                        },
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF8FC1E4),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          width: 200,
-                          height: 60,
-                          child: const Center(
-                              child: Text(
-                            '이동',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          )),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 10,
-            right: 10,
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop('back');
-              },
-              icon: Icon(
-                Icons.arrow_back_ios_new,
-                size: 30,
-                color: Colors.black.withAlpha(100),
               ),
             ),
-          ),
-        ],
+            Container(
+              width: AppLingua.width * 0.3,
+              height: AppLingua.height * 0.045,
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 0.5, color: Color(0xFF868E96)),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              child: Center(
+                child: TextField(
+                  textAlign: TextAlign.center,
+                  onChanged: (value) {
+                    setState(() {
+                      _sliderValue = int.parse(value).toDouble();
+                      index = _sliderValue.toInt();
+                      _scrollController.jumpTo(0);
+                    });
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(
+                        vertical: AppLingua.height * 0.009),
+                    border: InputBorder.none,
+                    hintText:
+                        '${_sliderValue.toInt()}/${AppLingua.originalSentences.length}',
+                    hintStyle: const TextStyle(
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context, _sliderValue.toInt());
+              },
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                      top: BorderSide(width: 1, color: Color(0xFFDEE2E6))),
+                ),
+                height: AppLingua.height * 0.0675,
+                child: Center(
+                    child: Text(
+                  '이동',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: const Color(0xFF43698F),
+                    fontSize: AppLingua.height * 0.025,
+                    fontFamily: 'Noto Sans KR',
+                    fontWeight: FontWeight.w700,
+                  ),
+                )),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:http/http.dart';
+import 'package:lingua/models/server_info.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/models/word_model.dart';
 import 'package:http/http.dart' as http;
@@ -8,8 +8,8 @@ import 'dart:convert';
 
 class ApiUtil {
   // static const String baseUrl = "http://10.0.2.2:8000";
-  static const String baseUrl = "http://43.201.60.160:8000";
-  static const int timeoutSec = 8;
+  static const String baseUrl = ServerInfo.baseUrl;
+  static const int timeoutSec = ServerInfo.timeoutSec;
   String API_KEY = '';
 
   static Future<List<WordModel>> dictSearch(String argText) async {

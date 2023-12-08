@@ -7,7 +7,6 @@ import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/id_pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/signup_screens/signup_screen_first.dart';
-import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/util/etc/change_screen.dart';
 
 import 'package:lingua/util/etc/exit_confirm.dart';
@@ -17,8 +16,6 @@ import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
 
 import '../../widgets/user_widgets/form_button.dart';
 import '../../widgets/user_widgets/from_field.dart';
-import '../../widgets/user_widgets/next_screen_button.dart';
-import 'Id_Pw_screens/id_find_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

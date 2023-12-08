@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/widgets/commons/common_divider.dart';
 
 Future<dynamic> consentDialog({
   required String title,

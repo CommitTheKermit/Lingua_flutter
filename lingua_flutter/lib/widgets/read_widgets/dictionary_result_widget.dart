@@ -68,8 +68,7 @@ class DictionaryResultWidget extends StatelessWidget {
                                 ),
                                 wordMean.pos.isNotEmpty
                                     ? Container(
-                                        width: AppLingua.width * 0.12,
-                                        height: AppLingua.height * 0.0225,
+                                        height: AppLingua.height * 0.025,
                                         decoration: ShapeDecoration(
                                           color: const Color(0xFF43698F),
                                           shape: RoundedRectangleBorder(
@@ -77,20 +76,28 @@ class DictionaryResultWidget extends StatelessWidget {
                                                 BorderRadius.circular(999),
                                           ),
                                         ),
-                                        child: Center(
-                                          child: Text(
-                                            wordMean.pos,
-                                            style: TextStyle(
-                                              color: const Color(0xFFF8F9FA),
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.0175,
-                                              fontWeight: FontWeight.w400,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.00135,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: AppLingua.width * 0.02,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              wordMean.pos.contains(',')
+                                                  ? wordMean.pos.substring(0,
+                                                      wordMean.pos.indexOf(','))
+                                                  : wordMean.pos,
+                                              style: TextStyle(
+                                                color: const Color(0xFFF8F9FA),
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.0175,
+                                                fontWeight: FontWeight.w400,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.00135,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -108,9 +115,6 @@ class DictionaryResultWidget extends StatelessWidget {
                                       style: TextStyle(
                                         color: const Color(0xFF495057),
                                         fontSize: AppLingua.height * 0.0225,
-                                        fontFamily: 'Noto Sans KR',
-                                        fontWeight: FontWeight.w500,
-                                        height: 0,
                                       ),
                                     ),
                                   ),

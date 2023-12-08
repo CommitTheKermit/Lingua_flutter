@@ -1,14 +1,11 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
-import 'package:lingua/screens_mobile/user_screens/signup_screens/signup_screen_second.dart';
 import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/util/etc/validators.dart';
 import 'package:lingua/widgets/commons/common_appbar.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
 
 import '../../../widgets/read_widgets/dialog/consent_dialog.dart';

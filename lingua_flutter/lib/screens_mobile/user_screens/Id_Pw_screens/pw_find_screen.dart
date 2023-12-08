@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_change_screen.dart';
 import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/util/etc/validators.dart';
-import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
 
 import '../../../widgets/read_widgets/dialog/consent_dialog.dart';
 import '../../../widgets/user_widgets/form_button.dart';
-import '../../../widgets/user_widgets/from_field.dart';
 
 class PwFindScreen extends StatefulWidget {
   const PwFindScreen({super.key});

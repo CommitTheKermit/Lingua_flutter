@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lingua/util/shared_preferences/preference_manager.dart';
 
@@ -36,7 +35,9 @@ class ReadOption {
     if (json['optFontHeight'] != null) {
       optFontHeight = json['optFontHeight'];
     }
-    if (json['optFontFamily'] != null) {}
+    if (json['optFontFamily'] != null) {
+      optFontFamily = json['optFontFamily'];
+    }
     if (json['optFontColor'] != null) {
       optFontColor = json['optFontColor'];
     }
