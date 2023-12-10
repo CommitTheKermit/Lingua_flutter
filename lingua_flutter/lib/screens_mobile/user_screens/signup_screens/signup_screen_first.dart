@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
@@ -71,7 +70,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                 ),
                 emailCode(),
                 labeledFormField(
-                    onSaved: (value) => _email = value!,
+                    onSaved: (value) => UserModel.password = value!,
                     argText: '비밀번호',
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -79,7 +78,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                       }
                       if (value.length < 10) {
                         return '비밀번호는 10자 이상이어야 합니다.';
-                      }
+                      }  
                       UserModel.password = value;
                       return null;
                     }),
@@ -92,31 +91,53 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                     }
                     return null;
                   },
+                  onChanged: (p0) {
+                    if (Validators.isValidPhoneNumber(p0)) {
+                      UserModel.phoneNo = p0;
+                    } else {}
+                  },
                 ),
                 labeledFormField(
                   onSaved: (value) => _phoneNo = value!,
                   argText: '휴대폰 번호',
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return '전화번호를 입력해주세요.';
-                    }
-                    if (!Validators.isValidPhoneNumber(value)) {
-                      return '올바른 전화번호 형식을 입력해주세요.';
-                    }
-                    UserModel.phoneNo = value;
                     return null;
+                  },
+                  onChanged: (p0) {
+                    if (Validators.isValidPhoneNumber(p0)) {
+                      UserModel.phoneNo = p0;
+                    } else {}
                   },
                 ),
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: NextJoinButton(
-                      isSent: isSent,
-                      inButtonText: '다음',
-                      nextScreen: const LoginScreen(),
+                    child: buildFormButton(
+                      backgroundColor: isVerifeid
+                          ? const Color(0xFF1E4A75)
+                          : const Color(0xFFDEE2E6),
+                      onPressed: isVerifeid
+                          ? () {
+                              ApiUser.signUp();
+                            }
+                          : () {},
+                      argText: '가입',
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                // Expanded(
+                //   child: Align(
+                //     alignment: Alignment.bottomCenter,
+                //     child: NextJoinButton(
+                //       isSent: isSent,
+                //       inButtonText: '다음',
+                //       nextScreen: const LoginScreen(),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -134,8 +155,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
       isLoading = true;
     });
     bool condition;
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    if (isValidEmail) {
       UserModel.email = _email;
       condition = await ApiUser.emailSend(UserModel.email);
       if (condition && mounted) {
@@ -163,12 +183,6 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
     setState(() {
       isLoading = true;
     });
-
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-    } else {
-      return null;
-    }
 
     String condition;
     condition = await ApiUser.emailVerify(
@@ -259,6 +273,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                     padding: EdgeInsets.symmetric(
                         horizontal: AppLingua.height * 0.011),
                     child: TextFormField(
+                      controller: textEditingController,
                       style: TextStyle(
                         color: const Color(0xFF868E96),
                         fontSize: AppLingua.height * 0.02,
@@ -348,7 +363,6 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
               style: TextStyle(
                 color: const Color(0xFF868E96),
                 fontSize: AppLingua.height * 0.02,
-                fontFamily: 'Noto Sans KR',
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -373,26 +387,19 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           ),
                         ),
                         child: TextFormField(
-                          onSaved: (value) =>
-                              _email = '${value!}@$_selectedDomain',
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              isValidEmail = false;
-                              return null;
-                            }
-                            if (!Validators.isValidEmail(
-                                '$value@$_selectedDomain')) {
-                              isValidEmail = false;
-                              return null;
-                            }
-                            isValidEmail = true;
-                            return null;
-                          },
                           onChanged: (p0) {
-                            setState(() {
-                              _formKey.currentState!.validate();
-                              _formKey.currentState!.save();
-                            });
+                            if (Validators.isValidEmail(
+                              '$p0@$_selectedDomain',
+                            )) {
+                              setState(() {
+                                isValidEmail = true;
+                                _email = '$p0@$_selectedDomain';
+                              });
+                            } else {
+                              setState(() {
+                                isValidEmail = false;
+                              });
+                            }
                           },
                           onTap: () {
                             setState(() {
@@ -462,8 +469,11 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                               .toList(),
                           onChanged: (value) {
                             // items 의 DropdownMenuItem 의 value 반환
+
                             setState(() {
                               _selectedDomain = value!;
+                              _email =
+                                  '${_email.substring(0, _email.indexOf('@'))}@$_selectedDomain';
                               if (_selectedDomain == '직접입력') {
                                 _isShowTextField = true;
                                 _email = '';
@@ -491,22 +501,17 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                               ),
                               child: TextFormField(
                                 onSaved: (value) => _email = value!,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    isValidEmail = false;
-                                    return null;
-                                  }
-                                  if (!Validators.isValidEmail(value)) {
-                                    isValidEmail = false;
-                                    return null;
-                                  }
-                                  isValidEmail = true;
-                                  return null;
-                                },
                                 onChanged: (p0) {
-                                  setState(() {
-                                    _formKey.currentState!.validate();
-                                  });
+                                  if (Validators.isValidEmail(p0)) {
+                                    setState(() {
+                                      isValidEmail = true;
+                                      _email = p0;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isValidEmail = false;
+                                    });
+                                  }
                                 },
                                 style: TextStyle(
                                   color: const Color(0xFF868E96),
@@ -564,6 +569,8 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                                   .toList(),
                               onChanged: (value) {
                                 // items 의 DropdownMenuItem 의 value 반환
+                                print(value);
+                                print(_selectedDomain);
                                 setState(() {
                                   _selectedDomain = value!;
                                   if (_selectedDomain != '직접입력') {

@@ -689,7 +689,6 @@ class _ReadScreenState extends State<ReadScreen>
                         : '파일을 선택해주세요.',
                     fontSize: AppLingua.height * 0.025,
                     fontColor: const Color(0xFF1E4A75),
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),

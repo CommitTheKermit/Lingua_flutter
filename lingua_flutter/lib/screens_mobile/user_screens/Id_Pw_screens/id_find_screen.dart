@@ -24,7 +24,7 @@ class _IdFindScreenState extends State<IdFindScreen> {
   bool isFormComplete = false;
   bool isLoading = false;
 
-  String _email = '';
+  final String _email = '';
   String _phoneNo = '';
 
   @override
@@ -50,20 +50,13 @@ class _IdFindScreenState extends State<IdFindScreen> {
                   labeledFormField(
                     argText: '휴대폰 번호',
                     hintText: '‘-’를 제외한 숫자만 입력해 주세요.',
-                    onSaved: (value) => _email = value!,
+                    onSaved: (value) => _phoneNo = value!,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return '';
-                      }
-                      if (!Validators.isValidPhoneNumber(value)) {
-                        return '';
-                      }
-
-                      _phoneNo = value;
+                      _phoneNo = value!;
                       return null;
                     },
                     onChanged: (p0) {
-                      if (_formKey.currentState!.validate()) {
+                      if (Validators.isValidPhoneNumber(p0)) {
                         setState(() {
                           isPhoneNumberValid = true;
                         });
@@ -81,7 +74,7 @@ class _IdFindScreenState extends State<IdFindScreen> {
                         backgroundColor: isPhoneNumberValid
                             ? const Color(0xFF1E4A75)
                             : const Color(0xFFDEE2E6),
-                        onPressed: _submit,
+                        onPressed: isPhoneNumberValid ? _submit : () {},
                         argText: '찾기',
                       ),
                     ),

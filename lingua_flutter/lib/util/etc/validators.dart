@@ -6,7 +6,7 @@ class Validators {
   }
 
   static bool isValidPhoneNumber(String phoneNo) {
-    final RegExp regex = RegExp(r"^(01[016789])([0-9]{4})([0-9]{4})$"); // 휴대전화
+    final RegExp regex = RegExp(r"^01[0-9]{9}$"); // 휴대전화
 
 /*
 
@@ -22,6 +22,7 @@ class Validators {
     //     RegExp(r"^(0[2-9]{1,2})-?([0-9]{3,4})-?([0-9]{4})$"); // 일반 전화
 
     // return regex.hasMatch(phoneNo) || regex2.hasMatch(phoneNo);
-    return regex.hasMatch(phoneNo);
+    bool result = regex.hasMatch(phoneNo);
+    return result;
   }
 }

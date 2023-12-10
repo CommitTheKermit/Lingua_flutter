@@ -22,8 +22,11 @@ class DictionaryResultWidget extends StatelessWidget {
           return const SizedBox.shrink();
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return SizedBox(
+            height: AppLingua.height * 0.6,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
         if (snapshot.hasError) {

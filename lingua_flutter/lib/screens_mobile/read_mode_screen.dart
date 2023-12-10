@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:lingua/models/bookmark_model.dart';
+import 'package:lingua/screens_mobile/bookmark_list_dialog.dart';
 import 'package:lingua/screens_mobile/etc_screens/read_option_screen.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/util/etc/change_screen.dart';
 import 'package:lingua/util/shared_preferences/preference_manager.dart';
 import 'package:lingua/util/string_process/pager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReadModeScreen extends StatefulWidget {
   const ReadModeScreen({super.key});
@@ -25,12 +31,51 @@ class _ReadModeScreenState extends State<ReadModeScreen>
 
   late Future<String> futureOption;
 
+  List<BookmarkModel> bookmarks = [];
+  Set<int> bookmarkedLines = {};
+
   Future<String> initOption() async {
     await ReadScreen.readModeOption.loadOption(key: 'readModeOption');
     index =
         double.parse(await PreferenceManager.getValue('readModeIndex') ?? '0');
 
+    bookmarks = await loadBookmarks();
+
     return 'done';
+  }
+
+  void buildInit() {
+    bookmarkedLines =
+        bookmarks.map((bookmark) => bookmark.bookMarkedLine).toSet();
+  }
+
+  Future<void> saveBookmarks(List<BookmarkModel> bookmarkList) async {
+    // BookmarkModel 인스턴스 리스트를 JSON 배열로 변환
+    List<Map<String, dynamic>> jsonList =
+        bookmarkList.map((bookmark) => bookmark.toJson()).toList();
+
+    // JSON 배열을 문자열로 변환
+    String jsonString = jsonEncode(jsonList);
+
+    // SharedPreferences에 저장
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('bookmarks', jsonString);
+  }
+
+  Future<List<BookmarkModel>> loadBookmarks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString('bookmarks');
+
+    if (jsonString == null) {
+      return [];
+    }
+
+    // 문자열을 JSON 배열로 변환하고 BookmarkModel 인스턴스 리스트로 변환
+    List<dynamic> jsonList = jsonDecode(jsonString);
+    List<BookmarkModel> bookmarkList =
+        jsonList.map((json) => BookmarkModel.fromJson(json)).toList();
+
+    return bookmarkList;
   }
 
   @override
@@ -68,6 +113,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
 
   @override
   Widget build(BuildContext context) {
+    buildInit();
     return FutureBuilder(
       future: futureOption,
       builder: (context, snapshot) {
@@ -178,10 +224,23 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                   children: [
                                     IconButton(
                                       icon: Image.asset(
-                                        "assets/images/icon_bookmark.png",
+                                        bookmarkedLines.contains(index.toInt())
+                                            ? "assets/images/icon_colored_bookmark.png"
+                                            : "assets/images/icon_bookmark.png",
                                         height: AppLingua.height * 0.03,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        BookmarkModel bookmark = BookmarkModel(
+                                            bookMarkedLine: index.toInt(),
+                                            bookMarkedPage:
+                                                pages[index.toInt()],
+                                            bookMarkedTime: DateTime.now());
+
+                                        bookmarks.add(bookmark);
+
+                                        saveBookmarks(bookmarks);
+                                        setState(() {});
+                                      },
                                     ),
                                     IconButton(
                                       icon: Image.asset(
@@ -291,26 +350,39 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                         width: AppLingua.width * 0.022,
                                       ),
                                       commonText(
-                                        labelText: '현재 문서내 책갈피 2개',
+                                        labelText:
+                                            '현재 문서내 책갈피 ${bookmarkedLines.length}개',
                                         fontSize: AppLingua.height * 0.02,
                                         fontWeight: FontWeight.w500,
                                         fontColor: const Color(0xFF1E4A75),
                                       ),
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      commonText(
-                                        labelText: '책갈피 목록',
-                                        fontSize: AppLingua.height * 0.015,
-                                        fontWeight: FontWeight.w400,
-                                        fontColor: const Color(0xFF1E4A75),
-                                      ),
-                                      Image.asset(
-                                        'assets/images/icon_small_arrow.png',
-                                        height: AppLingua.height * 0.015,
-                                      ),
-                                    ],
+                                  GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return BookmarkListDialog(
+                                            bookmarks: bookmarks,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        commonText(
+                                          labelText: '책갈피 목록',
+                                          fontSize: AppLingua.height * 0.015,
+                                          fontWeight: FontWeight.w400,
+                                          fontColor: const Color(0xFF1E4A75),
+                                        ),
+                                        Image.asset(
+                                          'assets/images/icon_small_arrow.png',
+                                          height: AppLingua.height * 0.015,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),

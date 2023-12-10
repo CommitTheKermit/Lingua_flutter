@@ -199,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onTap: () {
                                   changeScreen(
                                       context: context,
-                                      nextScreen: const PwFindScreen(),
+                                      nextScreen: const IDPWFindScreen(),
                                       isReplace: false);
                                 },
                                 child: commonText(
