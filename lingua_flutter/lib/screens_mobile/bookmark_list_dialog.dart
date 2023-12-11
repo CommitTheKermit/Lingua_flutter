@@ -3,6 +3,7 @@ import 'package:lingua/main.dart';
 import 'package:lingua/models/bookmark_model.dart';
 import 'package:lingua/screens_mobile/bookmark_result_widget.dart';
 import 'package:lingua/util/api/api_util.dart';
+import 'package:lingua/util/bookmark_process/bookmark_util.dart';
 import 'package:lingua/widgets/read_widgets/dictionary_result_widget.dart';
 
 class BookmarkListDialog extends StatefulWidget {
@@ -31,19 +32,24 @@ class _BookmarkListDialogState extends State<BookmarkListDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       actions: [
         Center(
           child: TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
-                '닫기',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: const Color(0xFF43698F),
-                  fontSize: AppLingua.height * 0.0225,
-                  fontWeight: FontWeight.w700,
+              child: Padding(
+                padding: EdgeInsets.only(top: AppLingua.height * 0.01),
+                child: Text(
+                  '닫기',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: const Color(0xFF43698F),
+                    fontSize: AppLingua.height * 0.0225,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               )),
         )
@@ -84,8 +90,24 @@ class _BookmarkListDialogState extends State<BookmarkListDialog> {
         width: AppLingua.width,
         height: AppLingua.height * 0.7,
         child: SingleChildScrollView(
-            child: BookmarkListWidget(
-          bookmarks: widget.bookmarks,
+            child: Column(
+          children: [
+            for (var bookmark in widget.bookmarks)
+              BookmarkResultWidget(
+                bookmarks: widget.bookmarks,
+                bookmark: bookmark,
+                onTapMove: () {
+                  Navigator.pop(context,
+                      'move :${widget.bookmarks[widget.bookmarks.indexOf(bookmark)].bookMarkedLine}');
+                },
+                onTapDelete: () {
+                  widget.bookmarks.removeAt(widget.bookmarks.indexOf(bookmark));
+
+                  saveBookmarks(widget.bookmarks);
+                  setState(() {});
+                },
+              ),
+          ],
         )),
       ),
     );

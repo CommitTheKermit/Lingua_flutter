@@ -175,6 +175,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
               ),
               border: Border.all(color: GFColors.DARK, width: 0.3),
               length: 4,
+              indicatorSize: TabBarIndicatorSize.tab,
               tabs: [
                 _singleTabButton(argText: '상단'),
                 _singleTabButton(argText: '중단'),
@@ -527,8 +528,14 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                 IconButton(
                     onPressed: downButtonValid ? downButtonTap : () {},
                     icon: downButtonValid
-                        ? Image.asset('assets/images/valid_minus.png')
-                        : Image.asset('assets/images/invalid_minus.png')),
+                        ? Image.asset(
+                            'assets/images/valid_minus.png',
+                            height: AppLingua.height * 0.035,
+                          )
+                        : Image.asset(
+                            'assets/images/invalid_minus.png',
+                            height: AppLingua.height * 0.035,
+                          )),
                 SizedBox(
                   width: AppLingua.width * 0.2,
                   child: Center(
@@ -543,8 +550,14 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                 IconButton(
                     onPressed: upButtonVaild ? upButtonTap : () {},
                     icon: upButtonVaild
-                        ? Image.asset('assets/images/valid_add.png')
-                        : Image.asset('assets/images/invalid_add.png')),
+                        ? Image.asset(
+                            'assets/images/valid_add.png',
+                            height: AppLingua.height * 0.035,
+                          )
+                        : Image.asset(
+                            'assets/images/invalid_add.png',
+                            height: AppLingua.height * 0.035,
+                          )),
               ],
             ),
           )

@@ -596,67 +596,102 @@ class _ReadScreenState extends State<ReadScreen>
       elevation: 0,
       // foregroundColor: const Color(0xFFF8F9FA),
       backgroundColor: Colors.white,
+
       // backgroundColor: Colors.transparent,
       automaticallyImplyLeading: false,
       shape: const Border(
-        left: BorderSide(color: Color(0xFFDEE2E6)),
-        top: BorderSide(color: Color(0xFFDEE2E6)),
-        right: BorderSide(color: Color(0xFFDEE2E6)),
         bottom: BorderSide(width: 1, color: Color(0xFFDEE2E6)),
       ),
 
       // No text styles in this selection
 
-      leading: Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: Image.asset(
-              "assets/images/sort_button.png",
-              height: AppLingua.height * 0.03,
-            ),
-            onPressed: () {
-              Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
-            },
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          );
-        },
-      ),
       actions: [
-        InputAllowButton(
-          apiUtil: apiUtil,
-          onPressedCallback: () {
-            setState(() {});
-          },
-          assetName: "assets/images/edit_button.png",
-          iconSize: AppLingua.height * 0.03,
-        ),
-        TranslateAllowButton(
-          apiUtil: apiUtil,
-          onPressedCallback: () {
-            setState(() {});
-            if (isNovelLoaded) {
-              lineShift(shiftAmount: 0);
-            }
-          },
-          assetName: "assets/images/translate_button.png",
-          iconSize: AppLingua.height * 0.03,
-        ),
-        IconButton(
-          iconSize: 20,
-          onPressed: () {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) {
-                return const DialogWordSearch();
-              },
-            );
-          },
-          icon: Image.asset(
-            "assets/images/search_button.png",
-            height: AppLingua.height * 0.03,
+        SizedBox(
+          width: AppLingua.width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: AppLingua.width * 0.01),
+                  child: Builder(
+                    builder: (BuildContext context) {
+                      return IconButton(
+                        icon: Image.asset(
+                          "assets/images/sort_button.png",
+                          height: AppLingua.height * 0.03,
+                          width: AppLingua.height * 0.03,
+                        ),
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
+                        },
+                        tooltip: MaterialLocalizations.of(context)
+                            .openAppDrawerTooltip,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: AppLingua.width * 0.5,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: commonText(
+                    labelText: AppLingua.titleNovel.isNotEmpty // 파일 제목 출력
+                        ? AppLingua.titleNovel
+                        : '파일을 선택해주세요.',
+                    fontSize: AppLingua.height * 0.025,
+                    fontColor: const Color(0xFF1E4A75),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  children: [
+                    InputAllowButton(
+                      apiUtil: apiUtil,
+                      onPressedCallback: () {
+                        setState(() {});
+                      },
+                      assetName: "assets/images/edit_button.png",
+                      iconSize: AppLingua.height * 0.03,
+                    ),
+                    TranslateAllowButton(
+                      apiUtil: apiUtil,
+                      onPressedCallback: () {
+                        setState(() {});
+                        if (isNovelLoaded) {
+                          lineShift(shiftAmount: 0);
+                        }
+                      },
+                      assetName: "assets/images/translate_button.png",
+                      iconSize: AppLingua.height * 0.03,
+                    ),
+                    IconButton(
+                      iconSize: 20,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (context) {
+                            return const DialogWordSearch();
+                          },
+                        );
+                      },
+                      icon: Image.asset(
+                        "assets/images/search_button.png",
+                        height: AppLingua.height * 0.03,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
+
         // 문맥 탐색 대화상자
         // IconButton(
         //   iconSize: 30,
@@ -673,31 +708,29 @@ class _ReadScreenState extends State<ReadScreen>
         //   color: Colors.white,
         // ),
       ],
-      title: null, // title을 null로 설정
-      flexibleSpace: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return FlexibleSpaceBar(
-            title: Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                width: AppLingua.width / 2,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: commonText(
-                    labelText: AppLingua.titleNovel.isNotEmpty // 파일 제목 출력
-                        ? AppLingua.titleNovel
-                        : '파일을 선택해주세요.',
-                    fontSize: AppLingua.height * 0.025,
-                    fontColor: const Color(0xFF1E4A75),
-                  ),
-                ),
-              ),
-            ),
-            titlePadding: EdgeInsets.only(
-                left: 50, top: AppLingua.height * 0.03), // 원하는 위치로 조절
-          );
-        },
-      ),
+
+      // title을 null로 설정
+      // flexibleSpace: LayoutBuilder(
+      //   builder: (BuildContext context, BoxConstraints constraints) {
+      //     return FlexibleSpaceBar(
+      //       title: SizedBox(
+      //         width: AppLingua.width / 2,
+      //         child: SingleChildScrollView(
+      //           scrollDirection: Axis.horizontal,
+      //           child: commonText(
+      //             labelText: AppLingua.titleNovel.isNotEmpty // 파일 제목 출력
+      //                 ? AppLingua.titleNovel
+      //                 : '파일을 선택해주세요.',
+      //             fontSize: AppLingua.height * 0.025,
+      //             fontColor: const Color(0xFF1E4A75),
+      //           ),
+      //         ),
+      //       ),
+      //       titlePadding: EdgeInsets.only(
+      //           left: 50, top: AppLingua.height * 0.03), // 원하는 위치로 조절
+      //     );
+      //   },
+      // ),
     );
   }
 

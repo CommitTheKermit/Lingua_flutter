@@ -6,7 +6,9 @@ import 'package:lingua/models/bookmark_model.dart';
 import 'package:lingua/screens_mobile/bookmark_list_dialog.dart';
 import 'package:lingua/screens_mobile/etc_screens/read_option_screen.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/util/bookmark_process/bookmark_util.dart';
 import 'package:lingua/util/etc/change_screen.dart';
+import 'package:lingua/util/etc/error_toast.dart';
 import 'package:lingua/util/shared_preferences/preference_manager.dart';
 import 'package:lingua/util/string_process/pager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
@@ -41,41 +43,24 @@ class _ReadModeScreenState extends State<ReadModeScreen>
 
     bookmarks = await loadBookmarks();
 
+    readTextStyle = TextStyle(
+      color: Color(ReadScreen.readModeOption.optFontColor),
+      fontSize: ReadScreen.readModeOption.optFontSize,
+      fontFamily: ReadScreen.readModeOption.optFontFamily,
+      height: ReadScreen.readModeOption.optFontHeight,
+    );
+
+    pages = paginateText(
+        text: AppLingua.stringContents,
+        style: readTextStyle,
+        screenSize: AppLingua.size);
+
     return 'done';
   }
 
   void buildInit() {
     bookmarkedLines =
         bookmarks.map((bookmark) => bookmark.bookMarkedLine).toSet();
-  }
-
-  Future<void> saveBookmarks(List<BookmarkModel> bookmarkList) async {
-    // BookmarkModel 인스턴스 리스트를 JSON 배열로 변환
-    List<Map<String, dynamic>> jsonList =
-        bookmarkList.map((bookmark) => bookmark.toJson()).toList();
-
-    // JSON 배열을 문자열로 변환
-    String jsonString = jsonEncode(jsonList);
-
-    // SharedPreferences에 저장
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('bookmarks', jsonString);
-  }
-
-  Future<List<BookmarkModel>> loadBookmarks() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonString = prefs.getString('bookmarks');
-
-    if (jsonString == null) {
-      return [];
-    }
-
-    // 문자열을 JSON 배열로 변환하고 BookmarkModel 인스턴스 리스트로 변환
-    List<dynamic> jsonList = jsonDecode(jsonString);
-    List<BookmarkModel> bookmarkList =
-        jsonList.map((json) => BookmarkModel.fromJson(json)).toList();
-
-    return bookmarkList;
   }
 
   @override
@@ -97,18 +82,6 @@ class _ReadModeScreenState extends State<ReadModeScreen>
       begin: const Offset(0, 1),
       end: const Offset(0, 0.865),
     ).animate(_controller);
-
-    readTextStyle = TextStyle(
-      color: Color(ReadScreen.readModeOption.optFontColor),
-      fontSize: ReadScreen.readModeOption.optFontSize,
-      fontFamily: ReadScreen.readModeOption.optFontFamily,
-      height: ReadScreen.readModeOption.optFontHeight,
-    );
-
-    pages = paginateText(
-        text: AppLingua.stringContents,
-        style: readTextStyle,
-        screenSize: AppLingua.size);
   }
 
   @override
@@ -255,6 +228,9 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                         height: AppLingua.height * 0.03,
                                       ),
                                       onPressed: () async {
+                                        errorToast(
+                                            argText:
+                                                '폰트 설정 변경시 북마크 페이지가 달라질 수 있습니다.');
                                         String? result = await Navigator.push(
                                           context,
                                           PageRouteBuilder(
@@ -285,17 +261,6 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                         );
                                         if (result != null) {
                                           await initOption();
-
-                                          readTextStyle = TextStyle(
-                                            color: Color(ReadScreen
-                                                .readModeOption.optFontColor),
-                                            fontSize: ReadScreen
-                                                .readModeOption.optFontSize,
-                                            fontFamily: ReadScreen
-                                                .readModeOption.optFontFamily,
-                                            height: ReadScreen
-                                                .readModeOption.optFontHeight,
-                                          );
 
                                           pages = paginateText(
                                               text: AppLingua.stringContents,
@@ -359,8 +324,8 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                     ],
                                   ),
                                   GestureDetector(
-                                    onTap: () {
-                                      showDialog(
+                                    onTap: () async {
+                                      String? result = await showDialog(
                                         context: context,
                                         builder: (context) {
                                           return BookmarkListDialog(
@@ -368,6 +333,17 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                           );
                                         },
                                       );
+                                      if (result != null) {
+                                        if (result.startsWith('move')) {
+                                          setState(() {
+                                            String tempResult =
+                                                result.substring(
+                                                    result.indexOf(':') + 1);
+
+                                            index = double.parse(tempResult);
+                                          });
+                                        } else {}
+                                      }
                                     },
                                     child: Row(
                                       children: [
