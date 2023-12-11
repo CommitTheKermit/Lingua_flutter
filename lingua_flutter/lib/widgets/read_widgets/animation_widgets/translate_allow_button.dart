@@ -62,7 +62,7 @@ class _TranslateAllowButtonState extends State<TranslateAllowButton>
         ReadScreen.isAllowTranslate = !ReadScreen.isAllowTranslate;
         PreferenceManager.saveBoolValue(
             'isAllowTranslate', ReadScreen.isAllowTranslate);
-        if (ReadScreen.isAllowTranslate && widget.apiUtil.API_KEY.isEmpty) {
+        if (ReadScreen.isAllowTranslate && ApiUtil.API_KEY.isEmpty) {
           try {
             await widget.apiUtil.getApiKey();
           } catch (e) {

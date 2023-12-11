@@ -10,7 +10,7 @@ class ApiUtil {
   // static const String baseUrl = "http://10.0.2.2:8000";
   static const String baseUrl = ServerInfo.baseUrl;
   static const int timeoutSec = ServerInfo.timeoutSec;
-  String API_KEY = '';
+  static String API_KEY = '';
 
   static Future<List<WordModel>> dictSearch(String argText) async {
     List<dynamic> returnValue;
@@ -161,7 +161,7 @@ class ApiUtil {
       },
     ).then((response) {
       if (response.statusCode == 200) {
-        API_KEY = json.decode(response.body)['api_key'];
+        ApiUtil.API_KEY = json.decode(response.body)['api_key'];
         return true;
       } else {
         return false;

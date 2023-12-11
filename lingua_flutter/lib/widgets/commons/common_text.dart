@@ -12,9 +12,7 @@ Text commonText({
     style: TextStyle(
       color: fontColor ?? const Color(0xFF363639),
       fontSize: fontSize ?? 12,
-      fontFamily: 'Noto Sans KR',
       fontWeight: fontWeight,
-      height: 0,
     ),
   );
 }

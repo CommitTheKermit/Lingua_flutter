@@ -7,6 +7,7 @@ import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/id_pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/signup_screens/signup_screen_first.dart';
+import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/util/etc/change_screen.dart';
 
 import 'package:lingua/util/etc/exit_confirm.dart';
@@ -223,8 +224,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           } else {
                             return;
                           }
-                          // bool condition = await ApiUser.login();
-                          bool condition = false;
+                          bool condition = await ApiUser.login();
+                          // bool condition = false;
                           if (condition && mounted) {
                             if (isEmailRecord && recordedEmail!.isEmpty) {
                               PreferenceManager.saveBoolValue(

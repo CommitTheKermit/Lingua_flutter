@@ -69,8 +69,16 @@ class _AppLinguaState extends State<AppLingua> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Noto Sans KR',
+        primaryColor: const Color(0xFF1E4A75),
+        highlightColor: const Color(0xFF1E4A75),
+        hintColor: const Color(0xFF1E4A75),
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color(0xFF1E4A75),
+          selectionColor: Color(0xFF1E4A75),
+          selectionHandleColor: Color(0xFF1E4A75),
+        ),
       ),
-      home: const ReadScreen(),
+      home: const LoginScreen(),
     );
   }
 }

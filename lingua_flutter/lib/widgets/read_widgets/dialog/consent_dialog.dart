@@ -35,7 +35,10 @@ Future<dynamic> consentDialog({
                 width: AppLingua.width,
                 decoration: const BoxDecoration(
                   border: Border(
-                    top: BorderSide(width: 1, color: Color(0xFFDEE2E6)),
+                    top: BorderSide(
+                      width: 2,
+                      color: Color(0xFFDEE2E6),
+                    ),
                   ),
                 ),
                 child: Center(

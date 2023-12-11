@@ -44,6 +44,7 @@ class _IDPWFindScreenState extends State<IDPWFindScreen>
           backgroundColor: Colors.white,
           centerTitle: true,
           title: GFSegmentTabs(
+            indicatorSize: TabBarIndicatorSize.tab,
             height: AppLingua.height * 0.0675,
             width: AppLingua.width,
             tabController: tabController,

@@ -3,6 +3,7 @@ import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 import 'package:lingua/util/api/api_user.dart';
+import 'package:lingua/util/etc/change_screen.dart';
 import 'package:lingua/util/etc/validators.dart';
 import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
@@ -70,18 +71,22 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                 ),
                 emailCode(),
                 labeledFormField(
-                    onSaved: (value) => UserModel.password = value!,
-                    argText: '비밀번호',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return '비밀번호를 입력해주세요.';
-                      }
-                      if (value.length < 10) {
-                        return '비밀번호는 10자 이상이어야 합니다.';
-                      }  
-                      UserModel.password = value;
-                      return null;
-                    }),
+                  onSaved: (value) => UserModel.password = value!,
+                  argText: '비밀번호',
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return '비밀번호를 입력해주세요.';
+                    }
+                    if (value.length < 10) {
+                      return '비밀번호는 10자 이상이어야 합니다.';
+                    }
+                    UserModel.password = value;
+                    return null;
+                  },
+                  onChanged: (p0) {
+                    _formKey.currentState!.validate();
+                  },
+                ),
                 labeledFormField(
                   onSaved: (value) => _passwordCheck = value!,
                   argText: '비밀번호 확인',
@@ -92,21 +97,21 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                     return null;
                   },
                   onChanged: (p0) {
-                    if (Validators.isValidPhoneNumber(p0)) {
-                      UserModel.phoneNo = p0;
-                    } else {}
+                    _formKey.currentState!.validate();
                   },
                 ),
                 labeledFormField(
                   onSaved: (value) => _phoneNo = value!,
                   argText: '휴대폰 번호',
                   validator: (value) {
+                    if (!Validators.isValidPhoneNumber(value!)) {
+                      return '잘못된 전화번호 형식입니다.';
+                    }
+                    UserModel.phoneNo = value;
                     return null;
                   },
                   onChanged: (p0) {
-                    if (Validators.isValidPhoneNumber(p0)) {
-                      UserModel.phoneNo = p0;
-                    } else {}
+                    _formKey.currentState!.validate();
                   },
                 ),
                 Expanded(
@@ -117,8 +122,18 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           ? const Color(0xFF1E4A75)
                           : const Color(0xFFDEE2E6),
                       onPressed: isVerifeid
-                          ? () {
-                              ApiUser.signUp();
+                          ? () async {
+                              bool result = await ApiUser.signUp();
+                              if (result) {
+                                await consentDialog(
+                                    title: '성공',
+                                    content: '가입을 환영합니다!',
+                                    context: context);
+                                changeScreen(
+                                    context: context,
+                                    nextScreen: const LoginScreen(),
+                                    isReplace: true);
+                              }
                             }
                           : () {},
                       argText: '가입',
@@ -156,7 +171,6 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
     });
     bool condition;
     if (isValidEmail) {
-      UserModel.email = _email;
       condition = await ApiUser.emailSend(UserModel.email);
       if (condition && mounted) {
         isVerifeid = true;
@@ -222,12 +236,12 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
     required void Function() onPressed,
     required String argText,
   }) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
-      ),
-      onPressed: onPressed,
-      child: SizedBox(
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+        ),
         width: AppLingua.width * 0.9,
         height: AppLingua.height * 0.0625,
         child: Center(
@@ -236,6 +250,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
             style: const TextStyle(
               fontSize: 20,
               fontFamily: 'Neo',
+              color: Colors.white,
             ),
           ),
         ),
@@ -387,24 +402,22 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           ),
                         ),
                         child: TextFormField(
-                          onChanged: (p0) {
-                            if (Validators.isValidEmail(
-                              '$p0@$_selectedDomain',
-                            )) {
-                              setState(() {
-                                isValidEmail = true;
-                                _email = '$p0@$_selectedDomain';
-                              });
-                            } else {
-                              setState(() {
-                                isValidEmail = false;
-                              });
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              isValidEmail = false;
+                              return '이메일을 입력해주세요.';
                             }
+                            if (!Validators.isValidEmail(
+                                '$value@$_selectedDomain')) {
+                              isValidEmail = false;
+                              return '잘못된 이메일 형식입니다.';
+                            }
+                            isValidEmail = true;
+                            UserModel.email = '$value@$_selectedDomain';
+                            return null;
                           },
-                          onTap: () {
-                            setState(() {
-                              isShowEmail = true;
-                            });
+                          onChanged: (p0) {
+                            _formKey.currentState!.validate();
                           },
                           style: TextStyle(
                             color: const Color(0xFF868E96),
@@ -416,6 +429,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                             border: OutlineInputBorder(
                               borderSide: BorderSide.none,
                             ),
+                            errorStyle: TextStyle(fontSize: 0),
                           ),
                         ),
                       ),
@@ -472,8 +486,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
 
                             setState(() {
                               _selectedDomain = value!;
-                              _email =
-                                  '${_email.substring(0, _email.indexOf('@'))}@$_selectedDomain';
+                              _formKey.currentState!.validate();
                               if (_selectedDomain == '직접입력') {
                                 _isShowTextField = true;
                                 _email = '';
@@ -501,23 +514,28 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                               ),
                               child: TextFormField(
                                 onSaved: (value) => _email = value!,
-                                onChanged: (p0) {
-                                  if (Validators.isValidEmail(p0)) {
-                                    setState(() {
-                                      isValidEmail = true;
-                                      _email = p0;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      isValidEmail = false;
-                                    });
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    isValidEmail = false;
+                                    return '이메일을 입력해주세요.';
                                   }
+                                  if (!Validators.isValidEmail(value)) {
+                                    isValidEmail = false;
+                                    return '잘못된 이메일 형식입니다.';
+                                  }
+                                  isValidEmail = true;
+                                  UserModel.email = value;
+                                  return null;
+                                },
+                                onChanged: (p0) {
+                                  _formKey.currentState!.validate();
                                 },
                                 style: TextStyle(
                                   color: const Color(0xFF868E96),
                                   fontSize: AppLingua.height * 0.02,
                                 ),
                                 decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
                                   fillColor: Colors.transparent,
                                   hintText: '이메일',
                                   hintStyle: TextStyle(
@@ -569,10 +587,9 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                                   .toList(),
                               onChanged: (value) {
                                 // items 의 DropdownMenuItem 의 value 반환
-                                print(value);
-                                print(_selectedDomain);
                                 setState(() {
                                   _selectedDomain = value!;
+                                  _formKey.currentState!.validate();
                                   if (_selectedDomain != '직접입력') {
                                     _isShowTextField = false;
                                   }

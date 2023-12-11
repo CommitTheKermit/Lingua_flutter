@@ -96,6 +96,7 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
+                          UserModel.password = _password;
                         } else {
                           return;
                         }
@@ -132,23 +133,30 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                             context: context);
                       },
                       child: Container(
-                        width: AppLingua.width,
+                        width: AppLingua.width * 0.9,
                         height: 60,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
+                        decoration: ShapeDecoration(
+                          color: const Color(0xFF1E4A75),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
                         ),
-                        child: const Center(
+                        child: Center(
                             child: Text(
-                          '완료',
+                          '비밀번호 재설정',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: 'Neo',
+                            color: const Color(0xFFF8F9FA),
+                            fontSize: AppLingua.height * 0.0225,
+                            fontWeight: FontWeight.w700,
                           ),
                         )),
                       ),
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: AppLingua.height * 0.03,
+                )
               ],
             ),
           ),

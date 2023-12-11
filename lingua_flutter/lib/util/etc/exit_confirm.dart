@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Future<bool> exitConfirm(var context) async {
   // 이곳에 종료 전에 수행하고 싶은 작업을 추가합니다.
@@ -19,7 +22,11 @@ Future<bool> exitConfirm(var context) async {
             TextButton(
               child: const Text('예'),
               onPressed: () {
-                Navigator.of(context).pop(true);
+                if (Platform.isAndroid) {
+                  SystemNavigator.pop();
+                } else if (Platform.isIOS) {
+                  exit(0);
+                }
               },
             ),
           ],

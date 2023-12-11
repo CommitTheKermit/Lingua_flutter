@@ -51,7 +51,7 @@ class _ReadScreenState extends State<ReadScreen>
         SentenceProcess,
         WidgetsBindingObserver,
         SingleTickerProviderStateMixin {
-  bool STOP_REFRESH = true;
+  bool STOP_REFRESH = false;
 
   String originalSingleSentence = '';
   String translatedSentence = '';
@@ -93,6 +93,11 @@ class _ReadScreenState extends State<ReadScreen>
 
     ReadScreen.isAllowTranslate =
         await PreferenceManager.getBoolValue('isAllowTranslate') ?? false;
+
+    if (ReadScreen.isAllowTranslate) {
+      ApiUtil apiUtil = ApiUtil();
+      apiUtil.getApiKey();
+    }
     ReadScreen.isAllowInput =
         await PreferenceManager.getBoolValue('isAllowInput') ?? true;
 
@@ -139,10 +144,12 @@ class _ReadScreenState extends State<ReadScreen>
       rawString = rawString.replaceAll(r'\n', '\n').replaceAll(r'\t', '\t');
 
       //번역 기록 입력
-      AppLingua.trasJson[originalSingleSentence] = rawString;
-      saveMapToFile(
-          map: AppLingua.trasJson,
-          filename: '${AppLingua.titleNovel}_translated.json');
+      if (!rawString.startsWith('error')) {
+        AppLingua.trasJson[originalSingleSentence] = rawString;
+        saveMapToFile(
+            map: AppLingua.trasJson,
+            filename: '${AppLingua.titleNovel}_translated.json');
+      }
 
       machineTranslated.value = rawString;
     }

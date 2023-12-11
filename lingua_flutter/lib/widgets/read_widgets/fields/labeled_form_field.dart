@@ -41,11 +41,12 @@ Widget labeledFormField({
             child: Center(
               child: TextFormField(
                 decoration: InputDecoration(
+                    contentPadding: EdgeInsets.zero,
                     hintText: hintText,
                     border: InputBorder.none,
                     errorStyle: TextStyle(
                       height: 0.1,
-                      fontSize: AppLingua.height * 0.01,
+                      fontSize: AppLingua.height * 0.0175,
                     )),
                 onSaved: onSaved,
                 validator: validator,

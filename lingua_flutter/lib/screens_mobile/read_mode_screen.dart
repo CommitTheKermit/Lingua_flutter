@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/bookmark_model.dart';
 import 'package:lingua/screens_mobile/bookmark_list_dialog.dart';
+
 import 'package:lingua/screens_mobile/etc_screens/read_option_screen.dart';
 import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/util/bookmark_process/bookmark_util.dart';
@@ -12,6 +13,7 @@ import 'package:lingua/util/etc/error_toast.dart';
 import 'package:lingua/util/shared_preferences/preference_manager.dart';
 import 'package:lingua/util/string_process/pager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/read_widgets/dialog/search_list_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ReadModeScreen extends StatefulWidget {
@@ -220,7 +222,27 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                         "assets/images/search_button.png",
                                         height: AppLingua.height * 0.03,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        String? result = await showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return SearchListDialog(
+                                              pages: pages,
+                                            );
+                                          },
+                                        );
+                                        if (result != null) {
+                                          if (result.startsWith('move')) {
+                                            setState(() {
+                                              String tempResult =
+                                                  result.substring(
+                                                      result.indexOf(':') + 1);
+
+                                              index = double.parse(tempResult);
+                                            });
+                                          }
+                                        }
+                                      },
                                     ),
                                     IconButton(
                                       icon: Image.asset(
@@ -342,7 +364,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
 
                                             index = double.parse(tempResult);
                                           });
-                                        } else {}
+                                        }
                                       }
                                     },
                                     child: Row(
