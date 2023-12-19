@@ -21,6 +21,7 @@ class ReadDrawer extends StatelessWidget {
         width: AppLingua.width * 0.7,
         child: Drawer(
           backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
@@ -65,7 +66,7 @@ class ReadDrawer extends StatelessWidget {
                     vertical: AppLingua.height * 0.035),
                 child: Container(
                   width: AppLingua.width * 0.66,
-                  height: AppLingua.height * 0.15,
+                  height: AppLingua.height * 0.1125,
                   decoration: ShapeDecoration(
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -103,23 +104,6 @@ class ReadDrawer extends StatelessWidget {
                           fontSize: AppLingua.height * 0.02),
                       SizedBox(
                         height: AppLingua.height * 0.015,
-                      ),
-                      Container(
-                        width: AppLingua.width * 0.55,
-                        height: AppLingua.height * 0.0375,
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFF43698F),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                        ),
-                        child: Center(
-                          child: commonText(
-                            labelText: UserModel.email,
-                            fontSize: AppLingua.height * 0.0175,
-                            fontColor: const Color(0xFFF8F9FA),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
                       ),
                     ],
                   ),

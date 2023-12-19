@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 
@@ -33,11 +35,48 @@ class DictionaryResultWidget extends StatelessWidget {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
         if (snapshot.hasData) {
+          List<WordModel> words = snapshot.data!;
+
+          for (int i = 0; i < words.length; i++) {
+            for (int j = 0; j < words.length; j++) {
+              if (words[i] == words[j]) {
+                continue;
+              }
+              if (words[i].kor == words[j].kor) {
+                if (words[i].meaning != words[j].meaning) {
+                  words[i].meaning += words[j].meaning;
+                }
+
+                log(words[i].meaning);
+                words.remove(words[j]);
+                j = 0;
+              }
+            }
+
+            if (words[i].meaning.indexOf('.') !=
+                words[i].meaning.lastIndexOf('.')) {
+              List spliited = words[i].meaning.split('.');
+              String resultMeaning = '';
+              for (int k = 0; k < spliited.length - 1; k++) {
+                resultMeaning += k != spliited.length - 2
+                    ? '${k + 1}. ${spliited[k]}\n'
+                    : '${k + 1}. ${spliited[k]}';
+              }
+
+              words[i].meaning = resultMeaning;
+            }
+
+            //   resultWords.add(words[i]);
+            // } else {
+            //   resultWords.add(words[i]);
+            // }
+          }
+
           return SingleChildScrollView(
             controller: _scrollController,
             child: Column(
               children: [
-                for (var wordMean in snapshot.data!)
+                for (var wordMean in words)
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
@@ -85,10 +124,11 @@ class DictionaryResultWidget extends StatelessWidget {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              wordMean.pos.contains(',')
-                                                  ? wordMean.pos.substring(0,
-                                                      wordMean.pos.indexOf(','))
-                                                  : wordMean.pos,
+                                              wordMean.pos,
+                                              // wordMean.pos.contains(',')
+                                              //     ? wordMean.pos.substring(0,
+                                              //         wordMean.pos.indexOf(','))
+                                              //     : wordMean.pos,
                                               style: TextStyle(
                                                 color: const Color(0xFFF8F9FA),
                                                 fontSize: MediaQuery.of(context)
@@ -118,6 +158,7 @@ class DictionaryResultWidget extends StatelessWidget {
                                       style: TextStyle(
                                         color: const Color(0xFF495057),
                                         fontSize: AppLingua.height * 0.0225,
+                                        height: 2,
                                       ),
                                     ),
                                   ),

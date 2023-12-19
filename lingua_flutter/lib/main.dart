@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:lingua/screens_mobile/read_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -41,7 +40,7 @@ class _AppLinguaState extends State<AppLingua> {
 
     //권한 상태를 기록
 
-    var storageStatus = statuses[Permission.storage];
+    // var storageStatus = statuses[Permission.storage];
 
     // if (cameraStatus!.isGranted &&
     //     microphoneStatus!.isGranted &&
@@ -68,16 +67,21 @@ class _AppLinguaState extends State<AppLingua> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Noto Sans KR',
-        primaryColor: const Color(0xFF1E4A75),
-        highlightColor: const Color(0xFF1E4A75),
-        hintColor: const Color(0xFF1E4A75),
-        textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: Color(0xFF1E4A75),
-          selectionColor: Color(0xFF1E4A75),
-          selectionHandleColor: Color(0xFF1E4A75),
-        ),
-      ),
+          fontFamily: 'Noto Sans KR',
+          primaryColor: const Color(0xFF1E4A75),
+          highlightColor: const Color(0xFF1E4A75),
+          hintColor: const Color(0xFF1E4A75),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Color(0xFF1E4A75),
+            selectionColor: Color(0xFF1E4A75),
+            selectionHandleColor: Color(0xFF1E4A75),
+          ),
+          dialogBackgroundColor: Colors.white,
+          dialogTheme: DialogTheme(
+            surfaceTintColor: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          )),
       home: const LoginScreen(),
     );
   }

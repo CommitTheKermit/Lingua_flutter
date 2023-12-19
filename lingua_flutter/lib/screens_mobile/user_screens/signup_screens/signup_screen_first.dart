@@ -6,10 +6,8 @@ import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/util/etc/change_screen.dart';
 import 'package:lingua/util/etc/validators.dart';
 import 'package:lingua/widgets/commons/common_appbar.dart';
+import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
-
-import '../../../widgets/read_widgets/dialog/consent_dialog.dart';
-import '../../../widgets/user_widgets/next_join_button.dart';
 
 class SignUpScreenFirst extends StatefulWidget {
   const SignUpScreenFirst({super.key});

@@ -65,7 +65,7 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                   Navigator.of(context).pop('back');
                 },
                 icon: Image.asset("assets/images/icon_close.png",
-                    height: AppLingua.height * 0.1),
+                    height: AppLingua.height * 0.05),
               ),
             ),
           ],
@@ -98,13 +98,17 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                 padding: EdgeInsets.symmetric(
                   horizontal: AppLingua.width * 0.04,
                 ),
-                child: SingleChildScrollView(
+                child: Scrollbar(
                   controller: _scrollController,
-                  child: Text(
-                    AppLingua.originalSentences[index],
-                    style: TextStyle(
-                      fontSize: AppLingua.height * 0.03,
-                      height: 1.7,
+                  thumbVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Text(
+                      AppLingua.originalSentences[index],
+                      style: TextStyle(
+                        fontSize: AppLingua.height * 0.03,
+                        height: 1.7,
+                      ),
                     ),
                   ),
                 ),

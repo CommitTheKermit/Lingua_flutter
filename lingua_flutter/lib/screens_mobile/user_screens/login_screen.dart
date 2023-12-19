@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
-import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/screens_mobile/main_screens/read_screen.dart';
+
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/id_pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/signup_screens/signup_screen_first.dart';
@@ -230,6 +231,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (isEmailRecord && recordedEmail!.isEmpty) {
                               PreferenceManager.saveBoolValue(
                                   'isEmailRecord', isEmailRecord);
+                              PreferenceManager.saveValue('email', _email);
+                            } else {
                               PreferenceManager.saveValue('email', _email);
                             }
 

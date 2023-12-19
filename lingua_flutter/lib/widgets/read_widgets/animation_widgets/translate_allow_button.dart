@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/screens_mobile/main_screens/read_screen.dart';
 import 'package:lingua/util/api/api_util.dart';
 import 'package:lingua/util/shared_preferences/preference_manager.dart';
 import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';

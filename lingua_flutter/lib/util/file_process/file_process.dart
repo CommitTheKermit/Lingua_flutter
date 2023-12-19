@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:external_path/external_path.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/util/file_process/translate_input_process.dart';
+import 'package:path_provider/path_provider.dart';
 
 mixin FileProcess {
   Future<String?> fileRead(String path) async {
@@ -107,5 +110,41 @@ mixin FileProcess {
     }
 
     return sentences;
+  }
+
+  Future<void> saveFile({
+    required String fileName,
+    String fileFormat = 'csv',
+  }) async {
+    String path = '';
+    String? directory;
+
+    if (Platform.isAndroid) {
+      directory = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS); // 외부 저장소 경로 얻기
+
+      Directory downloadDirectory = Directory(directory);
+      if (downloadDirectory.existsSync()) {
+        path = downloadDirectory.path;
+      }
+    } else if (Platform.isIOS) {
+      path = (await getApplicationDocumentsDirectory()).path;
+    }
+
+    final file =
+        await File('$path/${AppLingua.titleNovel}$fileName.$fileFormat')
+            .create(recursive: true); // 파일 경로 설정
+
+    String csvData = '원문, 입력문, 기계번역문\n';
+    AppLingua.inputJson.forEach((key, value) {
+      if (AppLingua.trasJson.containsKey(key)) {
+        csvData += '"$key","$value","${AppLingua.trasJson[key]}",\n';
+      } else {
+        csvData += '"$key","$value",\n';
+      }
+    });
+
+    const bomUtf8 = '\uFEFF';
+    await file.writeAsString(bomUtf8 + csvData, encoding: utf8);
   }
 }

@@ -1,5 +1,5 @@
 name: lingua
-description: A new Flutter project.
+description: Mobile translate tool, translate viewer
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -40,6 +40,7 @@ dependencies:
   build_runner:
   json_annotation:
   flutter_native_splash: ^2.3.7
+  external_path: ^1.0.3
 
 
 
@@ -49,6 +50,7 @@ dependencies:
   workmanager: ^0.5.2
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
+  show_more_text_popup: ^0.3.0
 
 dev_dependencies:
   flutter_test:

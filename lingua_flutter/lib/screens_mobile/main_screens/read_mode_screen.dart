@@ -6,15 +6,17 @@ import 'package:lingua/models/bookmark_model.dart';
 import 'package:lingua/screens_mobile/bookmark_list_dialog.dart';
 
 import 'package:lingua/screens_mobile/etc_screens/read_option_screen.dart';
-import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/screens_mobile/interactable_page_widget.dart';
+import 'package:lingua/screens_mobile/main_screens/read_screen.dart';
+
 import 'package:lingua/util/bookmark_process/bookmark_util.dart';
-import 'package:lingua/util/etc/change_screen.dart';
 import 'package:lingua/util/etc/error_toast.dart';
 import 'package:lingua/util/shared_preferences/preference_manager.dart';
 import 'package:lingua/util/string_process/pager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/read_widgets/dialog/dialog_page_search.dart';
 import 'package:lingua/widgets/read_widgets/dialog/search_list_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:show_more_text_popup/show_more_text_popup.dart';
 
 class ReadModeScreen extends StatefulWidget {
   const ReadModeScreen({super.key});
@@ -89,6 +91,17 @@ class _ReadModeScreenState extends State<ReadModeScreen>
   @override
   Widget build(BuildContext context) {
     buildInit();
+
+    // ShowMoreTextPopup popup = ShowMoreTextPopup(context,
+    // text: text,
+    // textStyle: const TextStyle(color: Colors.black),
+    // height: 200,
+    // width: 100,
+    // backgroundColor: const Color(0xFF16CCCC),
+    // padding: const EdgeInsets.all(4.0),
+    // borderRadius: BorderRadius.circular(10.0));
+
+    // print('\n\n'.isEmpty.toString());
     return FutureBuilder(
       future: futureOption,
       builder: (context, snapshot) {
@@ -97,7 +110,10 @@ class _ReadModeScreenState extends State<ReadModeScreen>
             child: CircularProgressIndicator(),
           );
         } else {
+          List splitted = pages[index.toInt()].split(RegExp(r"[ ]"));
+          // print(splitted);
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             body: GestureDetector(
               onTap: () {
                 setState(() {
@@ -140,6 +156,8 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                           padding: EdgeInsets.symmetric(
                               horizontal: AppLingua.width * 0.04,
                               vertical: AppLingua.height * 0),
+                          // child: InteractableTextsWidget(
+                          //     readTextStyle: readTextStyle, splitted: splitted),
                           child: Center(
                             child: Text(
                               pages[index.toInt()],
@@ -205,13 +223,22 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                         height: AppLingua.height * 0.03,
                                       ),
                                       onPressed: () {
-                                        BookmarkModel bookmark = BookmarkModel(
-                                            bookMarkedLine: index.toInt(),
-                                            bookMarkedPage:
-                                                pages[index.toInt()],
-                                            bookMarkedTime: DateTime.now());
+                                        if (!bookmarkedLines
+                                            .contains(index.toInt())) {
+                                          BookmarkModel bookmark =
+                                              BookmarkModel(
+                                                  bookMarkedLine: index.toInt(),
+                                                  bookMarkedPage:
+                                                      pages[index.toInt()],
+                                                  bookMarkedTime:
+                                                      DateTime.now());
 
-                                        bookmarks.add(bookmark);
+                                          bookmarks.add(bookmark);
+                                        } else {
+                                          bookmarks.removeWhere((element) =>
+                                              element.bookMarkedLine ==
+                                              index.toInt());
+                                        }
 
                                         saveBookmarks(bookmarks);
                                         setState(() {});
@@ -419,35 +446,66 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    width: AppLingua.width * 0.3,
-                                    height: AppLingua.height * 0.045,
-                                    decoration: ShapeDecoration(
-                                      shape: RoundedRectangleBorder(
-                                        side: const BorderSide(
-                                            width: 0.5,
-                                            color: Color(0xFF868E96)),
-                                        borderRadius: BorderRadius.circular(5),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      String result = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return DialogPageSearch(
+                                            index: index.toInt(),
+                                            pages: pages,
+                                          );
+                                        },
+                                      );
+                                      setState(() {
+                                        if (result == 'back') {
+                                          return;
+                                        }
+                                        // index = result;
+                                        // IndexSaveLoad.saveCurrentIndex(index);
+                                        // originalSingleSentence = AppLingua.originalSentences[index];
+                                        // words = extractWords(originalSingleSentence);
+                                        // _scrollController.jumpTo(0);
+
+                                        index = double.parse(result);
+                                      });
+                                    },
+                                    child: Container(
+                                      width: AppLingua.width * 0.3,
+                                      height: AppLingua.height * 0.045,
+                                      decoration: ShapeDecoration(
+                                        shape: RoundedRectangleBorder(
+                                          side: const BorderSide(
+                                              width: 0.5,
+                                              color: Color(0xFF868E96)),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
                                       ),
-                                    ),
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          commonText(
-                                            labelText: index.toStringAsFixed(0),
-                                            fontColor: const Color(0xFF1E4A75),
-                                            fontSize: AppLingua.height * 0.0225,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                          commonText(
-                                            labelText: "/${pages.length - 1}",
-                                            fontColor: const Color(0xFF868E96),
-                                            fontSize: AppLingua.height * 0.0225,
-                                            fontWeight: FontWeight.w700,
-                                          )
-                                        ],
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            commonText(
+                                              labelText:
+                                                  index.toStringAsFixed(0),
+                                              fontColor:
+                                                  const Color(0xFF1E4A75),
+                                              fontSize:
+                                                  AppLingua.height * 0.0225,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                            commonText(
+                                              labelText: "/${pages.length - 1}",
+                                              fontColor:
+                                                  const Color(0xFF868E96),
+                                              fontSize:
+                                                  AppLingua.height * 0.0225,
+                                              fontWeight: FontWeight.w700,
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),

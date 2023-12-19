@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/read_option.dart';
-import 'package:lingua/screens_mobile/read_screen.dart';
+import 'package:lingua/screens_mobile/main_screens/read_screen.dart';
 import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:lingua/widgets/commons/common_divider.dart';
 import 'package:lingua/widgets/commons/common_text.dart';

@@ -6,6 +6,7 @@ import 'dart:convert';
 
 class ApiUser {
   // static const String baseUrl = "http://10.0.2.2:8000";
+
   static const String baseUrl = ServerInfo.baseUrl;
   static const int timeoutSec = ServerInfo.timeoutSec;
   static late String? cookie;

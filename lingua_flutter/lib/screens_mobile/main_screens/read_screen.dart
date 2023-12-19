@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/models/user_model.dart';
-import 'package:lingua/screens_mobile/read_mode_screen.dart';
+import 'package:lingua/screens_mobile/main_screens/read_mode_screen.dart';
+
 import 'package:lingua/screens_mobile/etc_screens/read_option_screen.dart';
 import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/util/api/api_util.dart';
@@ -21,12 +22,12 @@ import 'package:lingua/widgets/read_widgets/animation_widgets/translate_allow_bu
 import 'package:lingua/widgets/read_widgets/call_limit_widget.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_line_search.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_word_search.dart';
+import 'package:lingua/widgets/read_widgets/read_button_widget.dart';
 import 'package:lingua/widgets/read_widgets/read_drawer.dart';
+import 'package:lingua/widgets/read_widgets/text_field_widget.dart';
 import 'package:lingua/widgets/read_widgets/translated_field_widget.dart';
 import 'package:lingua/widgets/read_widgets/words_widget.dart';
 import 'package:lingua/util/etc/error_toast.dart';
-import '../widgets/read_widgets/read_button_widget.dart';
-import '../widgets/read_widgets/text_field_widget.dart';
 
 class ReadScreen extends StatefulWidget {
   static bool isAllowTranslate = false;
@@ -127,31 +128,32 @@ class _ReadScreenState extends State<ReadScreen>
     } else {
       _inputController.text = '';
     }
-
     setState(() {});
-
-    if (ReadScreen.isAllowTranslate) {
+    if (ReadScreen.isAllowTranslate && requestQuota.value > 0) {
       //번역 기록 불러오기
       if (AppLingua.trasJson.containsKey(originalSingleSentence)) {
         machineTranslated.value = AppLingua.trasJson[originalSingleSentence]!;
         return;
       }
 
-      String rawString =
+      String translatedString =
           await apiUtil.requestTranslatedText(originalSingleSentence);
       requestQuota.value = requestQuota.value - 1;
 
-      rawString = rawString.replaceAll(r'\n', '\n').replaceAll(r'\t', '\t');
+      translatedString =
+          translatedString.replaceAll(r'\n', '\n').replaceAll(r'\t', '\t');
 
       //번역 기록 입력
-      if (!rawString.startsWith('error')) {
-        AppLingua.trasJson[originalSingleSentence] = rawString;
+      if (!translatedString.startsWith('error')) {
+        AppLingua.trasJson[originalSingleSentence] = translatedString;
         saveMapToFile(
             map: AppLingua.trasJson,
             filename: '${AppLingua.titleNovel}_translated.json');
       }
 
-      machineTranslated.value = rawString;
+      machineTranslated.value = translatedString;
+    } else if (requestQuota.value <= 0) {
+      machineTranslated.value = '번역 콜이 부족합니다.';
     }
   }
 
@@ -487,6 +489,7 @@ class _ReadScreenState extends State<ReadScreen>
           ),
           onTap: () async {
             try {
+              errorToast(argText: '.txt 파일만 불러올 수 있습니다.');
               Navigator.pop(context);
               AppLingua.originalSentences = await filePickAndRead();
               _loadInitialIndex();
@@ -499,7 +502,7 @@ class _ReadScreenState extends State<ReadScreen>
             width: AppLingua.height * 0.03,
           ),
           title: const Text(
-            '읽기 모드',
+            '뷰어 모드',
             style: TextStyle(
               fontSize: 16,
             ),
@@ -523,7 +526,7 @@ class _ReadScreenState extends State<ReadScreen>
             width: AppLingua.height * 0.03,
           ),
           title: const Text(
-            '읽기 옵션',
+            '옵션',
             style: TextStyle(
               fontSize: 16,
             ),
@@ -581,19 +584,35 @@ class _ReadScreenState extends State<ReadScreen>
         ),
         ListTile(
           leading: Image.asset(
-            'assets/images/icon_wordbook.png',
+            'assets/images/icon_download.png',
             width: AppLingua.height * 0.03,
           ),
           title: const Text(
-            '단어장',
+            '기록 추출',
             style: TextStyle(
               fontSize: 16,
             ),
           ),
-          onTap: () {
-            errorToast(argText: '준비중.');
+          onTap: () async {
+            await saveFile(fileName: 'fileName');
+            errorToast(argText: '저장 완료. 다운로드 폴더를 확인해보세요!');
           },
         ),
+        // ListTile(
+        //   leading: Image.asset(
+        //     'assets/images/icon_wordbook.png',
+        //     width: AppLingua.height * 0.03,
+        //   ),
+        //   title: const Text(
+        //     '단어장',
+        //     style: TextStyle(
+        //       fontSize: 16,
+        //     ),
+        //   ),
+        //   onTap: () {
+        //     errorToast(argText: '준비중.');
+        //   },
+        // ),
       ],
     );
   }
@@ -616,32 +635,30 @@ class _ReadScreenState extends State<ReadScreen>
         SizedBox(
           width: AppLingua.width,
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: AppLingua.width * 0.01),
-                  child: Builder(
-                    builder: (BuildContext context) {
-                      return IconButton(
-                        icon: Image.asset(
-                          "assets/images/sort_button.png",
-                          height: AppLingua.height * 0.03,
-                          width: AppLingua.height * 0.03,
-                        ),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
-                        },
-                        tooltip: MaterialLocalizations.of(context)
-                            .openAppDrawerTooltip,
-                      );
-                    },
-                  ),
+              Padding(
+                padding: EdgeInsets.only(left: AppLingua.width * 0.01),
+                child: Builder(
+                  builder: (BuildContext context) {
+                    return IconButton(
+                      icon: Image.asset(
+                        "assets/images/sort_button.png",
+                        height: AppLingua.height * 0.03,
+                        width: AppLingua.height * 0.03,
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
+                      },
+                      tooltip: MaterialLocalizations.of(context)
+                          .openAppDrawerTooltip,
+                    );
+                  },
                 ),
               ),
               SizedBox(
-                width: AppLingua.width * 0.5,
+                width: AppLingua.width * 0.4,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: commonText(
@@ -653,8 +670,8 @@ class _ReadScreenState extends State<ReadScreen>
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.centerRight,
+              const Spacer(),
+              SizedBox(
                 child: Row(
                   children: [
                     InputAllowButton(
