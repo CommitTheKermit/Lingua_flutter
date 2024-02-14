@@ -96,13 +96,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      commonText(
-                        labelText: 'lingua',
-                        fontSize: AppLingua.height * 0.0425,
-                        fontWeight: FontWeight.w700,
+                      Image.asset(
+                        'assets/images/logo_color.png',
+                        width: AppLingua.width * 0.3,
+                        height: AppLingua.height * 0.15,
                       ),
                       SizedBox(
-                        height: AppLingua.height * 0.1375,
+                        height: AppLingua.height * 0.075,
                       ),
                       buildFormField(
                         controller: controller,

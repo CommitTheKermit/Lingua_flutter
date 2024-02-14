@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart';
 
 // Map을 JSON으로 변환하고 파일로 저장하는 함수
 Future<void> saveMapToFile(
-    {required Map<String, String> map, required String filename}) async {
+    {required Map<String, dynamic> map, required String filename}) async {
   final directory = await getApplicationDocumentsDirectory();
   final file = File('${directory.path}/$filename');
   await file.writeAsString(jsonEncode(map));

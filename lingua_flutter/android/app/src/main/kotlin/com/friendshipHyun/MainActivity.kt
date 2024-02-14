@@ -1,4 +1,4 @@
-package com.example.lingua
+package com.friendshipHyun
 
 import io.flutter.embedding.android.FlutterActivity
 

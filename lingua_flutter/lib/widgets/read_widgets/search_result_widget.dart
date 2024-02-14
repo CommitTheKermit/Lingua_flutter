@@ -21,8 +21,9 @@ class SearchResultWidget extends StatefulWidget {
 class _SearchResultWidgetState extends State<SearchResultWidget> {
   @override
   Widget build(BuildContext context) {
-    int targetIndex =
-        widget.searchResult.pageContent.indexOf(widget.targetWord);
+    int targetIndex = widget.searchResult.pageContent
+        .toLowerCase()
+        .indexOf(widget.targetWord);
     int variance = 60;
 
     int prefixLimit = targetIndex - variance > 0 ? targetIndex - variance : 0;
