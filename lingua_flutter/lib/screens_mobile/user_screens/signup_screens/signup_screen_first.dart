@@ -167,14 +167,21 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
     setState(() {
       isLoading = true;
     });
-    bool condition;
+    String condition;
     if (isValidEmail) {
       condition = await ApiUser.emailSend(UserModel.email);
-      if (condition && mounted) {
-        isVerifeid = true;
+      if (condition == '200') {
+        // isSent = true;
+        isEmailSent = true;
         consentDialog(
           title: '성공',
           content: '메일함을 확인해주세요.',
+          context: context,
+        );
+      } else if (condition == '404') {
+        consentDialog(
+          title: '중복',
+          content: '이미 존재하는 이메일입니다.',
           context: context,
         );
       } else {
@@ -202,17 +209,11 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
       textEditingController.text,
     );
 
-    if (condition == '200' && mounted) {
-      isSent = true;
+    if (condition == '200') {
+      isVerifeid = true;
       consentDialog(
         title: '성공',
         content: '인증 성공',
-        context: context,
-      );
-    } else if (condition == '404') {
-      consentDialog(
-        title: '중복',
-        content: '이미 존재하는 이메일입니다.',
         context: context,
       );
     } else {
@@ -304,7 +305,6 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                     ? GestureDetector(
                         onTap: () {
                           _emailSubmit();
-                          isEmailSent = true;
                         },
                         child: Container(
                           width: AppLingua.width * 0.35,
@@ -455,6 +455,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           ),
                         ),
                         child: DropdownButton(
+                          dropdownColor: Colors.white,
                           underline: const SizedBox.shrink(),
                           isExpanded: true,
                           icon: Image.asset(

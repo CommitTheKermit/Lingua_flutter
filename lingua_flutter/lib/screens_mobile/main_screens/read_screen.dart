@@ -594,8 +594,12 @@ class _ReadScreenState extends State<ReadScreen>
             ),
           ),
           onTap: () async {
-            await saveFile(fileName: 'fileName');
-            errorToast(argText: '저장 완료. 다운로드 폴더를 확인해보세요!');
+            try {
+              await saveFile(fileName: 'fileName');
+              errorToast(argText: '저장 완료. 다운로드 폴더를 확인해보세요!');
+            } catch (e) {
+              errorToast(argText: '저장 오류 발생');
+            }
           },
         ),
         // ListTile(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/bookmark_model.dart';
@@ -95,7 +97,7 @@ class _SearchListDialogState extends State<SearchListDialog> {
                     }
                   }
                 });
-                print(_searchResults.length);
+                log(_searchResults.length.toString());
               },
               child: Image.asset(
                 "assets/images/icon_magnifier.png",

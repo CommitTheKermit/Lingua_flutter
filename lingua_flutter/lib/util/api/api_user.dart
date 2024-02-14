@@ -38,7 +38,7 @@ class ApiUser {
     );
   }
 
-  static Future<bool> emailSend(String email) async {
+  static Future<String> emailSend(String email) async {
     final url = Uri.parse('$baseUrl/users/mailsend');
 
     return await http
@@ -50,14 +50,10 @@ class ApiUser {
       body: jsonEncode({'email': email}),
     )
         .then((response) {
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
+      return response.statusCode.toString();
     }).timeout(
       const Duration(seconds: timeoutSec),
-      onTimeout: () => false, // 3초 후에 실행될 대체값입니다.
+      onTimeout: () => '400', // 3초 후에 실행될 대체값입니다.
     );
   }
 

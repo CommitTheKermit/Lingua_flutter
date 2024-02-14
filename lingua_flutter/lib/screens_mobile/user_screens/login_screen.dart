@@ -81,6 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
+            backgroundColor: Colors.white,
             resizeToAvoidBottomInset: false,
             body: WillPopScope(
               onWillPop: () async {
@@ -221,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            print('$_email $_password');
+                            log('$_email $_password');
                           } else {
                             return;
                           }

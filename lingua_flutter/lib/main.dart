@@ -67,6 +67,9 @@ class _AppLinguaState extends State<AppLingua> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+          // ignore: deprecated_member_use
+
+          scaffoldBackgroundColor: Colors.white,
           fontFamily: 'Noto Sans KR',
           primaryColor: const Color(0xFF1E4A75),
           highlightColor: const Color(0xFF1E4A75),

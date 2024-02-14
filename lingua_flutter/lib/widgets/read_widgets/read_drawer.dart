@@ -66,7 +66,7 @@ class ReadDrawer extends StatelessWidget {
                     vertical: AppLingua.height * 0.035),
                 child: Container(
                   width: AppLingua.width * 0.66,
-                  height: AppLingua.height * 0.1125,
+                  height: AppLingua.height * 0.125,
                   decoration: ShapeDecoration(
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
