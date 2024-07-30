@@ -92,7 +92,7 @@ class ReadDrawer extends StatelessWidget {
                             child: commonText(
                               labelText: '로그아웃',
                               fontColor: const Color(0xFFADB5BD),
-                              fontSize:3.5.h,
+                              fontSize: 2.h,
                             ),
                           ),
                         ),

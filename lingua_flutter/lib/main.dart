@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lingua/screens_mobile/main_screens/read_screen.dart';
 
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 int requestQuota = 0;
 String titleNovel = "";
@@ -81,7 +83,11 @@ class _AppLinguaState extends State<AppLingua> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           )),
-      home: const LoginScreen(),
+      home: ResponsiveSizer(
+        builder: (context, orientation, screenType) {
+          return const ReadScreen();
+        }
+      ),
     );
   }
 }
