@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 Widget labeledFormField({
   required FormFieldSetter<String> onSaved,
@@ -9,26 +10,26 @@ Widget labeledFormField({
   Function(String)? onChanged,
 }) {
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: AppLingua.height * 0.015),
+    padding: EdgeInsets.symmetric(vertical: 1.5.h),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.only(
-            bottom: AppLingua.height * 0.01,
+            bottom: 1.h,
           ),
           child: Text(
             argText,
             style: TextStyle(
               color: const Color(0xFF868E96),
-              fontSize: AppLingua.height * 0.02,
+              fontSize: 2.h,
               fontWeight: FontWeight.w400,
             ),
           ),
         ),
         Container(
-          width: AppLingua.width * 0.9,
-          height: AppLingua.height * 0.06,
+          width: 90.w,
+          height: 6.h,
           decoration: ShapeDecoration(
             color: const Color(0xFFF8F9FA),
             shape: RoundedRectangleBorder(
@@ -37,7 +38,7 @@ Widget labeledFormField({
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppLingua.height * 0.011),
+            padding: EdgeInsets.symmetric(horizontal: 1.1.h),
             child: Center(
               child: TextFormField(
                 decoration: InputDecoration(
@@ -46,7 +47,7 @@ Widget labeledFormField({
                     border: InputBorder.none,
                     errorStyle: TextStyle(
                       height: 0.1,
-                      fontSize: AppLingua.height * 0.0175,
+                      fontSize: 1.75.h,
                     )),
                 onSaved: onSaved,
                 validator: validator,

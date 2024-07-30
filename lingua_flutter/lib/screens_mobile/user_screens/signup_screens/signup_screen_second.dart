@@ -148,7 +148,7 @@
 //                         );
 //                       },
 //                       child: Container(
-//                         width: AppLingua.width,
+//                         width: width,
 //                         height: 60,
 //                         decoration: BoxDecoration(
 //                           color: Theme.of(context).primaryColor,

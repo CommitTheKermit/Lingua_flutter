@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_change_screen.dart';
 import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/util/etc/validators.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../widgets/read_widgets/dialog/consent_dialog.dart';
 import '../../../widgets/user_widgets/form_button.dart';
@@ -181,27 +181,27 @@ class _PwFindScreenState extends State<PwFindScreen> {
     required String argText,
   }) {
     return Padding(
-      padding: EdgeInsets.only(top: AppLingua.height * 0.015),
+      padding: EdgeInsets.only(top: 1.5.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.only(
-              bottom: AppLingua.height * 0.01,
+              bottom: 1.h,
             ),
             child: Text(
               argText,
               style: TextStyle(
                 color: const Color(0xFF868E96),
-                fontSize: AppLingua.height * 0.02,
+                fontSize: 2.h,
                 fontFamily: 'Noto Sans KR',
                 fontWeight: FontWeight.w400,
               ),
             ),
           ),
           Container(
-            width: AppLingua.width * 0.9,
-            height: AppLingua.height * 0.06,
+            width: 90.w,
+            height: 6.h,
             decoration: const BoxDecoration(
               color: Colors.transparent,
             ),
@@ -209,7 +209,7 @@ class _PwFindScreenState extends State<PwFindScreen> {
                 ? Row(
                     children: [
                       Container(
-                        width: AppLingua.width * 0.4,
+                        width: 40.w,
                         decoration: ShapeDecoration(
                           color: const Color(0xFFF8F9FA),
                           shape: RoundedRectangleBorder(
@@ -242,7 +242,7 @@ class _PwFindScreenState extends State<PwFindScreen> {
                           },
                           style: TextStyle(
                             color: const Color(0xFF868E96),
-                            fontSize: AppLingua.height * 0.02,
+                            fontSize: 2.h,
                           ),
                           decoration: const InputDecoration(
                             filled: true,
@@ -254,20 +254,20 @@ class _PwFindScreenState extends State<PwFindScreen> {
                         ),
                       ),
                       SizedBox(
-                        width: AppLingua.width * 0.1,
+                        width: 10.w,
                         child: Center(
                           child: Text(
                             '@',
                             style: TextStyle(
                               color: const Color(0xFF868E96),
-                              fontSize: AppLingua.height * 0.02,
+                              fontSize: 2.h,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
                       ),
                       Container(
-                        width: AppLingua.width * 0.4,
+                        width: 40.w,
                         decoration: ShapeDecoration(
                           color: const Color(0xFFF8F9FA),
                           shape: RoundedRectangleBorder(
@@ -281,7 +281,7 @@ class _PwFindScreenState extends State<PwFindScreen> {
                           isExpanded: true,
                           icon: Image.asset(
                             'assets/images/dropbox_down.png',
-                            height: AppLingua.height * 0.02,
+                            height: 2.h,
                           ),
                           value: _selectedDomain,
                           items: _domains
@@ -289,13 +289,13 @@ class _PwFindScreenState extends State<PwFindScreen> {
                                     value: e, // 선택 시 onChanged 를 통해 반환할 value
                                     child: Padding(
                                       padding: EdgeInsets.only(
-                                        left: AppLingua.width * 0.02,
+                                        left: 2.w,
                                       ),
                                       child: Text(
                                         e,
                                         style: TextStyle(
                                           color: const Color(0xFF868E96),
-                                          fontSize: AppLingua.height * 0.02,
+                                          fontSize: 2.h,
                                         ),
                                       ),
                                     ),
@@ -321,7 +321,7 @@ class _PwFindScreenState extends State<PwFindScreen> {
                         child: Row(
                           children: [
                             Container(
-                              width: AppLingua.width * 0.9,
+                              width: 90.w,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFFF8F9FA),
                                 shape: RoundedRectangleBorder(
@@ -346,14 +346,14 @@ class _PwFindScreenState extends State<PwFindScreen> {
                                 },
                                 style: TextStyle(
                                   color: const Color(0xFF868E96),
-                                  fontSize: AppLingua.height * 0.02,
+                                  fontSize: 2.h,
                                 ),
                                 decoration: InputDecoration(
                                   fillColor: Colors.transparent,
                                   hintText: '이메일',
                                   hintStyle: TextStyle(
                                     color: const Color(0xFF868E96),
-                                    fontSize: AppLingua.height * 0.02,
+                                    fontSize: 2.h,
                                     fontWeight: FontWeight.w400,
                                     height: 0.5,
                                   ),
@@ -367,17 +367,17 @@ class _PwFindScreenState extends State<PwFindScreen> {
                         ),
                       ),
                       Positioned.fill(
-                        left: AppLingua.width * 0.5,
+                        left: 50.w,
                         child: Align(
                           alignment: Alignment.center,
                           child: SizedBox(
-                            width: AppLingua.width * 0.333,
+                            width: 33.3.w,
                             child: DropdownButton(
                               underline: const SizedBox.shrink(),
                               isExpanded: true,
                               icon: Image.asset(
                                 'assets/images/dropbox_down.png',
-                                height: AppLingua.height * 0.02,
+                                height: 2.h,
                               ),
                               value: !_isShowTextField ? _selectedDomain : null,
                               items: _domains
@@ -386,13 +386,13 @@ class _PwFindScreenState extends State<PwFindScreen> {
                                             e, // 선택 시 onChanged 를 통해 반환할 value
                                         child: Padding(
                                           padding: EdgeInsets.only(
-                                            left: AppLingua.width * 0.02,
+                                            left: 2.w,
                                           ),
                                           child: Text(
                                             e,
                                             style: TextStyle(
                                               color: const Color(0xFF868E96),
-                                              fontSize: AppLingua.height * 0.02,
+                                              fontSize: 2.h,
                                             ),
                                           ),
                                         ),

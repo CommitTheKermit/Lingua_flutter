@@ -3,6 +3,7 @@ import 'package:lingua/main.dart';
 import 'package:lingua/models/word_model.dart';
 import 'package:lingua/util/api/api_util.dart';
 import 'package:lingua/widgets/read_widgets/dictionary_result_widget.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class DialogWordWidget extends StatefulWidget {
   final String argText;
@@ -64,7 +65,7 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
             widget.argText,
             style: TextStyle(
               color: const Color(0xFF43698F),
-              fontSize: AppLingua.height * 0.035,
+              fontSize: 3.5.h,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -79,8 +80,8 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
             ),
           ),
         ),
-        width: AppLingua.width,
-        height: AppLingua.height,
+        width: 100.w,
+        height: 100.h,
         child: DictionaryResultWidget(
             wordMeans: wordMeans, scrollController: _scrollController),
       ),
@@ -93,7 +94,7 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
         argText,
         style: TextStyle(
           color: const Color(0xFF43698F),
-          fontSize: AppLingua.height * 0.0225,
+          fontSize: 2.25.h,
           fontWeight: FontWeight.w700,
           fontFamily: 'Noto Sans KR',
           height: 0,

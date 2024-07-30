@@ -1,13 +1,11 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/screens_mobile/main_screens/read_screen.dart';
-import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:lingua/widgets/commons/common_divider.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ReadOptionScreen extends StatefulWidget {
   final int startingTab;
@@ -92,7 +90,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
         title: commonText(
           labelText: '읽기 옵션',
           fontColor: const Color(0xFF171A1D),
-          fontSize: AppLingua.height * 0.0225,
+          fontSize: 2.25.h,
           fontWeight: FontWeight.w700,
         ),
         actions: [
@@ -111,7 +109,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                   color: isChanged
                       ? const Color(0xFF1E4A75)
                       : const Color(0xFF868E96),
-                  fontSize: AppLingua.height * 0.02,
+                  fontSize: 2.h,
                 ),
               ))
         ],
@@ -135,7 +133,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           },
           icon: Image.asset(
             'assets/images/icon_back.png',
-            width: AppLingua.height * 0.0275,
+            width: 2.75.h,
           ),
         ),
       ),
@@ -164,8 +162,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             centerTitle: true,
             titleSpacing: 0,
             title: GFSegmentTabs(
-              height: AppLingua.height * 0.0675,
-              width: AppLingua.width,
+              height: 6.75.h,
+              width: 100.w,
               tabController: tabController,
               tabBarColor: GFColors.WHITE,
               labelColor: GFColors.WHITE,
@@ -221,24 +219,24 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             '확인 필요',
             style: TextStyle(
               color: const Color(0xFF171A1D),
-              fontSize: AppLingua.height * 0.0225,
+              fontSize: 2.25.h,
               fontWeight: FontWeight.w700,
             ),
           ),
           content: SizedBox(
-            width: AppLingua.width * 0.8,
-            height: AppLingua.height * 0.08,
+            width: 80.w,
+            height: 8.h,
             child: Text(
               '변경사항이 존재하지만, 저장하지 않았습니다.',
               style: TextStyle(
                 color: const Color(0xFF171A1D),
-                fontSize: AppLingua.height * 0.02,
+                fontSize: 2.h,
               ),
             ),
           ),
           actions: [
             Container(
-              height: AppLingua.height * 0.0675,
+              height: 6.75.h,
               decoration: const BoxDecoration(
                 border: Border(
                   top: BorderSide(width: 1.5, color: Color(0xFFDEE2E6)),
@@ -264,7 +262,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                           '나가기',
                           style: TextStyle(
                             color: const Color(0xFF43698F),
-                            fontSize: AppLingua.height * 0.0225,
+                            fontSize: 2.25.h,
                             fontWeight: FontWeight.w700,
                           ),
                         )),
@@ -287,13 +285,13 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                         Navigator.of(context).pop('save');
                       },
                       child: SizedBox(
-                        height: AppLingua.height * 0.0675,
+                        height: 6.75.h,
                         child: Center(
                             child: Text(
                           '저장',
                           style: TextStyle(
                             color: const Color(0xFF43698F),
-                            fontSize: AppLingua.height * 0.0225,
+                            fontSize: 2.25.h,
                             fontWeight: FontWeight.w700,
                           ),
                         )),
@@ -315,7 +313,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
       child: Center(
         child: Text(
           argText,
-          style: TextStyle(fontSize: AppLingua.height * 0.02125),
+          style: TextStyle(fontSize: 2.125.h),
         ),
       ),
     );
@@ -329,18 +327,18 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
       child: Column(
         children: [
           Container(
-            width: AppLingua.width,
-            height: AppLingua.height * 0.045,
+            width: 100.w,
+            height: 4.5.h,
             decoration: const BoxDecoration(color: Colors.transparent),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.only(left: AppLingua.width * 0.03),
+                padding: EdgeInsets.only(left: 3.w),
                 child: Text(
                   '설정 미리보기',
                   style: TextStyle(
                     color: const Color(0xFF868E96),
-                    fontSize: AppLingua.height * 0.0175,
+                    fontSize: 1.75.h,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -348,8 +346,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             ),
           ),
           Container(
-            height: AppLingua.height * 0.26,
-            width: AppLingua.width,
+            height: 26.h,
+            width: 100.w,
             decoration: BoxDecoration(
               color: Color(readOption.optBackgroundColor),
             ),
@@ -369,20 +367,20 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           ),
           commonDivider(),
           Container(
-            width: AppLingua.width,
-            height: AppLingua.height * 0.045,
+            width: 100.w,
+            height: 4.5.h,
             decoration: const BoxDecoration(
               color: Color(0xFFF8F9FA),
             ),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.only(left: AppLingua.width * 0.03),
+                padding: EdgeInsets.only(left: 3.w),
                 child: Text(
                   '폰트 설정',
                   style: TextStyle(
                     color: const Color(0xFF868E96),
-                    fontSize: AppLingua.height * 0.0175,
+                    fontSize: 1.75.h,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -392,7 +390,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           optionSingleContainer(
             mainAxisAlignment: MainAxisAlignment.start,
             context: context,
-            containerHeight: AppLingua.height * 0.25,
+            containerHeight: 25.h,
             lines: [
               optionFontSelect(
                 labelText: '폰트 선택',
@@ -414,7 +412,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: optionSingleContainer(
               mainAxisAlignment: MainAxisAlignment.start,
               context: context,
-              containerHeight: AppLingua.height * 0.15,
+              containerHeight: 15.h,
               lines: [
                 optionUpDown(
                   labelText: '글자 크기',
@@ -467,7 +465,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
     MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
   }) {
     return Container(
-      width: AppLingua.width,
+      width: 100.w,
       height: containerHeight,
       decoration: const BoxDecoration(
         color: Color(0xFFF8F9FA),
@@ -507,19 +505,19 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
         children: [
           Padding(
             padding: EdgeInsets.only(
-              top: AppLingua.height * 0.0125,
+              top: 1.25.h,
               left: 15,
             ),
             child: Center(
               child: commonText(
                 labelText: labelText,
-                fontSize: AppLingua.height * 0.02,
+                fontSize: 2.h,
               ),
             ),
           ),
           Padding(
             padding: EdgeInsets.only(
-              top: AppLingua.height * 0.0125,
+              top: 1.25.h,
               right: 15,
             ),
             child: Row(
@@ -530,19 +528,19 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                     icon: downButtonValid
                         ? Image.asset(
                             'assets/images/valid_minus.png',
-                            height: AppLingua.height * 0.035,
+                            height: 3.5.h,
                           )
                         : Image.asset(
                             'assets/images/invalid_minus.png',
-                            height: AppLingua.height * 0.035,
+                            height: 3.5.h,
                           )),
                 SizedBox(
-                  width: AppLingua.width * 0.2,
+                  width: 20.w,
                   child: Center(
                     child: Text(
                       argText,
                       style: TextStyle(
-                        fontSize: AppLingua.height * 0.023,
+                        fontSize: 2.3.h,
                       ),
                     ),
                   ),
@@ -552,11 +550,11 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                     icon: upButtonVaild
                         ? Image.asset(
                             'assets/images/valid_add.png',
-                            height: AppLingua.height * 0.035,
+                            height: 3.5.h,
                           )
                         : Image.asset(
                             'assets/images/invalid_add.png',
-                            height: AppLingua.height * 0.035,
+                            height: 3.5.h,
                           )),
               ],
             ),
@@ -586,7 +584,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: Center(
               child: commonText(
                 labelText: labelText,
-                fontSize: AppLingua.height * 0.02,
+                fontSize: 2.h,
               ),
             ),
           ),
@@ -605,13 +603,13 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  width: AppLingua.width * 0.65,
+                  width: 65.w,
                   child: DropdownButton(
                     underline: const SizedBox.shrink(),
                     isExpanded: true,
                     icon: Icon(
                       Icons.keyboard_arrow_down,
-                      size: AppLingua.height * 0.04,
+                      size: 4.h,
                     ),
                     value: readOption.optFontFamily,
                     items: _fonts
@@ -620,7 +618,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                               child: Text(
                                 '     $e',
                                 style: TextStyle(
-                                  fontSize: AppLingua.height * 0.021,
+                                  fontSize: 2.1.h,
                                   fontFamily: _fonts[_fonts.indexOf(e)],
                                 ),
                               ),
@@ -660,12 +658,12 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
             child: Center(
               child: commonText(
                 labelText: labelText,
-                fontSize: AppLingua.height * 0.02,
+                fontSize: 2.h,
               ),
             ),
           ),
           SizedBox(
-            width: AppLingua.width * 0.7,
+            width: 70.w,
             child: Padding(
               padding: const EdgeInsets.only(
                 top: 12,
@@ -693,8 +691,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                               alignment: Alignment.center,
                               children: [
                                 Container(
-                                  width: AppLingua.width * 0.13,
-                                  height: AppLingua.height * 0.036,
+                                  width: 13.w,
+                                  height: 3.6.h,
                                   decoration: ShapeDecoration(
                                     color: Color(
                                       value,
@@ -740,12 +738,12 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
           child: Center(
             child: commonText(
               labelText: labelText,
-              fontSize: AppLingua.height * 0.02,
+              fontSize: 2.h,
             ),
           ),
         ),
         SizedBox(
-          width: AppLingua.width * 0.7,
+          width: 70.w,
           child: Padding(
             padding: const EdgeInsets.only(
               top: 12,
@@ -773,8 +771,8 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
                               alignment: Alignment.center,
                               children: [
                                 Container(
-                                  width: AppLingua.width * 0.13,
-                                  height: AppLingua.height * 0.036,
+                                  width: 13.w,
+                                  height: 3.6.h,
                                   decoration: ShapeDecoration(
                                     color: Color(
                                       value,

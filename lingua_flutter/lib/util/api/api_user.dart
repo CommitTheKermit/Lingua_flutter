@@ -233,7 +233,7 @@ class ApiUser {
         answerJson = jsonDecode(response.body);
         int requestQuota = answerJson['request_quota'];
 
-        AppLingua.requestQuota = requestQuota;
+        requestQuota = requestQuota;
 
         return requestQuota;
       } else {
@@ -267,7 +267,7 @@ class ApiUser {
         .then((response) {
       if (response.statusCode == 200) {
         // 서버가 성공적으로 응답하면 JSON을 파싱합니다.
-        AppLingua.requestQuota = argQuota;
+        requestQuota = argQuota;
 
         return true;
       } else {

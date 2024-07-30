@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 // ignore: must_be_immutable
 class AskDialog extends StatelessWidget {
@@ -34,25 +35,25 @@ class AskDialog extends StatelessWidget {
         title,
         style: TextStyle(
           color: const Color(0xFF171A1D),
-          fontSize: AppLingua.height * 0.0225,
+          fontSize: 2.25.h,
           fontWeight: FontWeight.w700,
         ),
       ),
       content: SizedBox(
-        width: AppLingua.width * 0.8,
+        width: 80.w,
         height:
-            content.isEmpty ? AppLingua.height * 0.04 : AppLingua.height * 0.08,
+            content.isEmpty ? 4.h : 8.h,
         child: Text(
           content,
           style: TextStyle(
             color: const Color(0xFF171A1D),
-            fontSize: AppLingua.height * 0.02,
+            fontSize: 2.h,
           ),
         ),
       ),
       actions: [
         Container(
-          height: AppLingua.height * 0.0675,
+          height: 6.75.h,
           decoration: const BoxDecoration(
             border: Border(
               top: BorderSide(width: 1.5, color: Color(0xFFDEE2E6)),
@@ -75,7 +76,7 @@ class AskDialog extends StatelessWidget {
                       leftBtnStr,
                       style: TextStyle(
                         color: const Color(0xFF43698F),
-                        fontSize: AppLingua.height * 0.0225,
+                        fontSize: 2.25.h,
                         fontWeight: FontWeight.w700,
                       ),
                     )),
@@ -87,13 +88,13 @@ class AskDialog extends StatelessWidget {
                 child: InkWell(
                   onTap: rightTap,
                   child: SizedBox(
-                    height: AppLingua.height * 0.0675,
+                    height: 6.75.h,
                     child: Center(
                         child: Text(
                       rightBtnStr,
                       style: TextStyle(
                         color: const Color(0xFF43698F),
-                        fontSize: AppLingua.height * 0.0225,
+                        fontSize: 2.25.h,
                         fontWeight: FontWeight.w700,
                       ),
                     )),

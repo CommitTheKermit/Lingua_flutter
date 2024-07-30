@@ -7,6 +7,7 @@ import 'package:lingua/util/api/api_user.dart';
 import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../login_screen.dart';
 
@@ -133,7 +134,7 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                             context: context);
                       },
                       child: Container(
-                        width: AppLingua.width * 0.9,
+                        width: 90.w,
                         height: 60,
                         decoration: ShapeDecoration(
                           color: const Color(0xFF1E4A75),
@@ -146,7 +147,7 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: const Color(0xFFF8F9FA),
-                            fontSize: AppLingua.height * 0.0225,
+                            fontSize: 2.25.h,
                             fontWeight: FontWeight.w700,
                           ),
                         )),
@@ -155,7 +156,7 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: AppLingua.height * 0.03,
+                  height: 3.h,
                 )
               ],
             ),

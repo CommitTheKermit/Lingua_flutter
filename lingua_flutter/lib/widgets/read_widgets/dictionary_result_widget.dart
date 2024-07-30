@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../models/word_model.dart';
 
@@ -25,7 +26,7 @@ class DictionaryResultWidget extends StatelessWidget {
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SizedBox(
-            height: AppLingua.height * 0.6,
+            height: 60.h,
             child: const Center(
               child: CircularProgressIndicator(),
             ),
@@ -82,7 +83,7 @@ class DictionaryResultWidget extends StatelessWidget {
                         vertical: 10, horizontal: 20),
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
-                      width: AppLingua.width * 0.9,
+                      width: 90.w,
                       decoration: ShapeDecoration(
                         color: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -101,16 +102,16 @@ class DictionaryResultWidget extends StatelessWidget {
                                   wordMean.kor,
                                   style: TextStyle(
                                     color: const Color(0xFF171A1D),
-                                    fontSize: AppLingua.height * 0.025,
+                                    fontSize: 2.5.h,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
                                 SizedBox(
-                                  width: AppLingua.height * 0.01,
+                                  width: 1.h,
                                 ),
                                 wordMean.pos.isNotEmpty
                                     ? Container(
-                                        height: AppLingua.height * 0.025,
+                                        height: 2.5.h,
                                         decoration: ShapeDecoration(
                                           color: const Color(0xFF43698F),
                                           shape: RoundedRectangleBorder(
@@ -120,7 +121,7 @@ class DictionaryResultWidget extends StatelessWidget {
                                         ),
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: AppLingua.width * 0.02,
+                                            horizontal: 2.w,
                                           ),
                                           child: Center(
                                             child: Text(
@@ -152,12 +153,12 @@ class DictionaryResultWidget extends StatelessWidget {
                               children: [
                                 Center(
                                   child: SizedBox(
-                                    width: AppLingua.width * 0.8,
+                                    width: 80.w,
                                     child: Text(
                                       wordMean.meaning,
                                       style: TextStyle(
                                         color: const Color(0xFF495057),
-                                        fontSize: AppLingua.height * 0.0225,
+                                        fontSize: 2.25.h,
                                         height: 2,
                                       ),
                                     ),

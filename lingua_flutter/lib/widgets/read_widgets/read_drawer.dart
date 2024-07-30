@@ -4,6 +4,7 @@ import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 import 'package:lingua/util/etc/change_screen.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ReadDrawer extends StatelessWidget {
   const ReadDrawer({
@@ -18,7 +19,7 @@ class ReadDrawer extends StatelessWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: SizedBox(
-        width: AppLingua.width * 0.7,
+        width: 70.w,
         child: Drawer(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
@@ -29,27 +30,27 @@ class ReadDrawer extends StatelessWidget {
                 height: MediaQuery.of(context).padding.top,
               ),
               Container(
-                width: AppLingua.width * 0.7,
-                height: AppLingua.height * 0.06,
+                width: 70.w,
+                height: 6.h,
                 decoration: const BoxDecoration(color: Color(0xFF43698F)),
                 child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: AppLingua.width * 0.02),
+                      padding: EdgeInsets.only(left: 2.w),
                       child: Image.asset(
                         "assets/images/launcher_icon_small.png",
-                        width: AppLingua.width * 0.1,
+                        width: 10.w,
                       ),
                     ),
                     SizedBox(
-                      width: AppLingua.width * 0.02,
+                      width: 2.w,
                     ),
                     Text(
                       'Lingua',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: const Color(0xFFF8F9FA),
-                        fontSize: AppLingua.height * 0.02,
+                        fontSize: 2.h,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 4.20,
                       ),
@@ -58,15 +59,15 @@ class ReadDrawer extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: AppLingua.height * 0.04,
+                width: 4.h,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: AppLingua.width * 0.05,
-                    vertical: AppLingua.height * 0.035),
+                    horizontal: 5.w,
+                    vertical: 3.5.h),
                 child: Container(
-                  width: AppLingua.width * 0.66,
-                  height: AppLingua.height * 0.125,
+                  width: 66.w,
+                  height: 12.5.h,
                   decoration: ShapeDecoration(
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -80,7 +81,7 @@ class ReadDrawer extends StatelessWidget {
                       Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: EdgeInsets.all(AppLingua.height * 0.01),
+                          padding: EdgeInsets.all(1.h),
                           child: GestureDetector(
                             onTap: () {
                               changeScreen(
@@ -91,19 +92,19 @@ class ReadDrawer extends StatelessWidget {
                             child: commonText(
                               labelText: '로그아웃',
                               fontColor: const Color(0xFFADB5BD),
-                              fontSize: AppLingua.width * 0.035,
+                              fontSize:3.5.h,
                             ),
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: AppLingua.height * 0.0175,
+                        height: 1.75.h,
                       ),
                       commonText(
                           labelText: UserModel.email,
-                          fontSize: AppLingua.height * 0.02),
+                          fontSize: 2.h),
                       SizedBox(
-                        height: AppLingua.height * 0.015,
+                        height: 1.5.h,
                       ),
                     ],
                   ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 import 'package:lingua/util/api/api_user.dart';
@@ -8,6 +7,7 @@ import 'package:lingua/util/etc/validators.dart';
 import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class SignUpScreenFirst extends StatefulWidget {
   const SignUpScreenFirst({super.key});
@@ -63,7 +63,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: AppLingua.height * 0.015),
+                SizedBox(height: 1.5.h),
                 emailField(
                   argText: '이메일 인증',
                 ),
@@ -241,8 +241,8 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
         decoration: BoxDecoration(
           color: backgroundColor,
         ),
-        width: AppLingua.width * 0.9,
-        height: AppLingua.height * 0.0625,
+        width: 90.w,
+        height: 6.25.h,
         child: Center(
           child: Text(
             argText,
@@ -260,21 +260,23 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
   Widget emailCode() {
     return Padding(
       padding: EdgeInsets.only(
-          top: AppLingua.height * 0.01, bottom: AppLingua.height * 0.015),
+        top: 1.h,
+        bottom: 1.5.h,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: AppLingua.width * 0.9,
-            height: AppLingua.height * 0.06,
+            width: 90.w,
+            height: 6.h,
             decoration: const BoxDecoration(
               color: Colors.transparent,
             ),
             child: Row(
               children: [
                 Container(
-                  width: AppLingua.width * 0.53,
-                  height: AppLingua.height * 0.06,
+                  width: 53.w,
+                  height: 6.h,
                   decoration: ShapeDecoration(
                     color: const Color(0xFFF8F9FA),
                     shape: RoundedRectangleBorder(
@@ -284,13 +286,12 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppLingua.height * 0.011),
+                    padding: EdgeInsets.symmetric(horizontal: 1.1.h),
                     child: TextFormField(
                       controller: textEditingController,
                       style: TextStyle(
                         color: const Color(0xFF868E96),
-                        fontSize: AppLingua.height * 0.02,
+                        fontSize: 2.h,
                       ),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
@@ -299,7 +300,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                   ),
                 ),
                 SizedBox(
-                  width: AppLingua.width * 0.02,
+                  width: 2.w,
                 ),
                 !isEmailSent
                     ? GestureDetector(
@@ -307,8 +308,8 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           _emailSubmit();
                         },
                         child: Container(
-                          width: AppLingua.width * 0.35,
-                          height: AppLingua.height * 0.06,
+                          width: 35.w,
+                          height: 6.h,
                           decoration: ShapeDecoration(
                             color: const Color(0xFF43698F),
                             shape: RoundedRectangleBorder(
@@ -322,7 +323,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                               '인증메일발송',
                               style: TextStyle(
                                   color: const Color(0xFFF8F9FA),
-                                  fontSize: AppLingua.height * 0.022,
+                                  fontSize: 2.2.h,
                                   fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -333,8 +334,8 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           _codeSubmit();
                         },
                         child: Container(
-                          width: AppLingua.width * 0.35,
-                          height: AppLingua.height * 0.06,
+                          width: 35.w,
+                          height: 6.h,
                           decoration: ShapeDecoration(
                             color: const Color(0xFF43698F),
                             shape: RoundedRectangleBorder(
@@ -345,7 +346,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                               '인증확인',
                               style: TextStyle(
                                   color: const Color(0xFFF8F9FA),
-                                  fontSize: AppLingua.height * 0.022,
+                                  fontSize: 2.2.h,
                                   fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -363,26 +364,26 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
     required String argText,
   }) {
     return Padding(
-      padding: EdgeInsets.only(top: AppLingua.height * 0.015),
+      padding: EdgeInsets.only(top: 1.5.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.only(
-              bottom: AppLingua.height * 0.01,
+              bottom: 1.h,
             ),
             child: Text(
               argText,
               style: TextStyle(
                 color: const Color(0xFF868E96),
-                fontSize: AppLingua.height * 0.02,
+                fontSize: 2.h,
                 fontWeight: FontWeight.w400,
               ),
             ),
           ),
           Container(
-            width: AppLingua.width * 0.9,
-            height: AppLingua.height * 0.06,
+            width: 90.w,
+            height: 6.h,
             decoration: const BoxDecoration(
               color: Colors.transparent,
             ),
@@ -390,7 +391,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                 ? Row(
                     children: [
                       Container(
-                        width: AppLingua.width * 0.4,
+                        width: 40.w,
                         decoration: ShapeDecoration(
                           color: const Color(0xFFF8F9FA),
                           shape: RoundedRectangleBorder(
@@ -419,7 +420,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           },
                           style: TextStyle(
                             color: const Color(0xFF868E96),
-                            fontSize: AppLingua.height * 0.02,
+                            fontSize: 2.h,
                           ),
                           decoration: const InputDecoration(
                             filled: true,
@@ -432,20 +433,20 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                         ),
                       ),
                       SizedBox(
-                        width: AppLingua.width * 0.1,
+                        width: 10.w,
                         child: Center(
                           child: Text(
                             '@',
                             style: TextStyle(
                               color: const Color(0xFF868E96),
-                              fontSize: AppLingua.height * 0.02,
+                              fontSize: 2.h,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
                       ),
                       Container(
-                        width: AppLingua.width * 0.4,
+                        width: 40.w,
                         decoration: ShapeDecoration(
                           color: const Color(0xFFF8F9FA),
                           shape: RoundedRectangleBorder(
@@ -460,7 +461,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           isExpanded: true,
                           icon: Image.asset(
                             'assets/images/dropbox_down.png',
-                            height: AppLingua.height * 0.02,
+                            height: 2.h,
                           ),
                           value: _selectedDomain,
                           items: _domains
@@ -468,13 +469,13 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                                     value: e, // 선택 시 onChanged 를 통해 반환할 value
                                     child: Padding(
                                       padding: EdgeInsets.only(
-                                        left: AppLingua.width * 0.02,
+                                        left: 2.w,
                                       ),
                                       child: Text(
                                         e,
                                         style: TextStyle(
                                           color: const Color(0xFF868E96),
-                                          fontSize: AppLingua.height * 0.02,
+                                          fontSize: 2.h,
                                         ),
                                       ),
                                     ),
@@ -502,7 +503,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                         child: Row(
                           children: [
                             Container(
-                              width: AppLingua.width * 0.9,
+                              width: 90.w,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFFF8F9FA),
                                 shape: RoundedRectangleBorder(
@@ -531,7 +532,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                                 },
                                 style: TextStyle(
                                   color: const Color(0xFF868E96),
-                                  fontSize: AppLingua.height * 0.02,
+                                  fontSize: 2.h,
                                 ),
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.zero,
@@ -539,7 +540,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                                   hintText: '이메일',
                                   hintStyle: TextStyle(
                                     color: const Color(0xFF868E96),
-                                    fontSize: AppLingua.height * 0.02,
+                                    fontSize: 2.h,
                                     fontWeight: FontWeight.w400,
                                     height: 0.5,
                                   ),
@@ -553,17 +554,17 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                         ),
                       ),
                       Positioned.fill(
-                        left: AppLingua.width * 0.5,
+                        left: 50.w,
                         child: Align(
                           alignment: Alignment.center,
                           child: SizedBox(
-                            width: AppLingua.width * 0.333,
+                            width: 33.3.w,
                             child: DropdownButton(
                               underline: const SizedBox.shrink(),
                               isExpanded: true,
                               icon: Image.asset(
                                 'assets/images/dropbox_down.png',
-                                height: AppLingua.height * 0.02,
+                                height: 2.h,
                               ),
                               value: !_isShowTextField ? _selectedDomain : null,
                               items: _domains
@@ -572,13 +573,13 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                                             e, // 선택 시 onChanged 를 통해 반환할 value
                                         child: Padding(
                                           padding: EdgeInsets.only(
-                                            left: AppLingua.width * 0.02,
+                                            left: 2.w,
                                           ),
                                           child: Text(
                                             e,
                                             style: TextStyle(
                                               color: const Color(0xFF868E96),
-                                              fontSize: AppLingua.height * 0.02,
+                                              fontSize: 2.h,
                                             ),
                                           ),
                                         ),

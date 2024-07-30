@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/widgets/read_widgets/word_button_widget.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 Widget wordsWidget({
   required int wordsScrollFlex,
@@ -11,8 +11,8 @@ Widget wordsWidget({
   return Flexible(
     flex: wordsScrollFlex,
     child: Container(
-      width: AppLingua.width,
-      height: AppLingua.height * 0.08,
+      width: 100.w,
+      height: 8.h,
       decoration: const BoxDecoration(
         color: Colors.white,
       ),

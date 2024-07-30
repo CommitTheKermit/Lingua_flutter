@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
@@ -6,7 +5,6 @@ import 'package:lingua/models/bookmark_model.dart';
 import 'package:lingua/screens_mobile/bookmark_list_dialog.dart';
 
 import 'package:lingua/screens_mobile/etc_screens/read_option_screen.dart';
-import 'package:lingua/screens_mobile/interactable_page_widget.dart';
 import 'package:lingua/screens_mobile/main_screens/read_screen.dart';
 
 import 'package:lingua/util/bookmark_process/bookmark_util.dart';
@@ -16,7 +14,7 @@ import 'package:lingua/util/string_process/pager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_page_search.dart';
 import 'package:lingua/widgets/read_widgets/dialog/search_list_dialog.dart';
-import 'package:show_more_text_popup/show_more_text_popup.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ReadModeScreen extends StatefulWidget {
   const ReadModeScreen({super.key});
@@ -55,9 +53,9 @@ class _ReadModeScreenState extends State<ReadModeScreen>
     );
 
     pages = paginateText(
-        text: AppLingua.stringContents,
+        text: stringContents,
         style: readTextStyle,
-        screenSize: AppLingua.size);
+        screenSize: Size(100.w, 100.h));
 
     return 'done';
   }
@@ -143,8 +141,8 @@ class _ReadModeScreenState extends State<ReadModeScreen>
               child: Stack(
                 children: [
                   Container(
-                    width: AppLingua.height,
-                    height: AppLingua.height,
+                    width: 100.h,
+                    height: 100.h,
                     decoration: BoxDecoration(
                       color:
                           Color(ReadScreen.readModeOption.optBackgroundColor),
@@ -154,8 +152,8 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: AppLingua.width * 0.04,
-                              vertical: AppLingua.height * 0),
+                              horizontal: 4.w,
+                              vertical: 0),
                           // child: InteractableTextsWidget(
                           //     readTextStyle: readTextStyle, splitted: splitted),
                           child: Center(
@@ -173,9 +171,9 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                     child: Opacity(
                       opacity: 0.9,
                       child: Container(
-                        width: AppLingua.width,
+                        width: 100.w,
                         height: MediaQuery.of(context).padding.top +
-                            AppLingua.height * 0.06,
+                            6.h,
                         decoration: const BoxDecoration(
                           color: Color(0xFFF8F9FA),
                           border: Border(
@@ -191,7 +189,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                               IconButton(
                                 icon: Image.asset(
                                   "assets/images/icon_back.png",
-                                  height: AppLingua.height * 0.03,
+                                  height: 3.h,
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
@@ -200,12 +198,12 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                     .openAppDrawerTooltip,
                               ),
                               SizedBox(
-                                width: AppLingua.width * 0.4,
+                                width: 40.w,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: commonText(
-                                    labelText: AppLingua.titleNovel, // 파일 제목 출력
-                                    fontSize: AppLingua.height * 0.025,
+                                    labelText: titleNovel, // 파일 제목 출력
+                                    fontSize: 2.5.h,
                                     fontColor: const Color(0xFF1E4A75),
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -220,7 +218,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                         bookmarkedLines.contains(index.toInt())
                                             ? "assets/images/icon_colored_bookmark.png"
                                             : "assets/images/icon_bookmark.png",
-                                        height: AppLingua.height * 0.03,
+                                        height: 3.h,
                                       ),
                                       onPressed: () {
                                         if (!bookmarkedLines
@@ -247,7 +245,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                     IconButton(
                                       icon: Image.asset(
                                         "assets/images/search_button.png",
-                                        height: AppLingua.height * 0.03,
+                                        height: 3.h
                                       ),
                                       onPressed: () async {
                                         String? result = await showDialog(
@@ -274,7 +272,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                     IconButton(
                                       icon: Image.asset(
                                         "assets/images/coloured_icon_read_setting.png",
-                                        height: AppLingua.height * 0.03,
+                                        height: 3.h,
                                       ),
                                       onPressed: () async {
                                         errorToast(
@@ -312,9 +310,9 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                           await initOption();
 
                                           pages = paginateText(
-                                              text: AppLingua.stringContents,
+                                              text: stringContents,
                                               style: readTextStyle,
-                                              screenSize: AppLingua.size);
+                                              screenSize: Size(100.w,100.h));
 
                                           setState(() {});
                                         }
@@ -346,9 +344,9 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                           child: Column(children: [
                             Padding(
                               padding: EdgeInsets.only(
-                                left: AppLingua.width * 0.05,
-                                right: AppLingua.width * 0.05,
-                                top: AppLingua.height * 0.018,
+                                left: 5.w,
+                                right: 5.w,
+                                top: 1.8.h,
                               ),
                               child: Row(
                                 mainAxisAlignment:
@@ -358,15 +356,15 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                     children: [
                                       Image.asset(
                                         "assets/images/icon_bookmarks.png",
-                                        height: AppLingua.height * 0.03,
+                                        height: 3.h,
                                       ),
                                       SizedBox(
-                                        width: AppLingua.width * 0.022,
+                                        width: 2.2.w,
                                       ),
                                       commonText(
                                         labelText:
                                             '현재 문서내 책갈피 ${bookmarkedLines.length}개',
-                                        fontSize: AppLingua.height * 0.02,
+                                        fontSize: 2.h,
                                         fontWeight: FontWeight.w500,
                                         fontColor: const Color(0xFF1E4A75),
                                       ),
@@ -398,13 +396,13 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                       children: [
                                         commonText(
                                           labelText: '책갈피 목록',
-                                          fontSize: AppLingua.height * 0.015,
+                                          fontSize: 1.5.h,
                                           fontWeight: FontWeight.w400,
                                           fontColor: const Color(0xFF1E4A75),
                                         ),
                                         Image.asset(
                                           'assets/images/icon_small_arrow.png',
-                                          height: AppLingua.height * 0.015,
+                                          height: 1.5.h,
                                         ),
                                       ],
                                     ),
@@ -414,24 +412,24 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                left: AppLingua.width * 0.05,
-                                right: AppLingua.width * 0.05,
-                                top: AppLingua.height * 0.018,
+                                left: 5.w,
+                                right: 5.w,
+                                top: 1.8.h,
                               ),
                               child: Row(
                                 children: [
                                   Image.asset(
                                     'assets/images/icon_text.png',
-                                    height: AppLingua.height * 0.03,
+                                    height: 3.h,
                                   ),
                                   SizedBox(
-                                    width: AppLingua.width * 0.5,
-                                    height: AppLingua.height * 0.01875,
+                                    width: 50.w,
+                                    height: 1.875.h,
                                     child: SliderTheme(
                                       data: SliderThemeData(
                                           thumbShape: RoundSliderThumbShape(
                                               enabledThumbRadius:
-                                                  AppLingua.height * 0.01)),
+                                                  1.h)),
                                       child: Slider(
                                         activeColor: const Color(0xFF44698F),
                                         thumbColor: const Color(0xFF1F4A76),
@@ -463,7 +461,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                         }
                                         // index = result;
                                         // IndexSaveLoad.saveCurrentIndex(index);
-                                        // originalSingleSentence = AppLingua.originalSentences[index];
+                                        // originalSingleSentence = originalSentences[index];
                                         // words = extractWords(originalSingleSentence);
                                         // _scrollController.jumpTo(0);
 
@@ -471,8 +469,8 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                       });
                                     },
                                     child: Container(
-                                      width: AppLingua.width * 0.3,
-                                      height: AppLingua.height * 0.045,
+                                      width: 30.w,
+                                      height: 4.5.h,
                                       decoration: ShapeDecoration(
                                         shape: RoundedRectangleBorder(
                                           side: const BorderSide(
@@ -493,7 +491,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                               fontColor:
                                                   const Color(0xFF1E4A75),
                                               fontSize:
-                                                  AppLingua.height * 0.0225,
+                                                  2.25.h,
                                               fontWeight: FontWeight.w700,
                                             ),
                                             commonText(
@@ -501,7 +499,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                               fontColor:
                                                   const Color(0xFF868E96),
                                               fontSize:
-                                                  AppLingua.height * 0.0225,
+                                                  2.25.h,
                                               fontWeight: FontWeight.w700,
                                             )
                                           ],

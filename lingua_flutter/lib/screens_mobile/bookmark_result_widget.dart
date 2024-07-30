@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/models/bookmark_model.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class BookmarkResultWidget extends StatefulWidget {
   const BookmarkResultWidget({
@@ -27,7 +27,7 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        width: AppLingua.width * 0.9,
+        width: 90.w,
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
@@ -39,16 +39,16 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
           children: [
             Image.asset(
               'assets/images/icon_bookmark.png',
-              height: AppLingua.height * 0.03,
+              height: 3.h,
             ),
             SizedBox(
-              width: AppLingua.width * 0.03,
+              width: 3.w,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: AppLingua.width * 0.7,
+                  width: 70.w,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -56,7 +56,7 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
                         '${widget.bookmark.bookMarkedLine}번째 줄',
                         style: TextStyle(
                           color: const Color(0xFF495057),
-                          fontSize: AppLingua.height * 0.02,
+                          fontSize: 2.h,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -66,8 +66,8 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
                           GestureDetector(
                             onTap: widget.onTapMove,
                             child: Container(
-                              width: AppLingua.width * 0.1125,
-                              height: AppLingua.height * 0.03,
+                              width: 11.25.w,
+                              height: 3.h,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFF43698F),
                                 shape: RoundedRectangleBorder(
@@ -78,7 +78,7 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
                                   '이동',
                                   style: TextStyle(
                                     color: const Color(0xFFF8F9FA),
-                                    fontSize: AppLingua.height * 0.015,
+                                    fontSize: 1.5.h,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -86,13 +86,13 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
                             ),
                           ),
                           SizedBox(
-                            width: AppLingua.height * 0.01,
+                            width: 1.h,
                           ),
                           GestureDetector(
                             onTap: widget.onTapDelete,
                             child: Container(
-                              width: AppLingua.width * 0.1125,
-                              height: AppLingua.height * 0.03,
+                              width: 11.25.w,
+                              height: 3.h,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFFF8F9FA),
                                 shape: RoundedRectangleBorder(
@@ -106,7 +106,7 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
                                   '삭제',
                                   style: TextStyle(
                                     color: const Color(0xFFD7260D),
-                                    fontSize: AppLingua.height * 0.015,
+                                    fontSize: 1.5.h,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -124,7 +124,7 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
                       '${widget.bookmark.bookMarkedTime.year}-${widget.bookmark.bookMarkedTime.month}-${widget.bookmark.bookMarkedTime.day} ${widget.bookmark.bookMarkedTime.hour}:${widget.bookmark.bookMarkedTime.minute}:${widget.bookmark.bookMarkedTime.second} 저장',
                       style: TextStyle(
                         color: const Color(0xFF495057),
-                        fontSize: AppLingua.height * 0.0175,
+                        fontSize: 1.75.h,
                         fontFamily: 'Noto Sans KR',
                         fontWeight: FontWeight.w500,
                         height: 0,
@@ -133,18 +133,18 @@ class _BookmarkResultWidgetState extends State<BookmarkResultWidget> {
                   ],
                 ),
                 SizedBox(
-                  height: AppLingua.height * 0.01,
+                  height: 1.h,
                 ),
                 SizedBox(
-                  width: AppLingua.width * 0.7,
-                  height: AppLingua.height * 0.06,
+                  width: 70.w,
+                  height: 6.h,
                   child: Text(
                     widget.bookmark.bookMarkedPage,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: const Color(0xFF171A1D),
-                      fontSize: AppLingua.height * 0.0175,
+                      fontSize: 1.75.h,
                       height: 1.5,
                     ),
                   ),

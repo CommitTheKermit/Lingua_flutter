@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 AppBar commonAppBar({
   required BuildContext context,
@@ -11,7 +11,7 @@ AppBar commonAppBar({
     title: commonText(
       labelText: argText,
       fontColor: const Color(0xFF171A1D),
-      fontSize: AppLingua.height * 0.0225,
+      fontSize: 2.25.h,
       fontWeight: FontWeight.w700,
     ),
     shadowColor: Colors.white,
@@ -23,7 +23,7 @@ AppBar commonAppBar({
       },
       icon: Image.asset(
         'assets/images/icon_back.png',
-        width: AppLingua.height * 0.0275,
+        width: 2.75.w,
       ),
     ),
   );

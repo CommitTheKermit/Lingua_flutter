@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/models/bookmark_model.dart';
 import 'package:lingua/screens_mobile/bookmark_result_widget.dart';
-import 'package:lingua/util/api/api_util.dart';
 import 'package:lingua/util/bookmark_process/bookmark_util.dart';
-import 'package:lingua/widgets/read_widgets/dictionary_result_widget.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class BookmarkListDialog extends StatefulWidget {
   final List<BookmarkModel> bookmarks;
@@ -41,13 +39,13 @@ class _BookmarkListDialogState extends State<BookmarkListDialog> {
                 Navigator.of(context).pop();
               },
               child: Padding(
-                padding: EdgeInsets.only(top: AppLingua.height * 0.01),
+                padding: EdgeInsets.only(top: 1.h),
                 child: Text(
                   '닫기',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: const Color(0xFF43698F),
-                    fontSize: AppLingua.height * 0.0225,
+                    fontSize: 2.25.h,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -58,23 +56,23 @@ class _BookmarkListDialogState extends State<BookmarkListDialog> {
       insetPadding:
           const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
       title: Padding(
-        padding: EdgeInsets.only(bottom: AppLingua.height * 0.015),
+        padding: EdgeInsets.only(bottom: 1.5.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
               'assets/images/icon_bookmarks.png',
-              height: AppLingua.height * 0.03,
+              height: 3.h,
             ),
             SizedBox(
-              width: AppLingua.width * 0.02,
+              width: 2.w,
             ),
             Text(
               '책갈피 목록',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: const Color(0xFF43698F),
-                fontSize: AppLingua.height * 0.025,
+                fontSize: 2.5.h,
                 fontWeight: FontWeight.w700,
               ),
             )
@@ -87,8 +85,8 @@ class _BookmarkListDialogState extends State<BookmarkListDialog> {
             horizontal: BorderSide(width: 1, color: Color(0xFFDEE2E6)),
           ),
         ),
-        width: AppLingua.width,
-        height: AppLingua.height * 0.7,
+        width: 100.w,
+        height: 70.h,
         child: SingleChildScrollView(
             child: Column(
           children: [

@@ -15,6 +15,7 @@ import 'package:lingua/util/etc/exit_confirm.dart';
 import 'package:lingua/util/shared_preferences/preference_manager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../widgets/user_widgets/form_button.dart';
 import '../../widgets/user_widgets/from_field.dart';
@@ -74,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log("width ${AppLingua.width.toString()}");
-    log("height ${AppLingua.height.toString()}");
+    log("width ${100.w.toString()}");
+    log("height ${100.h.toString()}");
     return FutureBuilder(
       future: futureOption,
       builder: (context, snapshot) {
@@ -91,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: EdgeInsets.only(
                   left: 10,
                   right: 10,
-                  top: AppLingua.height * 0.165,
+                  top: 16.5.h,
                 ),
                 child: Form(
                   key: _formKey,
@@ -99,11 +100,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Image.asset(
                         'assets/images/logo_color.png',
-                        width: AppLingua.width * 0.3,
-                        height: AppLingua.height * 0.15,
+                        width: 30.w,
+                        height: 15.h,
                       ),
                       SizedBox(
-                        height: AppLingua.height * 0.075,
+                        height: 7.5.h,
                       ),
                       buildFormField(
                         controller: controller,
@@ -125,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                       ),
                       SizedBox(
-                        height: AppLingua.height * 0.01,
+                        height: 1.h,
                       ),
                       buildFormField(
                         isObscure: true,
@@ -171,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               commonText(
                                 labelText: '이메일 저장',
                                 fontColor: const Color(0xFF868E96),
-                                fontSize: AppLingua.height * 0.0175,
+                                fontSize: 1.75.h,
                               ),
                             ],
                           ),
@@ -187,14 +188,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: commonText(
                                   labelText: '아이디',
                                   fontColor: const Color(0xFF868E96),
-                                  fontSize: AppLingua.height * 0.0175,
+                                  fontSize: 1.75.h,
                                 ),
                               ),
                               SizedBox(
-                                height: AppLingua.height * 0.01375,
+                                height: 1.375.h,
                                 child: VerticalDivider(
                                   thickness: 2,
-                                  width: AppLingua.width * 0.04,
+                                  width: 4.w,
                                   color: const Color(0xFF868E96),
                                 ),
                               ),
@@ -208,14 +209,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: commonText(
                                   labelText: '비밀번호 찾기',
                                   fontColor: const Color(0xFF868E96),
-                                  fontSize: AppLingua.height * 0.0175,
+                                  fontSize: 1.75.h,
                                 ),
                               ),
                             ],
                           )
                         ],
                       ),
-                      SizedBox(height: AppLingua.height * 0.05),
+                      SizedBox(height: 5.h),
                       buildFormButton(
                         backgroundColor: const Color(0xFF1E4A75),
                         argText: '로그인',
@@ -257,14 +258,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                       ),
                       SizedBox(
-                        height: AppLingua.height * 0.06,
+                        height: 6.h,
                       ),
                       commonText(
                           labelText: '아직 링구아 회원이 아니신가요?',
                           fontColor: const Color(0xFF868E96),
-                          fontSize: AppLingua.height * 0.0175),
+                          fontSize: 1.75.h),
                       SizedBox(
-                        height: AppLingua.height * 0.01375,
+                        height: 1.375.h,
                       ),
                       GestureDetector(
                         onTap: () {
@@ -276,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: commonText(
                             labelText: '회원가입',
                             fontColor: const Color(0xFF1E4A75),
-                            fontSize: AppLingua.height * 0.0175),
+                            fontSize: 1.75.h),
                       ),
                     ],
                   ),

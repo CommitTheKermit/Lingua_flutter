@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 Widget buildFormButton({
   required Color backgroundColor,
@@ -15,12 +15,12 @@ Widget buildFormButton({
         color: backgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       ),
-      width: AppLingua.width * 0.9,
-      height: AppLingua.height * 0.06,
+      width: 90.w,
+      height: 6.h,
       child: Center(
           child: commonText(
         labelText: argText,
-        fontSize: AppLingua.width * 0.045,
+        fontSize: 4.5.w,
         fontWeight: FontWeight.w700,
         fontColor: Colors.white,
       )),

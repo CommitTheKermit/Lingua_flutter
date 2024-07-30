@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 enum PageState {
   prev,
@@ -51,11 +52,11 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
     }
 
     head = head < 0 ? 0 : head;
-    tail = tail > AppLingua.originalSentences.length
-        ? AppLingua.originalSentences.length
+    tail = tail > originalSentences.length
+        ? originalSentences.length
         : tail;
     for (int i = head; i < tail; i++) {
-      contextSentences.add(AppLingua.originalSentences[widget.index + i]);
+      contextSentences.add(originalSentences[widget.index + i]);
     }
     return contextSentences;
   }
@@ -121,7 +122,7 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
         margin: const EdgeInsets.only(bottom: 10),
         child: Center(
           child: Text(
-            AppLingua.titleNovel,
+            titleNovel,
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w600,
@@ -138,8 +139,8 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
             ),
           ),
         ),
-        width: AppLingua.width,
-        height: AppLingua.height,
+        width: 100.w,
+        height: 100.h,
         child: SingleChildScrollView(
           controller: _scrollController,
           child: Column(
@@ -157,7 +158,7 @@ class _DialogContextWidgetState extends State<DialogContextWidget> {
                             const TextStyle(color: Colors.grey, fontSize: 19),
                       ),
                       SizedBox(
-                        width: AppLingua.width - 70,
+                        width: 100.w - 70,
                         child: Text(
                           argTextList[i],
                           style: const TextStyle(fontSize: 25),

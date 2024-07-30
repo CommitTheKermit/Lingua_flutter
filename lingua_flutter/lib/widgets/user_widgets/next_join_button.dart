@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class NextJoinButton extends StatelessWidget {
   const NextJoinButton({
@@ -41,10 +41,10 @@ class NextJoinButton extends StatelessWidget {
             }
           : () {},
       child: Padding(
-        padding: EdgeInsets.only(bottom: AppLingua.height * 0.03),
+        padding: EdgeInsets.only(bottom: 3.h),
         child: Container(
-          width: AppLingua.width * 0.9,
-          height: AppLingua.height * 0.0625,
+          width: 90.w,
+          height: 6.25.h,
           decoration: ShapeDecoration(
             color: const Color(0xFF1E4A75),
             shape:
@@ -53,7 +53,7 @@ class NextJoinButton extends StatelessWidget {
           child: Center(
             child: commonText(
               labelText: inButtonText,
-              fontSize: AppLingua.height * 0.0225,
+              fontSize: 2.25.h,
               fontWeight: FontWeight.w700,
               fontColor: const Color(0xFFF8F9FA),
             ),

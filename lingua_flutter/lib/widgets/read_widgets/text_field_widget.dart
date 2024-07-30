@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class TextFieldWidget extends StatefulWidget {
   final int flexValue;
@@ -40,7 +41,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       fit: FlexFit.tight,
       flex: widget.flexValue,
       child: Container(
-        width: AppLingua.width,
+        width: 100.w,
         decoration: BoxDecoration(
           color: Color(widget.readOption.optBackgroundColor),
         ),
@@ -53,23 +54,23 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    left: AppLingua.width * 0.04,
-                    top: AppLingua.height * 0.01,
+                    left: 4.w,
+                    top: 1.h,
                   ),
                   child: commonText(
                     labelText: '원문',
-                    fontSize: AppLingua.height * 0.02,
+                    fontSize:2.h,
                     fontColor: const Color(0xFF868E96),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    right: AppLingua.width * 0.04,
-                    top: AppLingua.height * 0.01,
+                    right: 4.w,
+                    top: 1.h,
                   ),
                   child: commonText(
                       labelText: '${widget.currentIndex}/${widget.endIndex}',
-                      fontSize: AppLingua.height * 0.02,
+                      fontSize:2.h,
                       fontColor: const Color(0xFF1E4A75)),
                 ),
               ],
@@ -79,8 +80,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                 controller: _scrollController,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: AppLingua.height * 0.01,
-                    horizontal: AppLingua.width * 0.02,
+                    vertical: 1.h,
+                    horizontal: 2.w,
                   ),
                   child: Text(
                     widget.argText,

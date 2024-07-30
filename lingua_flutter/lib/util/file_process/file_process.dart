@@ -13,8 +13,8 @@ mixin FileProcess {
       final file = File(path);
       // final pathFrags = file.path.split('/');
       // titleNovel = pathFrags[pathFrags.length - 1].split('.')[0];
-      AppLingua.stringContents = await file.readAsString();
-      return AppLingua.stringContents;
+      stringContents = await file.readAsString();
+      return stringContents;
     } catch (e) {
       // print("Error reading file: $e");
       return null;
@@ -28,7 +28,7 @@ mixin FileProcess {
     );
 
     if (result != null) {
-      AppLingua.titleNovel = result.files.single.name.split('.')[0];
+      titleNovel = result.files.single.name.split('.')[0];
       return result.files.single.path;
     } else {
       // 사용자가 선택을 취소한 경우
@@ -39,13 +39,13 @@ mixin FileProcess {
   Future<List<String>> filePickAndRead() async {
     String? filePath = await filePick();
     if (filePath != null) {
-      loadMapFromFile(filename: '${AppLingua.titleNovel}_input.json')
+      loadMapFromFile(filename: '${titleNovel}_input.json')
           .then((value) {
-        AppLingua.inputJson = value;
+        inputJson = value;
       });
-      loadMapFromFile(filename: '${AppLingua.titleNovel}_translated.json')
+      loadMapFromFile(filename: '${titleNovel}_translated.json')
           .then((value) {
-        AppLingua.trasJson = value;
+        trasJson = value;
       });
 
       String? contents = await fileRead(filePath);
@@ -132,13 +132,13 @@ mixin FileProcess {
     }
 
     final file =
-        await File('$path/${AppLingua.titleNovel}$fileName.$fileFormat')
+        await File('$path/${titleNovel}$fileName.$fileFormat')
             .create(recursive: true); // 파일 경로 설정
 
     String csvData = '원문, 입력문, 기계번역문\n';
-    AppLingua.inputJson.forEach((key, value) {
-      if (AppLingua.trasJson.containsKey(key)) {
-        csvData += '"$key","$value","${AppLingua.trasJson[key]}",\n';
+    inputJson.forEach((key, value) {
+      if (trasJson.containsKey(key)) {
+        csvData += '"$key","$value","${trasJson[key]}",\n';
       } else {
         csvData += '"$key","$value",\n';
       }

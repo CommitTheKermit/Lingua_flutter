@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 Divider commonDivider() {
   return Divider(
     color: Colors.transparent,
-    thickness: AppLingua.height * 0.005,
-    height: AppLingua.height * 0.005,
+    thickness: 0.5.h,
+    height: 0.5.h,
   );
 }

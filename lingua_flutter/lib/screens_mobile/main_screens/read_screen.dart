@@ -28,6 +28,7 @@ import 'package:lingua/widgets/read_widgets/text_field_widget.dart';
 import 'package:lingua/widgets/read_widgets/translated_field_widget.dart';
 import 'package:lingua/widgets/read_widgets/words_widget.dart';
 import 'package:lingua/util/etc/error_toast.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ReadScreen extends StatefulWidget {
   static bool isAllowTranslate = false;
@@ -119,20 +120,20 @@ class _ReadScreenState extends State<ReadScreen>
     _scrollController.jumpTo(0);
     index += shiftAmount;
     IndexSaveLoad.saveCurrentIndex(index);
-    originalSingleSentence = AppLingua.originalSentences[index];
+    originalSingleSentence = originalSentences[index];
     words = extractWords(originalSingleSentence);
 
     //입력 기록 불러오기
-    if (AppLingua.inputJson.containsKey(originalSingleSentence)) {
-      _inputController.text = AppLingua.inputJson[originalSingleSentence]!;
+    if (inputJson.containsKey(originalSingleSentence)) {
+      _inputController.text = inputJson[originalSingleSentence]!;
     } else {
       _inputController.text = '';
     }
     setState(() {});
     if (ReadScreen.isAllowTranslate && requestQuota.value > 0) {
       //번역 기록 불러오기
-      if (AppLingua.trasJson.containsKey(originalSingleSentence)) {
-        machineTranslated.value = AppLingua.trasJson[originalSingleSentence]!;
+      if (trasJson.containsKey(originalSingleSentence)) {
+        machineTranslated.value = trasJson[originalSingleSentence]!;
         return;
       }
 
@@ -145,10 +146,10 @@ class _ReadScreenState extends State<ReadScreen>
 
       //번역 기록 입력
       if (!translatedString.startsWith('error')) {
-        AppLingua.trasJson[originalSingleSentence] = translatedString;
+        trasJson[originalSingleSentence] = translatedString;
         saveMapToFile(
-            map: AppLingua.trasJson,
-            filename: '${AppLingua.titleNovel}_translated.json');
+            map: trasJson,
+            filename: '${titleNovel}_translated.json');
       }
 
       machineTranslated.value = translatedString;
@@ -273,7 +274,7 @@ class _ReadScreenState extends State<ReadScreen>
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppLingua.height * 0.06),
+              preferredSize: Size.fromHeight(6.h),
               child: readAppBar(context),
             ),
             drawer: readDrawer(context),
@@ -292,7 +293,7 @@ class _ReadScreenState extends State<ReadScreen>
                     readOption: ReadScreen.topOption,
                     currentIndex: isNovelLoaded ? index : 0,
                     endIndex:
-                        isNovelLoaded ? AppLingua.originalSentences.length : 0,
+                        isNovelLoaded ? originalSentences.length : 0,
                   ),
                   ReadScreen.isAllowTranslate
                       ? commonDivider()
@@ -349,7 +350,7 @@ class _ReadScreenState extends State<ReadScreen>
                           fit: FlexFit.tight,
                           flex: inputFieldFlex,
                           child: Container(
-                            width: AppLingua.width,
+                            width: 100.w,
                             decoration: BoxDecoration(
                               color: Color(
                                   ReadScreen.botOption.optBackgroundColor),
@@ -407,7 +408,7 @@ class _ReadScreenState extends State<ReadScreen>
                     flex: buttonsFlex,
                     child: Container(
                       height: double.infinity,
-                      width: AppLingua.width,
+                      width: 100.w,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
@@ -428,10 +429,10 @@ class _ReadScreenState extends State<ReadScreen>
                             ),
                             ReadButtonWidget(
                               indexLimit:
-                                  index == AppLingua.originalSentences.length &&
+                                  index == originalSentences.length &&
                                       !isNovelLoaded,
                               onTapFunc:
-                                  index == AppLingua.originalSentences.length
+                                  index == originalSentences.length
                                       ? () {}
                                       : () {
                                           lineShift(
@@ -445,12 +446,12 @@ class _ReadScreenState extends State<ReadScreen>
                               indexLimit: !isNovelLoaded,
                               onTapFunc: () {
                                 if (_inputController.text.isNotEmpty) {
-                                  AppLingua.inputJson[originalSingleSentence] =
+                                  inputJson[originalSingleSentence] =
                                       _inputController.text;
                                   saveMapToFile(
-                                      map: AppLingua.inputJson,
+                                      map: inputJson,
                                       filename:
-                                          '${AppLingua.titleNovel}_input.json');
+                                          '${titleNovel}_input.json');
                                 } else {
                                   errorToast(argText: '입력칸이 비어 있습니다.');
                                 }
@@ -479,7 +480,7 @@ class _ReadScreenState extends State<ReadScreen>
         ListTile(
           leading: Image.asset(
             'assets/images/icon_file_read.png',
-            width: AppLingua.height * 0.03,
+            width: 3.h,
           ),
           title: const Text(
             '파일 읽기',
@@ -491,7 +492,7 @@ class _ReadScreenState extends State<ReadScreen>
             try {
               errorToast(argText: '.txt 파일만 불러올 수 있습니다.');
               Navigator.pop(context);
-              AppLingua.originalSentences = await filePickAndRead();
+              originalSentences = await filePickAndRead();
               _loadInitialIndex();
             } catch (e) {}
           },
@@ -499,7 +500,7 @@ class _ReadScreenState extends State<ReadScreen>
         ListTile(
           leading: Image.asset(
             'assets/images/icon_read_mode.png',
-            width: AppLingua.height * 0.03,
+            width: 3.h,
           ),
           title: const Text(
             '뷰어 모드',
@@ -523,7 +524,7 @@ class _ReadScreenState extends State<ReadScreen>
         ListTile(
           leading: Image.asset(
             'assets/images/icon_read_setting.png',
-            width: AppLingua.height * 0.03,
+            width: 3.h,
           ),
           title: const Text(
             '옵션',
@@ -562,7 +563,7 @@ class _ReadScreenState extends State<ReadScreen>
         ListTile(
           leading: Image.asset(
             'assets/images/icon_line_change.png',
-            width: AppLingua.height * 0.03,
+            width: 3.h,
           ),
           title: const Text(
             '줄 이동',
@@ -585,7 +586,7 @@ class _ReadScreenState extends State<ReadScreen>
         ListTile(
           leading: Image.asset(
             'assets/images/icon_download.png',
-            width: AppLingua.height * 0.03,
+            width: 3.h,
           ),
           title: const Text(
             '기록 추출',
@@ -605,7 +606,7 @@ class _ReadScreenState extends State<ReadScreen>
         // ListTile(
         //   leading: Image.asset(
         //     'assets/images/icon_wordbook.png',
-        //     width: AppLingua.height * 0.03,
+        //     width: height * 0.03,
         //   ),
         //   title: const Text(
         //     '단어장',
@@ -637,20 +638,20 @@ class _ReadScreenState extends State<ReadScreen>
 
       actions: [
         SizedBox(
-          width: AppLingua.width,
+          width: 100.w,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: AppLingua.width * 0.01),
+                padding: EdgeInsets.only(left: 1.w),
                 child: Builder(
                   builder: (BuildContext context) {
                     return IconButton(
                       icon: Image.asset(
                         "assets/images/sort_button.png",
-                        height: AppLingua.height * 0.03,
-                        width: AppLingua.height * 0.03,
+                        height: 3.h,
+                        width: 3.h,
                       ),
                       onPressed: () {
                         Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
@@ -662,14 +663,14 @@ class _ReadScreenState extends State<ReadScreen>
                 ),
               ),
               SizedBox(
-                width: AppLingua.width * 0.4,
+                width: 40.w,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: commonText(
-                    labelText: AppLingua.titleNovel.isNotEmpty // 파일 제목 출력
-                        ? AppLingua.titleNovel
+                    labelText: titleNovel.isNotEmpty // 파일 제목 출력
+                        ? titleNovel
                         : '파일을 선택해주세요.',
-                    fontSize: AppLingua.height * 0.025,
+                    fontSize: 2.5.h,
                     fontColor: const Color(0xFF1E4A75),
                   ),
                 ),
@@ -684,7 +685,7 @@ class _ReadScreenState extends State<ReadScreen>
                         setState(() {});
                       },
                       assetName: "assets/images/edit_button.png",
-                      iconSize: AppLingua.height * 0.03,
+                      iconSize: 3.h,
                     ),
                     TranslateAllowButton(
                       apiUtil: apiUtil,
@@ -695,7 +696,7 @@ class _ReadScreenState extends State<ReadScreen>
                         }
                       },
                       assetName: "assets/images/translate_button.png",
-                      iconSize: AppLingua.height * 0.03,
+                      iconSize: 3.h,
                     ),
                     IconButton(
                       iconSize: 20,
@@ -710,7 +711,7 @@ class _ReadScreenState extends State<ReadScreen>
                       },
                       icon: Image.asset(
                         "assets/images/search_button.png",
-                        height: AppLingua.height * 0.03,
+                        height: 3.h,
                       ),
                     ),
                   ],
@@ -742,20 +743,20 @@ class _ReadScreenState extends State<ReadScreen>
       //   builder: (BuildContext context, BoxConstraints constraints) {
       //     return FlexibleSpaceBar(
       //       title: SizedBox(
-      //         width: AppLingua.width / 2,
+      //         width: width / 2,
       //         child: SingleChildScrollView(
       //           scrollDirection: Axis.horizontal,
       //           child: commonText(
-      //             labelText: AppLingua.titleNovel.isNotEmpty // 파일 제목 출력
-      //                 ? AppLingua.titleNovel
+      //             labelText: titleNovel.isNotEmpty // 파일 제목 출력
+      //                 ? titleNovel
       //                 : '파일을 선택해주세요.',
-      //             fontSize: AppLingua.height * 0.025,
+      //             fontSize: height * 0.025,
       //             fontColor: const Color(0xFF1E4A75),
       //           ),
       //         ),
       //       ),
       //       titlePadding: EdgeInsets.only(
-      //           left: 50, top: AppLingua.height * 0.03), // 원하는 위치로 조절
+      //           left: 50, top: height * 0.03), // 원하는 위치로 조절
       //     );
       //   },
       // ),
@@ -780,7 +781,7 @@ class _ReadScreenState extends State<ReadScreen>
       }
       // index = result;
       // IndexSaveLoad.saveCurrentIndex(index);
-      // originalSingleSentence = AppLingua.originalSentences[index];
+      // originalSingleSentence = originalSentences[index];
       // words = extractWords(originalSingleSentence);
       // _scrollController.jumpTo(0);
 

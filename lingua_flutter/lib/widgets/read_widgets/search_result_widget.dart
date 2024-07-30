@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/models/bookmark_model.dart';
 import 'package:lingua/models/search_result_model.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class SearchResultWidget extends StatefulWidget {
   const SearchResultWidget({
@@ -55,7 +55,7 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        width: AppLingua.width * 0.9,
+        width: 90.w,
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
@@ -69,18 +69,18 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: AppLingua.width * 0.775,
+                  width: 77.5.w,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: AppLingua.width * 0.01,
+                        width: 1.w,
                       ),
                       Text(
                         '${widget.searchResult.pageNumber} 쪽',
                         style: TextStyle(
                           color: const Color(0xFF495057),
-                          fontSize: AppLingua.height * 0.02,
+                          fontSize: 2.h,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -90,8 +90,8 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                           GestureDetector(
                             onTap: widget.onTapMove,
                             child: Container(
-                              width: AppLingua.width * 0.1125,
-                              height: AppLingua.height * 0.03,
+                              width: 11.25.w,
+                              height: 3.h,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFF43698F),
                                 shape: RoundedRectangleBorder(
@@ -102,7 +102,7 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                                   '이동',
                                   style: TextStyle(
                                     color: const Color(0xFFF8F9FA),
-                                    fontSize: AppLingua.height * 0.015,
+                                    fontSize: 1.5.h,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -115,32 +115,32 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                   ),
                 ),
                 SizedBox(
-                  height: AppLingua.height * 0.01,
+                  height: 1.h,
                 ),
                 SizedBox(
-                  width: AppLingua.width * 0.7,
-                  height: AppLingua.height * 0.09,
+                  width: 70.w,
+                  height: 9.h,
                   child: RichText(
                     text: TextSpan(children: [
                       TextSpan(
                         text: prefix,
                         style: TextStyle(
                           color: const Color(0xFF363639),
-                          fontSize: AppLingua.height * 0.02,
+                          fontSize: 2.h,
                         ),
                       ),
                       TextSpan(
                         text: widget.targetWord,
                         style: TextStyle(
                           color: const Color(0xFF363639),
-                          fontSize: AppLingua.height * 0.02,
+                          fontSize: 2.h,
                         ),
                       ),
                       TextSpan(
                         text: suffix,
                         style: TextStyle(
                           color: const Color(0xFF363639),
-                          fontSize: AppLingua.height * 0.02,
+                          fontSize: 2.h,
                         ),
                       ),
                     ]),
@@ -148,7 +148,7 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
                     overflow: TextOverflow.ellipsis,
                     // style: TextStyle(
                     //   color: const Color(0xFF171A1D),
-                    //   fontSize: AppLingua.height * 0.0175,
+                    //   fontSize: height * 0.0175,
                     //   height: 1.5,
                     // ),
                   ),

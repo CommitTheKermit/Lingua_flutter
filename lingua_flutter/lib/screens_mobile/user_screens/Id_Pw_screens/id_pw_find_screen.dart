@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/id_find_screen.dart';
 import 'package:lingua/screens_mobile/user_screens/Id_Pw_screens/pw_find_screen.dart';
 
 import 'package:lingua/widgets/commons/common_appbar.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class IDPWFindScreen extends StatefulWidget {
   const IDPWFindScreen({super.key});
@@ -45,8 +45,8 @@ class _IDPWFindScreenState extends State<IDPWFindScreen>
           centerTitle: true,
           title: GFSegmentTabs(
             indicatorSize: TabBarIndicatorSize.tab,
-            height: AppLingua.height * 0.0675,
-            width: AppLingua.width,
+            height: 6.75.h,
+            width: 100.w,
             tabController: tabController,
             tabBarColor: GFColors.WHITE,
             labelColor: GFColors.WHITE,
@@ -64,7 +64,7 @@ class _IDPWFindScreenState extends State<IDPWFindScreen>
                     '아이디 찾기',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: AppLingua.height * 0.0225,
+                      fontSize: 2.25.h,
                     ),
                   ),
                 ),
@@ -76,7 +76,7 @@ class _IDPWFindScreenState extends State<IDPWFindScreen>
                     '비밀번호 찾기',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: AppLingua.height * 0.0225,
+                      fontSize: 2.25.h,
                     ),
                   ),
                 ),

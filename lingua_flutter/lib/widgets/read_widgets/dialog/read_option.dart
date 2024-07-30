@@ -12,13 +12,13 @@
 //         content: Column(
 //           children: [
 //             Container(
-//               width: AppLingua.width,
+//               width: width,
 //               height: 100,
 //               decoration: const BoxDecoration(color: Colors.green),
 //             ),
 //             SizedBox(
 //               height: 400,
-//               width: AppLingua.width,
+//               width: width,
 //               child: const DefaultTabController(
 //                 length: 3,
 //                 child: Column(

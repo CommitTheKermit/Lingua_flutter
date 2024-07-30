@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 enum PageState {
   prev,
@@ -49,10 +50,10 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
             Align(
               alignment: Alignment.center,
               child: Text(
-                AppLingua.titleNovel,
+                titleNovel,
                 style: TextStyle(
                   color: const Color(0xFF43698F),
-                  fontSize: AppLingua.height * 0.03,
+                  fontSize: 3.h,
                   fontFamily: 'Noto Sans KR',
                   fontWeight: FontWeight.w700,
                 ),
@@ -65,7 +66,7 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                   Navigator.of(context).pop('back');
                 },
                 icon: Image.asset("assets/images/icon_close.png",
-                    height: AppLingua.height * 0.05),
+                    height: 5.h),
               ),
             ),
           ],
@@ -79,24 +80,24 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
         bottom: 10,
       ),
       content: SizedBox(
-        width: AppLingua.width,
-        height: AppLingua.height * 0.45,
+        width: 100.w,
+        height: 45.h,
         child: Column(
           children: [
             Container(
-              height: AppLingua.height * 0.015,
+              height: 1.5.h,
               decoration: const BoxDecoration(
                   border: Border(
                       bottom: BorderSide(width: 1, color: Color(0xFFDEE2E6)))),
             ),
             Container(
-              height: AppLingua.height * 0.25,
+              height: 25.h,
               decoration: const BoxDecoration(
                 color: Colors.transparent,
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppLingua.width * 0.04,
+                  horizontal: 4.w,
                 ),
                 child: Scrollbar(
                   controller: _scrollController,
@@ -104,9 +105,9 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                   child: SingleChildScrollView(
                     controller: _scrollController,
                     child: Text(
-                      AppLingua.originalSentences[index],
+                      originalSentences[index],
                       style: TextStyle(
-                        fontSize: AppLingua.height * 0.03,
+                        fontSize: 3.h,
                         height: 1.7,
                       ),
                     ),
@@ -118,8 +119,8 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
               child: SliderTheme(
                 data: SliderThemeData(
                   thumbShape: RoundSliderThumbShape(
-                      enabledThumbRadius: AppLingua.height * 0.01),
-                  trackHeight: AppLingua.height * 0.01,
+                      enabledThumbRadius: 1.h),
+                  trackHeight: 1.h,
                 ),
                 child: Slider(
                   activeColor: const Color(0xFF44698F),
@@ -134,13 +135,13 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                     });
                   },
                   min: 0,
-                  max: AppLingua.originalSentences.length.toDouble(),
+                  max: originalSentences.length.toDouble(),
                 ),
               ),
             ),
             Container(
-              width: AppLingua.width * 0.3,
-              height: AppLingua.height * 0.045,
+              width: 30.w,
+              height: 4.5.h,
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 0.5, color: Color(0xFF868E96)),
@@ -159,10 +160,10 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                   },
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
-                        vertical: AppLingua.height * 0.009),
+                        vertical: 0.9.h),
                     border: InputBorder.none,
                     hintText:
-                        '${_sliderValue.toInt()}/${AppLingua.originalSentences.length}',
+                        '${_sliderValue.toInt()}/${originalSentences.length}',
                     hintStyle: const TextStyle(
                       fontSize: 22,
                     ),
@@ -181,14 +182,14 @@ class _DialogLineSearchState extends State<DialogLineSearch> {
                   border: Border(
                       top: BorderSide(width: 1, color: Color(0xFFDEE2E6))),
                 ),
-                height: AppLingua.height * 0.0675,
+                height: 6.75.h,
                 child: Center(
                     child: Text(
                   '이동',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: const Color(0xFF43698F),
-                    fontSize: AppLingua.height * 0.025,
+                    fontSize: 2.5.h,
                     fontFamily: 'Noto Sans KR',
                     fontWeight: FontWeight.w700,
                   ),

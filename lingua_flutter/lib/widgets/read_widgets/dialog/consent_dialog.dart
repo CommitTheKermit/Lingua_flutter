@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 Future<dynamic> consentDialog({
   required String title,
@@ -11,12 +12,12 @@ Future<dynamic> consentDialog({
     builder: (BuildContext context) {
       return AlertDialog(
         insetPadding: EdgeInsets.symmetric(
-            horizontal: AppLingua.width * 0.0375, vertical: 0),
+            horizontal: 3.75.w, vertical: 0),
         title: Text(
           title,
           style: TextStyle(
             color: const Color(0xFF171A1D),
-            fontSize: AppLingua.height * 0.0225,
+            fontSize: 2.25.h,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -24,7 +25,7 @@ Future<dynamic> consentDialog({
           content,
           style: TextStyle(
             color: const Color(0xFF171A1D),
-            fontSize: AppLingua.height * 0.02,
+            fontSize: 2.h,
           ),
         ),
         actionsPadding: EdgeInsets.zero,
@@ -32,7 +33,7 @@ Future<dynamic> consentDialog({
           Center(
             child: TextButton(
               child: Container(
-                width: AppLingua.width,
+                width: 100.w,
                 decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(
@@ -44,12 +45,12 @@ Future<dynamic> consentDialog({
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        vertical: AppLingua.height * 0.0125),
+                        vertical: 1.25.h),
                     child: Text(
                       '확인',
                       style: TextStyle(
                         color: const Color(0xFF43698F),
-                        fontSize: AppLingua.height * 0.0225,
+                        fontSize: 2.25.h,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

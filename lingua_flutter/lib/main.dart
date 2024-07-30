@@ -6,6 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+int requestQuota = 0;
+String titleNovel = "";
+List<String> originalSentences = [];
+String stringContents = "";
+Map<String, String> trasJson = {};
+Map<String, String> inputJson = {};
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
@@ -18,15 +25,7 @@ void main() {
 class AppLingua extends StatefulWidget {
   const AppLingua({super.key});
 
-  static int requestQuota = 0;
-  static Size size = const Size(0, 0);
-  static double width = 0;
-  static double height = 0;
-  static String titleNovel = "";
-  static List<String> originalSentences = [];
-  static String stringContents = "";
-  static Map<String, String> trasJson = {};
-  static Map<String, String> inputJson = {};
+
 
   @override
   State<AppLingua> createState() => _AppLinguaState();
@@ -60,9 +59,6 @@ class _AppLinguaState extends State<AppLingua> {
 
   @override
   Widget build(BuildContext context) {
-    AppLingua.size = MediaQuery.of(context).size;
-    AppLingua.width = MediaQuery.of(context).size.width;
-    AppLingua.height = MediaQuery.of(context).size.height;
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

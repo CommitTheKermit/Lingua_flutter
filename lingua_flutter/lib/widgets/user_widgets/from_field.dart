@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 Widget buildFormField({
   required FormFieldSetter<String> onSaved,
@@ -12,8 +13,8 @@ Widget buildFormField({
   TextEditingController? controller,
 }) {
   return Container(
-    width: AppLingua.width * 0.9,
-    height: AppLingua.height * 0.07,
+    width: 90.w,
+    height: 7.h,
     decoration: ShapeDecoration(
       color: const Color(0xFFF8F9FA),
       shape: RoundedRectangleBorder(
@@ -33,7 +34,7 @@ Widget buildFormField({
           border: InputBorder.none,
           hintStyle: TextStyle(
             color: const Color(0xFFADB5BD),
-            fontSize: AppLingua.height * 0.02,
+            fontSize: 2.h,
           ),
         ),
       ),
