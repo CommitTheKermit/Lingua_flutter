@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:lingua/util/shared_preferences/preference_manager.dart';
+import 'package:lingua/utils/shared_preferences/preference_manager.dart';
 
 part 'bookmark_model.g.dart';
 
@@ -17,7 +17,7 @@ class BookmarkModel {
       required this.bookMarkedTime});
 
   Future<void> loadOption({required String key}) async {
-    String? jsonString = await PreferenceManager.getValue(key);
+    String? jsonString = await getValue(key);
 
     if (jsonString == null) {
       return;
@@ -39,7 +39,7 @@ class BookmarkModel {
     Map json = toJson();
     String jsonString = jsonEncode(json);
 
-    PreferenceManager.saveValue(key, jsonString);
+    saveValue(key, jsonString);
   }
 
   factory BookmarkModel.fromJson(Map<String, dynamic> json) =>

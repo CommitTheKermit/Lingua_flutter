@@ -51,7 +51,7 @@ class NextJoinButton extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           ),
           child: Center(
-            child: commonText(
+            child: comnText(
               labelText: inButtonText,
               fontSize: 2.25.h,
               fontWeight: FontWeight.w700,

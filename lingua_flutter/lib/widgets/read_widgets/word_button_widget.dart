@@ -39,7 +39,7 @@ class WordButtonWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4)),
             ),
             child: Center(
-              child: commonText(
+              child: comnText(
                 labelText: inButtonText,
                 fontColor: const Color(0xFFF8F9FA),
                 fontSize: 2.h,

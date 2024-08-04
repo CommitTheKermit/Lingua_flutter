@@ -2,19 +2,27 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lingua/screens_mobile/main_screens/read_screen.dart';
-
-import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
+import 'package:lingua/main/main_provider.dart';
+import 'package:lingua/main/main_theme.dart';
+import 'package:lingua/mainframe/view/mainframe.dart';
+import 'package:lingua/models/server_info.dart';
+import 'package:lingua/screens_mobile/read_screen/view/read_screen.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_screen_prov.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+// static const String baseUrl = "http://10.0.2.2:8000";
+const String baseUrl = ServerInfo.baseUrl;
+const int timeoutSec = ServerInfo.timeoutSec;
+String API_KEY = '';
 int requestQuota = 0;
 String titleNovel = "";
 List<String> originalSentences = [];
 String stringContents = "";
 Map<String, String> trasJson = {};
 Map<String, String> inputJson = {};
-
+GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
@@ -26,8 +34,6 @@ void main() {
 
 class AppLingua extends StatefulWidget {
   const AppLingua({super.key});
-
-
 
   @override
   State<AppLingua> createState() => _AppLinguaState();
@@ -61,33 +67,22 @@ class _AppLinguaState extends State<AppLingua> {
 
   @override
   Widget build(BuildContext context) {
+    MainTheme mainTheme = MainTheme(
+      argContext: context,
+    );
 
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          // ignore: deprecated_member_use
-
-          scaffoldBackgroundColor: Colors.white,
-          fontFamily: 'Noto Sans KR',
-          primaryColor: const Color(0xFF1E4A75),
-          highlightColor: const Color(0xFF1E4A75),
-          hintColor: const Color(0xFF1E4A75),
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: Color(0xFF1E4A75),
-            selectionColor: Color(0xFF1E4A75),
-            selectionHandleColor: Color(0xFF1E4A75),
-          ),
-          dialogBackgroundColor: Colors.white,
-          dialogTheme: DialogTheme(
-            surfaceTintColor: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      theme: mainTheme.theme,
+      home: ResponsiveSizer(builder: (context, orientation, screenType) {
+        return MainProvider(
+          child: Mainframe(
+              child: ReadScreen(
+            readProv: Provider.of<ReadScreenProv>(context, listen: false),
           )),
-      home: ResponsiveSizer(
-        builder: (context, orientation, screenType) {
-          return const ReadScreen();
-        }
-      ),
+        );
+      }),
     );
   }
 }

@@ -1,28 +1,32 @@
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:lingua/util/shared_preferences/preference_manager.dart';
+import 'package:lingua/utils/shared_preferences/preference_manager.dart';
 
 part 'read_option.g.dart';
 
 @JsonSerializable()
 class ReadOption {
-  double optFontSize;
-  double optFontHeight;
-  String optFontFamily;
-  int optFontColor;
-  int optBackgroundColor;
+  double optFontSize = 25;
+  double optFontHeight = 1.7;
+  String optFontFamily = 'Neo';
+  int optFontColor = 0xff000000;
+  int optBackgroundColor = 0xffffffff;
 
-  ReadOption(this.optFontSize, this.optFontHeight, this.optFontFamily,
+ReadOption();
+
+  ReadOption.full(this.optFontSize, this.optFontHeight, this.optFontFamily,
       this.optFontColor, this.optBackgroundColor);
 
+      
+
   ReadOption clone() {
-    return ReadOption(optFontSize, optFontHeight, optFontFamily, optFontColor,
+    return ReadOption.full(optFontSize, optFontHeight, optFontFamily, optFontColor,
         optBackgroundColor);
   }
 
   Future<void> loadOption({required String key}) async {
-    String? jsonString = await PreferenceManager.getValue(key);
+    String? jsonString = await getValue(key);
 
     if (jsonString == null) {
       return;
@@ -50,7 +54,7 @@ class ReadOption {
     Map json = toJson();
     String jsonString = jsonEncode(json);
 
-    PreferenceManager.saveValue(key, jsonString);
+    saveValue(key, jsonString);
   }
 
   factory ReadOption.fromJson(Map<String, dynamic> json) =>

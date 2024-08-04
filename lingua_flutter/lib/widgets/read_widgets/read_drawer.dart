@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
-import 'package:lingua/screens_mobile/user_screens/login_screen.dart';
-import 'package:lingua/util/etc/change_screen.dart';
+import 'package:lingua/screens_mobile_old/user_screens/login_screen.dart';
+import 'package:lingua/utils/etc/change_screen.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -89,7 +89,7 @@ class ReadDrawer extends StatelessWidget {
                                   nextScreen: const LoginScreen(),
                                   isReplace: true);
                             },
-                            child: commonText(
+                            child: comnText(
                               labelText: '로그아웃',
                               fontColor: const Color(0xFFADB5BD),
                               fontSize: 2.h,
@@ -100,7 +100,7 @@ class ReadDrawer extends StatelessWidget {
                       SizedBox(
                         height: 1.75.h,
                       ),
-                      commonText(
+                      comnText(
                           labelText: UserModel.email,
                           fontSize: 2.h),
                       SizedBox(

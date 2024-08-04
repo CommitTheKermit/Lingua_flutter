@@ -53,6 +53,7 @@ dependencies:
   show_more_text_popup: ^0.3.0
   change_app_package_name: ^1.1.0
   responsive_sizer: ^3.3.1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

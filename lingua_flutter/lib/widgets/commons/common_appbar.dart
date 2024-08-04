@@ -8,7 +8,7 @@ AppBar commonAppBar({
 }) {
   return AppBar(
     centerTitle: true,
-    title: commonText(
+    title: comnText(
       labelText: argText,
       fontColor: const Color(0xFF171A1D),
       fontSize: 2.25.h,

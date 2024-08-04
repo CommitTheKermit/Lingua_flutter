@@ -57,7 +57,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                     left: 4.w,
                     top: 1.h,
                   ),
-                  child: commonText(
+                  child: comnText(
                     labelText: '원문',
                     fontSize:2.h,
                     fontColor: const Color(0xFF868E96),
@@ -68,7 +68,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                     right: 4.w,
                     top: 1.h,
                   ),
-                  child: commonText(
+                  child: comnText(
                       labelText: '${widget.currentIndex}/${widget.endIndex}',
                       fontSize:2.h,
                       fontColor: const Color(0xFF1E4A75)),

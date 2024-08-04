@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -34,7 +33,7 @@ Widget callLimitWidget({
                     padding: EdgeInsets.only(
                       left: 5.w,
                     ),
-                    child: commonText(
+                    child: comnText(
                       labelText: '번역 제한',
                       fontColor: const Color(0xFF868E96),
                       fontSize: 2.h,
@@ -47,7 +46,7 @@ Widget callLimitWidget({
                         padding: EdgeInsets.only(
                           right: 5.w,
                         ),
-                        child: commonText(
+                        child: comnText(
                           labelText: "$value/200",
                           fontWeight: FontWeight.w400,
                           fontSize: 2.25.h,
@@ -112,7 +111,7 @@ Widget callLimitWidget({
                         Padding(
                           padding:
                               EdgeInsets.only(left: 2.5.w),
-                          child: commonText(
+                          child: comnText(
                             labelText: '번역 제한 충전까지',
                             fontColor: const Color(0xFF868E96),
                             fontSize: 2.h,

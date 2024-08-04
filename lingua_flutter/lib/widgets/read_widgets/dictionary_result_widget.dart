@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../models/word_model.dart';

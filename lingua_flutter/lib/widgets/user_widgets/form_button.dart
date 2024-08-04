@@ -18,7 +18,7 @@ Widget buildFormButton({
       width: 90.w,
       height: 6.h,
       child: Center(
-          child: commonText(
+          child: comnText(
         labelText: argText,
         fontSize: 4.5.w,
         fontWeight: FontWeight.w700,

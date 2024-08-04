@@ -6,7 +6,7 @@ part of 'read_option.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ReadOption _$ReadOptionFromJson(Map<String, dynamic> json) => ReadOption(
+ReadOption _$ReadOptionFromJson(Map<String, dynamic> json) => ReadOption.full(
       (json['optFontSize'] as num).toDouble(),
       (json['optFontHeight'] as num).toDouble(),
       json['optFontFamily'] as String,
