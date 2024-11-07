@@ -146,10 +146,10 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
               length: 4,
               indicatorSize: TabBarIndicatorSize.tab,
               tabs: [
-                _singleTabButton(argText: '상단'),
-                _singleTabButton(argText: '중단'),
-                _singleTabButton(argText: '하단'),
-                _singleTabButton(argText: '뷰어'),
+                singleTabButton(argText: '상단'),
+                singleTabButton(argText: '중단'),
+                singleTabButton(argText: '하단'),
+                singleTabButton(argText: '뷰어'),
               ],
             ),
           ),
@@ -182,16 +182,6 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
 
 
 
-  SizedBox singleTabButton({required String argText}) {
-    return SizedBox(
-      child: Center(
-        child: Text(
-          argText,
-          style: TextStyle(fontSize: 2.125.h),
-        ),
-      ),
-    );
-  }
 
   Center optionPage({
     required BuildContext context,
