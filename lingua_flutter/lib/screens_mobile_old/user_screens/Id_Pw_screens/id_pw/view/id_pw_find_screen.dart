@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/id_find_screen.dart';
-import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/pw_find_screen.dart';
+import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/id_pw/view/id_find_screen.dart';
+import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/id_pw/view/pw_find_screen.dart';
 
 import 'package:lingua/widgets/commons/common_appbar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

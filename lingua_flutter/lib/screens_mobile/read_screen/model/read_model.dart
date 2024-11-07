@@ -3,16 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lingua/models/read_option.dart';
 
-class ReadScreenModel {
+class ReadModel {
   bool isAllowTranslate = false;
   bool isAllowInput = true;
   ReadOption topOption = ReadOption();
   ReadOption midOption = ReadOption();
   ReadOption botOption = ReadOption();
-  ReadOption readModeOption =
-      ReadOption();
+  ReadOption readModeOption = ReadOption();
 
-        bool STOP_REFRESH = false;
+  bool STOP_REFRESH = false;
 
   String originalSingleSentence = '';
   String translatedSentence = '';
@@ -45,4 +44,6 @@ class ReadScreenModel {
   late Timer countdownTimer;
   final int refreshPeriodMinute = 6;
   late final int refreshPeriodSecond;
+
+  String titleNovel = '';
 }

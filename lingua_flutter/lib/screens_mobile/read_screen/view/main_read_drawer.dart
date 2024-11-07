@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/screens_mobile/read_screen/view_model/read_screen_prov.dart';
-import 'package:lingua/screens_mobile_old/etc_screens/read_option_screen.dart';
-import 'package:lingua/screens_mobile_old/main_screens/read_mode_screen.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_prov.dart';
+import 'package:lingua/screens_mobile_old/etc_screens/read_option/view/read_option_screen.dart';
+import 'package:lingua/screens_mobile_old/main_screens/read_mode/view/read_mode.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
 import 'package:lingua/utils/etc/error_toast.dart';
 import 'package:lingua/utils/file_process/file_process.dart';
@@ -20,9 +20,9 @@ class MainReadDrawer extends StatefulWidget {
 class _MainReadDrawerState extends State<MainReadDrawer> {
   @override
   Widget build(BuildContext context) {
-    ReadScreenProv readProv = Provider.of<ReadScreenProv>(context);
-    
-      return ReadDrawer(
+    ReadProv readProv = Provider.of<ReadProv>(context);
+
+    return ReadDrawer(
       listTiles: [
         ListTile(
           leading: Image.asset(
@@ -60,7 +60,9 @@ class _MainReadDrawerState extends State<MainReadDrawer> {
                   Navigator.pop(context);
                   changeScreen(
                     context: context,
-                    nextScreen: const ReadModeScreen(),
+                    nextScreen: ReadModeScreen(
+                      readProv: readProv,
+                    ),
                     isReplace: false,
                   );
                 }
@@ -97,8 +99,9 @@ class _MainReadDrawerState extends State<MainReadDrawer> {
                   );
                 },
                 pageBuilder: (context, anmation, secondaryAnimation) =>
-                    const ReadOptionScreen(
+                    ReadOptionScreen(
                   startingTab: 0,
+                  readProv: readProv,
                 ),
               ),
             );

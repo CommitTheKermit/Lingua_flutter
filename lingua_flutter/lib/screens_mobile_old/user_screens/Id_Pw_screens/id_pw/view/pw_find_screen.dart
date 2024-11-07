@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/pw_change_screen.dart';
+import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/id_pw/view/pw_change_screen.dart';
 import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/etc/validators.dart';
+import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
+import 'package:lingua/widgets/user_widgets/form_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../../widgets/read_widgets/dialog/consent_dialog.dart';
-import '../../../widgets/user_widgets/form_button.dart';
 
 class PwFindScreen extends StatefulWidget {
   const PwFindScreen({super.key});
@@ -137,7 +137,7 @@ class _PwFindScreenState extends State<PwFindScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      condition = await ApiUser.pwFind(_phoneNo, _email);
+      condition = await pwFind(_phoneNo, _email);
 
       if (condition && mounted) {
         isVerifeid = true;

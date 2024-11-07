@@ -84,7 +84,7 @@ class _DialogWordSearchState extends State<DialogWordSearch> {
             suffixIcon: GestureDetector(
               onTap: () {
                 setState(() {
-                  wordMeans = ApiUtil.dictSearch(_controller.text);
+                  wordMeans = dictSearch(_controller.text);
                 });
               },
               child: Image.asset(

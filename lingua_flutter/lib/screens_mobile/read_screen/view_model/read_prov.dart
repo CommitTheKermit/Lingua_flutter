@@ -3,41 +3,38 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
-import 'package:lingua/screens_mobile/read_screen/model/read_screen_model.dart';
+import 'package:lingua/screens_mobile/read_screen/model/read_model.dart';
 import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/api/api_util.dart';
 import 'package:lingua/utils/file_process/translate_input_process.dart';
-import 'package:lingua/utils/shared_preferences/preference_manager.dart';
+import 'package:lingua/utils/shared_preferences/preferences.dart';
 import 'package:lingua/utils/shared_preferences/save_index.dart';
 import 'package:lingua/utils/string_process/sentence_process.dart';
 import 'package:lingua/utils/uitl.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_line_search.dart';
 
-class ReadScreenProv extends ChangeNotifier
-{
-    ReadScreenModel model = ReadScreenModel();
+class ReadProv extends ChangeNotifier {
+  ReadModel model = ReadModel();
 
   void clear() {
-    model = ReadScreenModel();
+    model = ReadModel();
   }
 
   void notify() {
     notifyListeners();
   }
 
-    Future<String> initOption() async {
+  Future<String> initOption() async {
     await model.topOption.loadOption(key: 'topOption');
     await model.midOption.loadOption(key: 'midOption');
     await model.botOption.loadOption(key: 'botOption');
 
-    model.isAllowTranslate =
-        await getBoolValue('isAllowTranslate') ?? false;
+    model.isAllowTranslate = await getPrefBool('isAllowTranslate') ?? false;
 
     if (model.isAllowTranslate) {
       // getApiKey();
     }
-    model.isAllowInput =
-        await getBoolValue('isAllowInput') ?? true;
+    model.isAllowInput = await getPrefBool('isAllowInput') ?? true;
 
     model.isInitalized = true;
     notify();
@@ -100,7 +97,8 @@ class ReadScreenProv extends ChangeNotifier
     model.callLimitFlex = 6;
     model.buttonsFlex = 7;
     if (!model.isAllowInput && !model.isAllowTranslate) {
-      model.originalTextFieldFlex += model.translatedTextFieldFlex + model.inputFieldFlex;
+      model.originalTextFieldFlex +=
+          model.translatedTextFieldFlex + model.inputFieldFlex;
     } else if (model.isAllowInput && !model.isAllowTranslate) {
       model.originalTextFieldFlex += model.translatedTextFieldFlex ~/ 2;
       model.inputFieldFlex += model.translatedTextFieldFlex ~/ 2;
@@ -110,7 +108,7 @@ class ReadScreenProv extends ChangeNotifier
     }
   }
 
-    void schedulePeriodicTask() {
+  void schedulePeriodicTask() {
     if (!model.STOP_REFRESH) {
       DateTime now = DateTime.now();
       DateTime nextRun = now.add(Duration(
@@ -121,12 +119,12 @@ class ReadScreenProv extends ChangeNotifier
       Duration initialDelay = nextRun.difference(now);
       model.remainingTime.value = initialDelay.inSeconds;
 
-      model.countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-        
+      model.countdownTimer =
+          Timer.periodic(const Duration(seconds: 1), (Timer t) {
         if (model.remainingTime.value > 0) {
-            model.remainingTime.value--;
-          }
-          notify();
+          model.remainingTime.value--;
+        }
+        notify();
       });
 
       Timer(initialDelay, () {
@@ -135,8 +133,8 @@ class ReadScreenProv extends ChangeNotifier
         });
         model.remainingTime.value = model.refreshPeriodSecond;
 
-        model.serverRequestTimer =
-            Timer.periodic(Duration(minutes: model.refreshPeriodMinute), (Timer t) {
+        model.serverRequestTimer = Timer.periodic(
+            Duration(minutes: model.refreshPeriodMinute), (Timer t) {
           periodicRefresh(email: UserModel.email).then((value) {
             model.requestQuota.value = value;
           });
@@ -146,25 +144,23 @@ class ReadScreenProv extends ChangeNotifier
     }
   }
 
-
-    Future<dynamic> lineSearchDialog(
+  Future<dynamic> lineSearchDialog(
       {required context, required int argIndex}) async {
     final result = await comnShowDialog(
         dialog: DialogLineSearch(
       index: argIndex,
     ));
 
-    
-      if (result == 'back') {
-        return;
-      }
-      // index = result;
-      // IndexSaveLoad.saveCurrentIndex(index);
-      // originalSingleSentence = originalSentences[index];
-      // words = extractWords(originalSingleSentence);
-      // _scrollController.jumpTo(0);
+    if (result == 'back') {
+      return;
+    }
+    // index = result;
+    // IndexSaveLoad.saveCurrentIndex(index);
+    // originalSingleSentence = originalSentences[index];
+    // words = extractWords(originalSingleSentence);
+    // _scrollController.jumpTo(0);
 
-      lineShift(shiftAmount: result - model.index);
+    lineShift(shiftAmount: result - model.index);
     notify();
   }
 }

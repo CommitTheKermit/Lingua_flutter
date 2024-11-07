@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/utils/shared_preferences/preference_manager.dart';
+import 'package:lingua/main.dart';
+import 'package:lingua/screens_mobile/read_screen/view/read.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_prov.dart';
+import 'package:lingua/utils/shared_preferences/preferences.dart';
 import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
+import 'package:provider/provider.dart';
 
 class TranslateAllowButton extends StatefulWidget {
   final String assetName;
@@ -19,26 +23,7 @@ class TranslateAllowButton extends StatefulWidget {
 
 class _TranslateAllowButtonState extends State<TranslateAllowButton>
     with SingleTickerProviderStateMixin {
-  // late AnimationController _controller;
-  // late Animation<Color?> _colorAnimation;
   bool isPressed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // _controller = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(
-    //     milliseconds: 200,
-    //   ),
-    // )..addListener(() {
-    //     setState(() {}); // 화면을 다시 그립니다.
-    //   });
-
-    // _colorAnimation =
-    //     ColorTween(begin: const Color(0xFF868e96), end: const Color(0xFF44698F))
-    //         .animate(_controller);
-  }
 
   @override
   void dispose() {
@@ -48,33 +33,19 @@ class _TranslateAllowButtonState extends State<TranslateAllowButton>
 
   @override
   Widget build(BuildContext context) {
+    ReadProv readProv = Provider.of<ReadProv>(context);
     return IconButton(
       iconSize: 20,
       onPressed: () async {
-        // ReadScreen.isAllowTranslate
-        //     ? _controller.reverse()
-        //     : _controller.forward();
-
-        ReadScreen.isAllowTranslate = !ReadScreen.isAllowTranslate;
-        saveBoolValue(
-            'isAllowTranslate', ReadScreen.isAllowTranslate);
-        if (ReadScreen.isAllowTranslate && ApiUtil.API_KEY.isEmpty) {
-          try {
-            await widget.apiUtil.getApiKey();
-          } catch (e) {
-            ReadScreen.isAllowTranslate = false;
-            consentDialog(
-                title: '인터넷 연결 필요',
-                content: '번역 기능은 인터넷 연결이 필요합니다.',
-                context: context);
-          }
-        }
+        readProv.model.isAllowTranslate = !readProv.model.isAllowTranslate;
+        setPrefBool('isAllowTranslate', readProv.model.isAllowTranslate);
+        if (readProv.model.isAllowTranslate) {}
         widget.onPressedCallback();
       },
       icon: Image.asset(
         widget.assetName,
         height: widget.iconSize,
-        color: ReadScreen.isAllowTranslate
+        color: readProv.model.isAllowTranslate
             ? const Color(0xFF44698F)
             : const Color(0xFF868e96),
       ),

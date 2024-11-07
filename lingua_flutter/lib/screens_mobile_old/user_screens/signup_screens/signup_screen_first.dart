@@ -121,7 +121,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           : const Color(0xFFDEE2E6),
                       onPressed: isVerifeid
                           ? () async {
-                              bool result = await ApiUser.signUp();
+                              bool result = await signUp();
                               if (result) {
                                 await consentDialog(
                                     title: '성공',
@@ -169,7 +169,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
     });
     String condition;
     if (isValidEmail) {
-      condition = await ApiUser.emailSend(UserModel.email);
+      condition = await emailSend(UserModel.email);
       if (condition == '200') {
         // isSent = true;
         isEmailSent = true;
@@ -204,7 +204,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
     });
 
     String condition;
-    condition = await ApiUser.emailVerify(
+    condition = await emailVerify(
       UserModel.email,
       textEditingController.text,
     );

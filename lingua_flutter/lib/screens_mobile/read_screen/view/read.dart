@@ -4,7 +4,7 @@ import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/read_screen/view/appbar/read_app_bar.dart';
 import 'package:lingua/screens_mobile/read_screen/view/main_read_drawer.dart';
-import 'package:lingua/screens_mobile/read_screen/view_model/read_screen_prov.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_prov.dart';
 
 import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/etc/exit_confirm.dart';
@@ -24,7 +24,7 @@ class ReadScreen extends StatefulWidget {
     required this.readProv,
   });
 
-  final ReadScreenProv readProv;
+  final ReadProv readProv;
 
   @override
   State<ReadScreen> createState() => _ReadScreenState();
@@ -82,7 +82,7 @@ class _ReadScreenState extends State<ReadScreen>
 
   @override
   Widget build(BuildContext context) {
-    ReadScreenProv readProv = widget.readProv;
+    ReadProv readProv = widget.readProv;
 
     readProv.buildRefresh();
 

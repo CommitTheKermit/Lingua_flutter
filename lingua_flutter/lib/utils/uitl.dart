@@ -5,7 +5,7 @@ Future comnShowDialog({
   required Widget dialog,
 }) async {
   return await showDialog(
-    context: navigatorKey.currentContext!,
+    context: navKey.currentContext!,
     builder: (context) => dialog,
   );
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/read_screen/view/appbar/translate_allow_button.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_prov.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/screens_mobile/read_screen/view/appbar/input_allow_button.dart';
+import 'package:lingua/widgets/read_widgets/dialog/dialog_word_search.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ReadAppBar extends StatefulWidget {
@@ -14,7 +17,8 @@ class ReadAppBar extends StatefulWidget {
 class _ReadAppBarState extends State<ReadAppBar> {
   @override
   Widget build(BuildContext context) {
-        return AppBar(
+    ReadProv readProv = Provider.of<ReadProv>(context);
+    return AppBar(
       elevation: 0,
       // foregroundColor: const Color(0xFFF8F9FA),
       backgroundColor: Colors.white,
@@ -58,8 +62,8 @@ class _ReadAppBarState extends State<ReadAppBar> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: comnText(
-                    labelText: titleNovel.isNotEmpty // 파일 제목 출력
-                        ? titleNovel
+                    labelText: readProv.model.titleNovel.isNotEmpty // 파일 제목 출력
+                        ? readProv.model.titleNovel
                         : '파일을 선택해주세요.',
                     fontSize: 2.5.h,
                     fontColor: const Color(0xFF1E4A75),
@@ -80,8 +84,8 @@ class _ReadAppBarState extends State<ReadAppBar> {
                     TranslateAllowButton(
                       onPressedCallback: () {
                         setState(() {});
-                        if (isNovelLoaded) {
-                          lineShift(shiftAmount: 0);
+                        if (readProv.model.isNovelLoaded) {
+                          readProv.lineShift(shiftAmount: 0);
                         }
                       },
                       assetName: "assets/images/translate_button.png",

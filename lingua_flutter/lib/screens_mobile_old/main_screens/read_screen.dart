@@ -3,7 +3,7 @@
 // import 'package:lingua/main.dart';
 // import 'package:lingua/models/read_option.dart';
 // import 'package:lingua/models/user_model.dart';
-// import 'package:lingua/screens_mobile_old/main_screens/read_mode_screen.dart';
+// import 'package:lingua/screens_mobile_old/main_screens/read_mode.dart';
 
 // import 'package:lingua/screens_mobile_old/etc_screens/read_option_screen.dart';
 // import 'package:lingua/utils/api/api_user.dart';
@@ -14,7 +14,7 @@
 // import 'package:lingua/utils/file_process/translate_input_process.dart';
 // import 'package:lingua/utils/shared_preferences/save_index.dart';
 // import 'package:lingua/utils/string_process/sentence_process.dart';
-// import 'package:lingua/utils/shared_preferences/preference_manager.dart';
+// import 'package:lingua/utils/shared_preferences/preferences.dart';
 // import 'package:lingua/widgets/commons/common_divider.dart';
 // import 'package:lingua/widgets/commons/common_text.dart';
 // import 'package:lingua/widgets/read_widgets/animation_widgets/input_allow_button.dart';

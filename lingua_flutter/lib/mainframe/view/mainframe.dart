@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 import 'package:lingua/widgets/commons/common_widget.dart';
 
 class Mainframe extends StatefulWidget {
-  const Mainframe({super.key, required this.child,});
+  const Mainframe({
+    super.key,
+    required this.child,
+  });
   final Widget child;
 
   @override
   State<Mainframe> createState() => _MainframeState();
 }
 
-class _MainframeState extends State<Mainframe> with WidgetsBindingObserver{
-
-  
+class _MainframeState extends State<Mainframe> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -35,16 +37,19 @@ class _MainframeState extends State<Mainframe> with WidgetsBindingObserver{
             'MAINFRAME DETACHED MAINFRAME DETACHED MAINFRAME DETACHED MAINFRAME DETACHED MAINFRAME DETACHED ');
         break;
       case AppLifecycleState.hidden:
-      comnLog('MAINFRAME HIDDEN MAINFRAME HIDDEN MAINFRAME HIDDEN MAINFRAME HIDDEN MAINFRAME HIDDEN MAINFRAME HIDDEN',);
-      break;
+        comnLog(
+          'MAINFRAME HIDDEN MAINFRAME HIDDEN MAINFRAME HIDDEN MAINFRAME HIDDEN MAINFRAME HIDDEN MAINFRAME HIDDEN',
+        );
+        break;
     }
   }
 
-    @override
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     comnLog('MAINFRAME INITALIZED');
+    globalContext = navKey.currentContext!;
   }
 
   @override
@@ -55,7 +60,6 @@ class _MainframeState extends State<Mainframe> with WidgetsBindingObserver{
     super.dispose();
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return widget.child;

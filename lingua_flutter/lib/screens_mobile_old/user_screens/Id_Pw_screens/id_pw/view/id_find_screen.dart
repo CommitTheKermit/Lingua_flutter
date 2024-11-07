@@ -5,8 +5,8 @@ import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/etc/validators.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
 
-import '../../../widgets/read_widgets/dialog/consent_dialog.dart';
-import '../../../widgets/user_widgets/form_button.dart';
+import '../../../../../widgets/read_widgets/dialog/consent_dialog.dart';
+import '../../../../../widgets/user_widgets/form_button.dart';
 
 class IdFindScreen extends StatefulWidget {
   const IdFindScreen({super.key});
@@ -103,7 +103,7 @@ class _IdFindScreenState extends State<IdFindScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      result = await ApiUser.idFind(_phoneNo);
+      result = await idFind(_phoneNo);
 
       if (result.contains('@') && mounted) {
         isVerifeid = true;

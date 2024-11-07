@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:lingua/utils/shared_preferences/preference_manager.dart';
+import 'package:lingua/utils/shared_preferences/preferences.dart';
 
 part 'read_option.g.dart';
 
@@ -26,7 +26,7 @@ ReadOption();
   }
 
   Future<void> loadOption({required String key}) async {
-    String? jsonString = await getValue(key);
+    String? jsonString = await getPrefString(key);
 
     if (jsonString == null) {
       return;
@@ -54,7 +54,7 @@ ReadOption();
     Map json = toJson();
     String jsonString = jsonEncode(json);
 
-    saveValue(key, jsonString);
+    setPrefString(key, jsonString);
   }
 
   factory ReadOption.fromJson(Map<String, dynamic> json) =>

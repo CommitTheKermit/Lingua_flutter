@@ -1,15 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/bookmark_model.dart';
+import 'package:lingua/screens_mobile/read_screen/view/read.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_prov.dart';
 import 'package:lingua/screens_mobile_old/bookmark_list_dialog.dart';
 
-import 'package:lingua/screens_mobile_old/etc_screens/read_option_screen.dart';
+import 'package:lingua/screens_mobile_old/etc_screens/read_option/view/read_option_screen.dart';
 import 'package:lingua/screens_mobile_old/main_screens/read_screen.dart';
 
 import 'package:lingua/utils/bookmark_process/bookmark_util.dart';
 import 'package:lingua/utils/etc/error_toast.dart';
-import 'package:lingua/utils/shared_preferences/preference_manager.dart';
+import 'package:lingua/utils/shared_preferences/preferences.dart';
 import 'package:lingua/utils/string_process/pager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_page_search.dart';
@@ -17,7 +18,12 @@ import 'package:lingua/widgets/read_widgets/dialog/search_list_dialog.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ReadModeScreen extends StatefulWidget {
-  const ReadModeScreen({super.key});
+  const ReadModeScreen({
+    super.key,
+    required this.readProv,
+  });
+
+  final ReadProv readProv;
 
   @override
   State<ReadModeScreen> createState() => _ReadModeScreenState();
@@ -39,17 +45,17 @@ class _ReadModeScreenState extends State<ReadModeScreen>
   Set<int> bookmarkedLines = {};
 
   Future<String> initOption() async {
-    await ReadScreen.readModeOption.loadOption(key: 'readModeOption');
-    index =
-        double.parse(await getValue('readModeIndex') ?? '0');
+    await widget.readProv.model.readModeOption
+        .loadOption(key: 'readModeOption');
+    index = double.parse(await getPrefString('readModeIndex') ?? '0');
 
     bookmarks = await loadBookmarks();
 
     readTextStyle = TextStyle(
-      color: Color(ReadScreen.readModeOption.optFontColor),
-      fontSize: ReadScreen.readModeOption.optFontSize,
-      fontFamily: ReadScreen.readModeOption.optFontFamily,
-      height: ReadScreen.readModeOption.optFontHeight,
+      color: Color(widget.readProv.model.readModeOption.optFontColor),
+      fontSize: widget.readProv.model.readModeOption.optFontSize,
+      fontFamily: widget.readProv.model.readModeOption.optFontFamily,
+      height: widget.readProv.model.readModeOption.optFontHeight,
     );
 
     pages = paginateText(
@@ -135,8 +141,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                     index += 1;
                   }
                 });
-                await saveValue(
-                    'readModeIndex', index.toString());
+                await setPrefString('readModeIndex', index.toString());
               },
               child: Stack(
                 children: [
@@ -144,16 +149,15 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                     width: 100.h,
                     height: 100.h,
                     decoration: BoxDecoration(
-                      color:
-                          Color(ReadScreen.readModeOption.optBackgroundColor),
+                      color: Color(widget
+                          .readProv.model.readModeOption.optBackgroundColor),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 4.w,
-                              vertical: 0),
+                              horizontal: 4.w, vertical: 0),
                           // child: InteractableTextsWidget(
                           //     readTextStyle: readTextStyle, splitted: splitted),
                           child: Center(
@@ -172,8 +176,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                       opacity: 0.9,
                       child: Container(
                         width: 100.w,
-                        height: MediaQuery.of(context).padding.top +
-                            6.h,
+                        height: MediaQuery.of(context).padding.top + 6.h,
                         decoration: const BoxDecoration(
                           color: Color(0xFFF8F9FA),
                           border: Border(
@@ -244,9 +247,8 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                     ),
                                     IconButton(
                                       icon: Image.asset(
-                                        "assets/images/search_button.png",
-                                        height: 3.h
-                                      ),
+                                          "assets/images/search_button.png",
+                                          height: 3.h),
                                       onPressed: () async {
                                         String? result = await showDialog(
                                           context: context,
@@ -301,8 +303,9 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                             },
                                             pageBuilder: (context, anmation,
                                                     secondaryAnimation) =>
-                                                const ReadOptionScreen(
+                                                ReadOptionScreen(
                                               startingTab: 3,
+                                              readProv: widget.readProv,
                                             ),
                                           ),
                                         );
@@ -312,7 +315,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                           pages = paginateText(
                                               text: stringContents,
                                               style: readTextStyle,
-                                              screenSize: Size(100.w,100.h));
+                                              screenSize: Size(100.w, 100.h));
 
                                           setState(() {});
                                         }
@@ -428,8 +431,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                     child: SliderTheme(
                                       data: SliderThemeData(
                                           thumbShape: RoundSliderThumbShape(
-                                              enabledThumbRadius:
-                                                  1.h)),
+                                              enabledThumbRadius: 1.h)),
                                       child: Slider(
                                         activeColor: const Color(0xFF44698F),
                                         thumbColor: const Color(0xFF1F4A76),
@@ -490,16 +492,14 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                                   index.toStringAsFixed(0),
                                               fontColor:
                                                   const Color(0xFF1E4A75),
-                                              fontSize:
-                                                  2.25.h,
+                                              fontSize: 2.25.h,
                                               fontWeight: FontWeight.w700,
                                             ),
                                             comnText(
                                               labelText: "/${pages.length - 1}",
                                               fontColor:
                                                   const Color(0xFF868E96),
-                                              fontSize:
-                                                  2.25.h,
+                                              fontSize: 2.25.h,
                                               fontWeight: FontWeight.w700,
                                             )
                                           ],

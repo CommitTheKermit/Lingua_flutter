@@ -6,8 +6,8 @@ import 'package:lingua/main/main_provider.dart';
 import 'package:lingua/main/main_theme.dart';
 import 'package:lingua/mainframe/view/mainframe.dart';
 import 'package:lingua/models/server_info.dart';
-import 'package:lingua/screens_mobile/read_screen/view/read_screen.dart';
-import 'package:lingua/screens_mobile/read_screen/view_model/read_screen_prov.dart';
+import 'package:lingua/screens_mobile/read_screen/view/read.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_prov.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -22,7 +22,8 @@ List<String> originalSentences = [];
 String stringContents = "";
 Map<String, String> trasJson = {};
 Map<String, String> inputJson = {};
-GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+GlobalKey<NavigatorState> navKey = GlobalKey();
+late BuildContext globalContext;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
@@ -72,14 +73,14 @@ class _AppLinguaState extends State<AppLingua> {
     );
 
     return MaterialApp(
-      navigatorKey: navigatorKey,
+      navigatorKey: navKey,
       debugShowCheckedModeBanner: false,
       theme: mainTheme.theme,
       home: ResponsiveSizer(builder: (context, orientation, screenType) {
         return MainProvider(
           child: Mainframe(
               child: ReadScreen(
-            readProv: Provider.of<ReadScreenProv>(context, listen: false),
+            readProv: Provider.of<ReadProv>(context, listen: false),
           )),
         );
       }),

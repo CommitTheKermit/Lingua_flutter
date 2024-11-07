@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/screens_mobile/read_screen/view/read.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_prov.dart';
 import 'package:lingua/screens_mobile_old/main_screens/read_screen.dart';
 
 import 'package:lingua/utils/api/api_util.dart';
-import 'package:lingua/utils/shared_preferences/preference_manager.dart';
+import 'package:lingua/utils/shared_preferences/preferences.dart';
+import 'package:provider/provider.dart';
 
 class InputAllowButton extends StatefulWidget {
   final String assetName;
@@ -51,21 +54,22 @@ class _InputAllowButtonState extends State<InputAllowButton>
 
   @override
   Widget build(BuildContext context) {
+    ReadProv readProv = Provider.of<ReadProv>(context);
     return IconButton(
       iconSize: 20,
       onPressed: () {
         setState(() {
           // ReadScreen.isAllowInput ? _controller.reverse() : _controller.forward();
-          ReadScreen.isAllowInput = !ReadScreen.isAllowInput;
-          saveBoolValue(
-              'isAllowInput', ReadScreen.isAllowInput);
+          readProv.model.isAllowInput = !readProv.model.isAllowInput;
+          setPrefBool(
+              'isAllowInput', readProv.model.isAllowInput);
         });
         widget.onPressedCallback();
       },
       icon: Image.asset(
         widget.assetName,
         height: widget.iconSize,
-        color: ReadScreen.isAllowInput
+        color: readProv.model.isAllowInput
             ? const Color(0xFF44698F)
             : const Color(0xFF868e96),
       ),

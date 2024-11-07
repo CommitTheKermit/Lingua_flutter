@@ -1,20 +1,20 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
-import 'package:lingua/screens_mobile_old/main_screens/read_screen.dart';
+import 'package:lingua/screens_mobile/read_screen/view/read.dart';
+import 'package:lingua/screens_mobile/read_screen/view_model/read_prov.dart';
+import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/id_pw/view/id_pw_find_screen.dart';
 
-import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/id_pw_find_screen.dart';
-import 'package:lingua/screens_mobile_old/user_screens/Id_Pw_screens/pw_find_screen.dart';
 import 'package:lingua/screens_mobile_old/user_screens/signup_screens/signup_screen_first.dart';
 import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
 
 import 'package:lingua/utils/etc/exit_confirm.dart';
-import 'package:lingua/utils/shared_preferences/preference_manager.dart';
+import 'package:lingua/utils/shared_preferences/preferences.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../widgets/user_widgets/form_button.dart';
@@ -50,13 +50,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<String> initAsync() async {
     try {
-      final temp = await getBoolValue('isEmailRecord');
+      final temp = await getPrefBool('isEmailRecord');
 
       if (temp == null) {
         isEmailRecord = false;
         return 'done';
       } else {
-        recordedEmail = await getValue('email');
+        recordedEmail = await getPrefString('email');
         if (recordedEmail == null) {
           isEmailRecord = false;
           return 'error';
@@ -227,20 +227,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           } else {
                             return;
                           }
-                          bool condition = await ApiUser.login();
+                          bool condition = await login();
                           // bool condition = false;
                           if (condition && mounted) {
                             if (isEmailRecord && recordedEmail!.isEmpty) {
-                              saveBoolValue(
-                                  'isEmailRecord', isEmailRecord);
-                              saveValue('email', _email);
+                              setPrefBool('isEmailRecord', isEmailRecord);
+                              setPrefString('email', _email);
                             } else {
-                              saveValue('email', _email);
+                              setPrefString('email', _email);
                             }
 
                             changeScreen(
                               context: context,
-                              nextScreen: const ReadScreen(),
+                              nextScreen: ChangeNotifierProvider(
+                                  create: (context) => ReadProv(),
+                                  child: Builder(builder: (context) {
+                                    return ReadScreen(
+                                      readProv: Provider.of<ReadProv>(context),
+                                    );
+                                  })),
                               isReplace: true,
                             );
                           } else {
