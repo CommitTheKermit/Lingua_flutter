@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
-import 'package:lingua/screens_mobile_old/user_screens/login_screen.dart';
+import 'package:lingua/screens_mobile/login_screens/login_screen.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

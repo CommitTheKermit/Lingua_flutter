@@ -26,7 +26,7 @@ ReadOption();
   }
 
   Future<void> loadOption({required String key}) async {
-    String? jsonString = await getPrefString(key);
+    String? jsonString = getPrefString(key);
 
     if (jsonString == null) {
       return;

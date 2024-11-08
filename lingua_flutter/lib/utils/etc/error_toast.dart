@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-Future<bool?> errorToast({
+Future<bool?> showToast({
   required String argText,
 }) {
   return Fluttertoast.showToast(
