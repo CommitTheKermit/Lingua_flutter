@@ -9,6 +9,7 @@ import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/etc/exit_confirm.dart';
 import 'package:lingua/utils/file_process/translate_input_process.dart';
 import 'package:lingua/widgets/commons/common_divider.dart';
+import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:lingua/widgets/read_widgets/call_limit_widget.dart';
 import 'package:lingua/widgets/read_widgets/read_button_widget.dart';
 import 'package:lingua/widgets/read_widgets/text_field_widget.dart';
@@ -283,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       map: inputJson,
                                       filename: '${titleNovel}_input.json');
                                 } else {
-                                  showToast(argText: '입력칸이 비어 있습니다.');
+                                  showToast('입력칸이 비어 있습니다.');
                                 }
                               },
                               imageFileOff:

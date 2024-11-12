@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:lingua/main/main_setting.dart';
 import 'package:lingua/provider/main_provider.dart';
 import 'package:lingua/main/main_theme.dart';
 import 'package:lingua/mainframe/view/mainframe.dart';
 import 'package:lingua/models/server_info.dart';
 import 'package:lingua/screens_mobile/home/view/home.dart';
+import 'package:lingua/screens_mobile/login_screens/login_screen.dart';
 import 'package:lingua/utils/shared_preferences/prefs.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 // static const String baseUrl = "http://10.0.2.2:8000";
-const String baseUrl = ServerInfo.baseUrl;
-const int timeoutSec = ServerInfo.timeoutSec;
 String API_KEY = '';
 int requestQuota = 0;
 String titleNovel = "";
@@ -24,14 +24,16 @@ Map<String, String> trasJson = {};
 Map<String, String> inputJson = {};
 GlobalKey<NavigatorState> navKey = GlobalKey();
 late BuildContext globalContext;
+late String baseApiUrl;
+late String baseApiPort;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
 
-  /// preferences 초기화
-  await Prefs().init();
+  await mainSetting();
+
   runApp(const AppLingua());
 }
 
@@ -43,27 +45,9 @@ class AppLingua extends StatefulWidget {
 }
 
 class _AppLinguaState extends State<AppLingua> {
-  Future<void> requestPermissions() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.storage,
-    ].request();
-
-    //권한 상태를 기록
-
-    // var storageStatus = statuses[Permission.storage];
-
-    // if (cameraStatus!.isGranted &&
-    //     microphoneStatus!.isGranted &&
-    //     storageStatus!.isGranted) {
-    //   // 모든 권한이 허용될시에 실행할 코드
-    // } else {
-    //   // 하나 이상의 권한이 거부될시에 실행할 코드
-    // }
-  }
-
   @override
   void initState() {
-    requestPermissions();
+    Permission.storage.request();
 
     super.initState();
   }
@@ -93,7 +77,7 @@ class _AppLinguaState extends State<AppLingua> {
         initialRoute: '/',
         routes: {
           '/': (context) => const Mainframe(
-                child: HomeScreen(),
+                child: LoginScreen(),
               ),
         },
         builder: (context, child) => ResponsiveSizer(

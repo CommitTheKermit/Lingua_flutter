@@ -9,6 +9,7 @@ import 'package:lingua/utils/etc/error_toast.dart';
 import 'package:lingua/utils/shared_preferences/preferences.dart';
 import 'package:lingua/utils/string_process/pager.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_page_search.dart';
 import 'package:lingua/widgets/read_widgets/dialog/search_list_dialog.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -87,7 +88,6 @@ class _ReadModeScreenState extends State<ReadModeScreen>
       end: const Offset(0, 0.865),
     ).animate(_controller);
   }
-
 
   @override
   void dispose() {
@@ -281,8 +281,7 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                       ),
                                       onPressed: () async {
                                         showToast(
-                                            argText:
-                                                '폰트 설정 변경시 북마크 페이지가 달라질 수 있습니다.');
+                                            '폰트 설정 변경시 북마크 페이지가 달라질 수 있습니다.');
                                         String? result = await Navigator.push(
                                           context,
                                           PageRouteBuilder(
@@ -526,5 +525,4 @@ class _ReadModeScreenState extends State<ReadModeScreen>
       },
     );
   }
-
 }

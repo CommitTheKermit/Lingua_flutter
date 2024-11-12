@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/models/word_model.dart';
+import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
 import 'package:lingua/utils/api/api_util.dart';
 import 'package:lingua/widgets/read_widgets/dictionary_result_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 enum PageState {
@@ -38,6 +40,7 @@ class _DialogWordSearchState extends State<DialogWordSearch> {
 
   @override
   Widget build(BuildContext context) {
+    HomeProv homeProv = Provider.of<HomeProv>(context);
     return AlertDialog(
       actions: [
         Center(
@@ -83,9 +86,8 @@ class _DialogWordSearchState extends State<DialogWordSearch> {
             border: InputBorder.none,
             suffixIcon: GestureDetector(
               onTap: () {
-                setState(() {
-                  wordMeans = dictSearch(_controller.text);
-                });
+                wordMeans = homeProv.dictSearch(_controller.text);
+                setState(() {});
               },
               child: Image.asset(
                 "assets/images/icon_magnifier.png",

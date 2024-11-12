@@ -6,6 +6,7 @@ import 'package:lingua/screens_mobile/read_option/view/read_option.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
 import 'package:lingua/utils/etc/error_toast.dart';
 import 'package:lingua/utils/file_process/file_process.dart';
+import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:lingua/widgets/read_widgets/read_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -38,7 +39,7 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
           onTap: () async {
             Scaffold.of(context).closeDrawer();
             try {
-              showToast(argText: '.txt 파일만 불러올 수 있습니다.');
+              showToast('.txt 파일만 불러올 수 있습니다.');
               originalSentences = await filePickAndRead();
               readProv.loadInitialIndex();
             } catch (e) {}
@@ -67,7 +68,7 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
                   );
                 }
               : () {
-                  showToast(argText: '파일을 먼저 불러와주세요.');
+                  showToast( '파일을 먼저 불러와주세요.');
                 },
         ),
         ListTile(
@@ -130,7 +131,7 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
                   );
                 }
               : () {
-                  showToast(argText: '파일을 먼저 불러와주세요.');
+                  showToast( '파일을 먼저 불러와주세요.');
                 },
         ),
         ListTile(
@@ -147,9 +148,9 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
           onTap: () async {
             try {
               await saveFile(fileName: 'fileName');
-              showToast(argText: '저장 완료. 다운로드 폴더를 확인해보세요!');
+              showToast( '저장 완료. 다운로드 폴더를 확인해보세요!');
             } catch (e) {
-              showToast(argText: '저장 오류 발생');
+              showToast( '저장 오류 발생');
             }
           },
         ),

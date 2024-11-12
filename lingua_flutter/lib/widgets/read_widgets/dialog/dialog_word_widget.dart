@@ -23,7 +23,7 @@ class _DialogWordWidgetState extends State<DialogWordWidget> {
   @override
   void initState() {
     super.initState();
-    wordMeans = dictSearch(widget.argText);
+    // wordMeans = dictSearch(widget.argText);
   }
 
   @override

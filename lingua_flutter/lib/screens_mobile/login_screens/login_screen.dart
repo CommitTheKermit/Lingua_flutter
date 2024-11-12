@@ -72,8 +72,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log("width ${100.w.toString()}");
-    log("height ${100.h.toString()}");
     return FutureBuilder(
       future: futureOption,
       builder: (context, snapshot) {
@@ -236,8 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             changeScreen(
                               context: context,
-                              nextScreen: HomeScreen(
-                              ),
+                              nextScreen: HomeScreen(),
                               isReplace: true,
                             );
                           } else {

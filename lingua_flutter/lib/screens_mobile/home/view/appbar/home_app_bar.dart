@@ -3,7 +3,7 @@ import 'package:lingua/screens_mobile/home/view/appbar/input_allow_button.dart';
 import 'package:lingua/screens_mobile/home/view/appbar/translate_allow_button.dart';
 import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
 import 'package:lingua/widgets/commons/common_text.dart';
-import 'package:lingua/widgets/read_widgets/dialog/dialog_word_search.dart';
+import 'package:lingua/screens_mobile/home/view/dialog/dialog_word_search.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

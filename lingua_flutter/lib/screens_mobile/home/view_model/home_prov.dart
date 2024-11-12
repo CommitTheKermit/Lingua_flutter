@@ -1,11 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/models/user_model.dart';
+import 'package:lingua/models/word_model.dart';
 import 'package:lingua/screens_mobile/home/model/read_model.dart';
 import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/api/api_util.dart';
+import 'package:lingua/utils/api_util.dart';
 import 'package:lingua/utils/file_process/translate_input_process.dart';
 import 'package:lingua/utils/shared_preferences/preferences.dart';
 import 'package:lingua/utils/shared_preferences/save_index.dart';
@@ -162,5 +167,95 @@ class HomeProv extends ChangeNotifier {
 
     lineShift(shiftAmount: result - model.index);
     notify();
+  }
+
+  Future<List<WordModel>> dictSearch(String argText) async {
+    List<dynamic> returnValue;
+    try {
+      Map result = await apiPost(
+        uri: '/dictionary/word',
+        body: {
+          'word': argText,
+        },
+      );
+      if (result['statusCode'] == 200) {
+        // 서버가 성공적으로 응답하면 JSON을 파싱합니다.
+        returnValue = [result];
+
+        // wordRecord(word: argText);
+        return returnValue.map((data) => WordModel.fromJson(data)).toList();
+      } else if (result['statusCode'] == 401) {
+        returnValue = [
+          {
+            "kor": "",
+            "pos": "",
+            "meaning": "데이터에 단어가 존재하지 않습니다.",
+            "example": "",
+            "eng_mean": ""
+          },
+        ];
+        return returnValue.map((data) => WordModel.fromJson(data)).toList();
+      } else {
+        // 서버가 200 이외의 상태 코드로 응답하면 예외를 발생시킵니다.
+        returnValue = [
+          {
+            "kor": "",
+            "pos": "",
+            "meaning": "서버 오류",
+            "example": "",
+            "eng_mean": ""
+          },
+        ];
+        return returnValue.map((data) => WordModel.fromJson(data)).toList();
+      }
+    } catch (e, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: e,
+        stack: stackTrace,
+      ));
+    }
+    return [];
+  }
+  Future<String> requestTranslatedText(String argText) async {
+    String apiKey = API_KEY; // 환경 변수나 별도 설정 파일에서 불러와야 함
+
+    if (Platform.isAndroid) {}
+    const deeplUrl = 'https://api-free.deepl.com/v2/translate';
+    Dio dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 20), // 연결 타임아웃 10초
+        receiveTimeout: const Duration(seconds: 20), // 데이터 수신 타임아웃 10초
+      ),
+    );
+    dio.options.headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'DeepL-Auth-Key $apiKey', // 오타 수정
+      // 'User-Agent': 'lingua/1.2.3',
+    };
+    try {
+      Response response = await dio.post(
+        deeplUrl,
+        data:  jsonEncode({
+          "text": [argText], // 함수 인자로 받은 텍스트
+          "source_lang": "EN",
+          "target_lang": "KO",
+          "preserve_formatting": true,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+
+        // String decodedData = utf8.decode(response.bodyBytes);
+        // int start = decodedData.indexOf('"text":');
+        // decodedData = decodedData.substring(start + 8, decodedData.length - 4);
+        // // print(decodedData);
+        // return decodedData;
+        return (response.data['translations'] as List).first['text'];
+      } else {
+        return 'error Failed with status code ${response.statusCode}';
+      }
+    } catch (e) {
+      return 'error Request failed with error: $e';
+    }
   }
 }
