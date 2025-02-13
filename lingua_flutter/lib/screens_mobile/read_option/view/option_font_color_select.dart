@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/screens_mobile/read_option/view_model/read_option_prov.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class OptionFontColorSelect extends StatefulWidget {
-  const OptionFontColorSelect({
+class OptioncolorFontSelect extends StatefulWidget {
+  const OptioncolorFontSelect({
     Key? key,
     required this.labelText,
     required this.readOption,
@@ -15,10 +15,10 @@ class OptionFontColorSelect extends StatefulWidget {
   final String labelText;
   final ReadOption readOption;
   @override
-  State<OptionFontColorSelect> createState() => _OptionFontColorSelectState();
+  State<OptioncolorFontSelect> createState() => _OptioncolorFontSelectState();
 }
 
-class _OptionFontColorSelectState extends State<OptionFontColorSelect> {
+class _OptioncolorFontSelectState extends State<OptioncolorFontSelect> {
   @override
   Widget build(BuildContext context) {
     ReadOptionProv optionProv = Provider.of<ReadOptionProv>(context);
@@ -34,7 +34,7 @@ class _OptionFontColorSelectState extends State<OptionFontColorSelect> {
             padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
             child: Center(
               child: comnText(
-                labelText: widget.labelText,
+                 widget.labelText,
                 fontSize: 2.h,
               ),
             ),
@@ -50,7 +50,7 @@ class _OptionFontColorSelectState extends State<OptionFontColorSelect> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: optionProv.model.fontColors
+                  children: optionProv.model.colorFonts
                       .map(
                         (value) => Padding(
                           padding: const EdgeInsets.symmetric(
@@ -62,7 +62,7 @@ class _OptionFontColorSelectState extends State<OptionFontColorSelect> {
                               !optionProv.model.isChanged
                                   ? optionProv.model.isChanged = true
                                   : optionProv.model.isChanged;
-                              widget.readOption.optFontColor = value;
+                              widget.readOption.optcolorFont = value;
                               optionProv.notify();
                             },
                             child: Stack(
@@ -81,7 +81,7 @@ class _OptionFontColorSelectState extends State<OptionFontColorSelect> {
                                     ),
                                   ),
                                 ),
-                                widget.readOption.optFontColor == value
+                                widget.readOption.optcolorFont == value
                                     ? Icon(
                                         Icons.check,
                                         color: optionProv.getComplementaryColor(

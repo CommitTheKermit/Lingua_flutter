@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
 import 'package:lingua/screens_mobile/read_option/model/read_option_model.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -139,7 +139,7 @@ class ReadOptionProv extends ChangeNotifier {
             ),
             child: Center(
               child: comnText(
-                labelText: labelText,
+                labelText,
                 fontSize: 2.h,
               ),
             ),
@@ -200,7 +200,7 @@ class ReadOptionProv extends ChangeNotifier {
     );
   }
 
-  Widget optionFontColorSelect({
+  Widget optioncolorFontSelect({
     required String labelText,
     required ReadOption readOption,
   }) {
@@ -216,7 +216,7 @@ class ReadOptionProv extends ChangeNotifier {
             padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
             child: Center(
               child: comnText(
-                labelText: labelText,
+                 labelText,
                 fontSize: 2.h,
               ),
             ),
@@ -232,7 +232,7 @@ class ReadOptionProv extends ChangeNotifier {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: model.fontColors
+                  children: model.colorFonts
                       .map(
                         (value) => Padding(
                           padding: const EdgeInsets.symmetric(
@@ -244,7 +244,7 @@ class ReadOptionProv extends ChangeNotifier {
                               !model.isChanged
                                   ? model.isChanged = true
                                   : model.isChanged;
-                              readOption.optFontColor = value;
+                              readOption.optcolorFont = value;
                               notify();
                             },
                             child: Stack(
@@ -263,7 +263,7 @@ class ReadOptionProv extends ChangeNotifier {
                                     ),
                                   ),
                                 ),
-                                readOption.optFontColor == value
+                                readOption.optcolorFont == value
                                     ? Icon(
                                         Icons.check,
                                         color:
@@ -297,7 +297,7 @@ class ReadOptionProv extends ChangeNotifier {
           padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
           child: Center(
             child: comnText(
-              labelText: labelText,
+               labelText,
               fontSize: 2.h,
             ),
           ),

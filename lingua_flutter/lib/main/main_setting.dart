@@ -11,15 +11,13 @@ Future envSetting() async {
     fileName: 'envs/deploy/$deploy.env',
   );
 
-  baseApiUrl = dotenv.get('BASE_API_URL');
-  baseApiPort = dotenv.get('BASE_API_PORT');
-  comnLog("API URL : $baseApiUrl$baseApiPort");
+  baseApiUrl = dotenv.get('BASE_API_URL') + dotenv.get('BASE_API_PORT');
+  comnLog("API URL : $baseApiUrl");
 
   API_KEY = const String.fromEnvironment("API_KEY");
 }
 
 Future<void> mainSetting() async {
-
   /// preferences 초기화
   await Prefs().init();
 

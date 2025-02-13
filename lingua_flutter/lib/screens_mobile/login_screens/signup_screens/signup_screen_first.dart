@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/models/user_model.dart';
-import 'package:lingua/screens_mobile/login_screens/login_screen.dart';
+import 'package:lingua/main.dart';
+import 'package:lingua/screens_mobile/login/view/login_screen.dart';
+import 'package:lingua/screens_mobile/login/view_model/login_prov.dart';
 import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
 import 'package:lingua/utils/etc/validators.dart';
+import 'package:lingua/utils/uitl.dart';
 import 'package:lingua/widgets/commons/common_appbar.dart';
-import 'package:lingua/widgets/read_widgets/dialog/consent_dialog.dart';
+import 'package:lingua/widgets/commons/comn_dialog.dart';
 import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class SignUpScreenFirst extends StatefulWidget {
@@ -69,7 +72,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                 ),
                 emailCode(),
                 labeledFormField(
-                  onSaved: (value) => UserModel.password = value!,
+                  onSaved: (value) => user.password = value!,
                   argText: '비밀번호',
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -78,7 +81,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                     if (value.length < 10) {
                       return '비밀번호는 10자 이상이어야 합니다.';
                     }
-                    UserModel.password = value;
+                    user.password = value;
                     return null;
                   },
                   onChanged: (p0) {
@@ -89,7 +92,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                   onSaved: (value) => passwordCheck = value!,
                   argText: '비밀번호 확인',
                   validator: (value) {
-                    if (value != UserModel.password) {
+                    if (value != user.password) {
                       return '비밀번호가 동일하지 않습니다.';
                     }
                     return null;
@@ -105,7 +108,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                     if (!Validators.isValidPhoneNumber(value!)) {
                       return '잘못된 전화번호 형식입니다.';
                     }
-                    UserModel.phoneNo = value;
+                    user.phoneNo = value;
                     return null;
                   },
                   onChanged: (p0) {
@@ -116,20 +119,21 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: buildFormButton(
-                      backgroundColor: isVerifeid
-                          ? const Color(0xFF1E4A75)
-                          : const Color(0xFFDEE2E6),
+                      backgroundColor:
+                          isVerifeid ? const Color(0xFF1E4A75) : const Color(0xFFDEE2E6),
                       onPressed: isVerifeid
                           ? () async {
                               bool result = await signUp();
                               if (result) {
-                                await consentDialog(
-                                    title: '성공',
-                                    content: '가입을 환영합니다!',
-                                    context: context);
-                                changeScreen(
-                                    context: context,
-                                    nextScreen: const LoginScreen(),
+                                await comnShowDialog(
+                                    dialog: const ComnDialog(
+                                  type: ComnDialogType.single,
+                                  title: '성공',
+                                  contents: '가입을 환영합니다!',
+                                ));
+                                await changeScreen(
+                                    nextScreen: ChangeNotifierProvider(
+                                        create: (context) => LoginProv(), child: LoginScreen()),
                                     isReplace: true);
                               }
                             }
@@ -168,34 +172,32 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
       isLoading = true;
     });
     String condition;
+    String title;
+    String content;
     if (isValidEmail) {
-      condition = await emailSend(UserModel.email);
+      condition = await emailSend(user.email);
       if (condition == '200') {
         // isSent = true;
         isEmailSent = true;
-        consentDialog(
-          title: '성공',
-          content: '메일함을 확인해주세요.',
-          context: context,
-        );
+        title = '성공';
+        content = '메일함을 확인해주세요.';
       } else if (condition == '404') {
-        consentDialog(
-          title: '중복',
-          content: '이미 존재하는 이메일입니다.',
-          context: context,
-        );
+        title = '중복';
+        content = '이미 존재하는 이메일입니다.';
       } else {
-        consentDialog(
-          title: '오류',
-          content: '잠시 후 다시 시도해주세요.',
-          context: context,
-        );
-        // 여기에서 사용자에게 알림을 보냅니다.
+        title = '오류';
+        content = '잠시 후 다시 시도해주세요.';
       }
+      await comnShowDialog(
+          dialog: ComnDialog(
+        type: ComnDialogType.single,
+        title: title,
+        contents: content,
+      ));
     }
-    setState(() {
-      isLoading = false;
-    });
+
+    isLoading = false;
+    setState(() {});
   }
 
   void _codeSubmit() async {
@@ -205,29 +207,29 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
 
     String condition;
     condition = await emailVerify(
-      UserModel.email,
+      user.email,
       textEditingController.text,
     );
 
     if (condition == '200') {
       isVerifeid = true;
-      consentDialog(
+      await comnShowDialog(
+          dialog: const ComnDialog(
+        type: ComnDialogType.single,
         title: '성공',
-        content: '인증 성공',
-        context: context,
-      );
+        contents: '인증 성공',
+      ));
     } else {
-      consentDialog(
+      await comnShowDialog(
+          dialog: const ComnDialog(
+        type: ComnDialogType.single,
         title: '오류',
-        content: '인증 코드를 다시 확인해보세요.',
-        context: context,
-      );
-      // 여기에서 사용자에게 알림을 보냅니다.
+        contents: '인증 코드를 다시 확인해보세요.',
+      ));
     }
 
-    setState(() {
-      isLoading = false;
-    });
+    isLoading = false;
+    setState(() {});
   }
 
   Widget buildFormButton({
@@ -280,8 +282,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                   decoration: ShapeDecoration(
                     color: const Color(0xFFF8F9FA),
                     shape: RoundedRectangleBorder(
-                      side:
-                          const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
+                      side: const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
@@ -313,8 +314,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           decoration: ShapeDecoration(
                             color: const Color(0xFF43698F),
                             shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  width: 1, color: Color(0xFFDEE2E6)),
+                              side: const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
@@ -338,8 +338,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                           height: 6.h,
                           decoration: ShapeDecoration(
                             color: const Color(0xFF43698F),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                           ),
                           child: Center(
                             child: Text(
@@ -395,8 +394,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                         decoration: ShapeDecoration(
                           color: const Color(0xFFF8F9FA),
                           shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                width: 1, color: Color(0xFFDEE2E6)),
+                            side: const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
@@ -406,13 +404,12 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                               isValidEmail = false;
                               return '이메일을 입력해주세요.';
                             }
-                            if (!Validators.isValidEmail(
-                                '$value@$_selectedDomain')) {
+                            if (!Validators.isValidEmail('$value@$_selectedDomain')) {
                               isValidEmail = false;
                               return '잘못된 이메일 형식입니다.';
                             }
                             isValidEmail = true;
-                            UserModel.email = '$value@$_selectedDomain';
+                            user.email = '$value@$_selectedDomain';
                             return null;
                           },
                           onChanged: (p0) {
@@ -450,8 +447,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                         decoration: ShapeDecoration(
                           color: const Color(0xFFF8F9FA),
                           shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                width: 1, color: Color(0xFFDEE2E6)),
+                            side: const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
@@ -507,8 +503,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                               decoration: ShapeDecoration(
                                 color: const Color(0xFFF8F9FA),
                                 shape: RoundedRectangleBorder(
-                                  side: const BorderSide(
-                                      width: 1, color: Color(0xFFDEE2E6)),
+                                  side: const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                               ),
@@ -524,7 +519,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                                     return '잘못된 이메일 형식입니다.';
                                   }
                                   isValidEmail = true;
-                                  UserModel.email = value;
+                                  user.email = value;
                                   return null;
                                 },
                                 onChanged: (p0) {
@@ -569,8 +564,7 @@ class _SignUpScreenFirstState extends State<SignUpScreenFirst> {
                               value: !_isShowTextField ? _selectedDomain : null,
                               items: _domains
                                   .map((e) => DropdownMenuItem(
-                                        value:
-                                            e, // 선택 시 onChanged 를 통해 반환할 value
+                                        value: e, // 선택 시 onChanged 를 통해 반환할 value
                                         child: Padding(
                                           padding: EdgeInsets.only(
                                             left: 2.w,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/models/user_model.dart';
-import 'package:lingua/screens_mobile/login_screens/login_screen.dart';
+import 'package:lingua/main.dart';
+import 'package:lingua/screens_mobile/login/view/login_screen.dart';
+import 'package:lingua/screens_mobile/login/view_model/login_prov.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ReadDrawer extends StatelessWidget {
@@ -61,17 +63,14 @@ class ReadDrawer extends StatelessWidget {
                 width: 4.h,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 5.w,
-                    vertical: 3.5.h),
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.5.h),
                 child: Container(
                   width: 66.w,
                   height: 12.5.h,
                   decoration: ShapeDecoration(
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
-                      side:
-                          const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
+                      side: const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
@@ -82,15 +81,12 @@ class ReadDrawer extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.all(1.h),
                           child: GestureDetector(
-                            onTap: () {
-                              changeScreen(
-                                  context: context,
-                                  nextScreen: const LoginScreen(),
-                                  isReplace: true);
+                            onTap: () async {
+                              await changeScreen(nextScreen: ChangeNotifierProvider(create: (context) => LoginProv(), child: LoginScreen()), isReplace: true);
                             },
                             child: comnText(
-                              labelText: '로그아웃',
-                              fontColor: const Color(0xFFADB5BD),
+                              '로그아웃',
+                              colorFont: const Color(0xFFADB5BD),
                               fontSize: 2.h,
                             ),
                           ),
@@ -99,9 +95,7 @@ class ReadDrawer extends StatelessWidget {
                       SizedBox(
                         height: 1.75.h,
                       ),
-                      comnText(
-                          labelText: UserModel.email,
-                          fontSize: 2.h),
+                      comnText(user.email, fontSize: 2.h),
                       SizedBox(
                         height: 1.5.h,
                       ),

@@ -43,9 +43,9 @@ class _TranslatedFieldWidgetState extends State<TranslatedFieldWidget> {
           child: Text(
             widget.argText,
             style: TextStyle(
-              fontSize: widget.readOption.optFontSize,
+              fontSize: widget.readOption.optfontSize,
               height: widget.readOption.optFontHeight,
-              color: Color(widget.readOption.optFontColor),
+              color: Color(widget.readOption.optcolorFont),
               fontFamily: widget.readOption.optFontFamily,
             ),
           ),

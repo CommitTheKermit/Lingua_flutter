@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/screens_mobile/read_option/view_model/read_option_prov.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -37,7 +37,7 @@ class _OptionFontSelectState extends State<OptionFontSelect> {
             ),
             child: Center(
               child: comnText(
-                labelText: widget.labelText,
+                 widget.labelText,
                 fontSize: 2.h,
               ),
             ),

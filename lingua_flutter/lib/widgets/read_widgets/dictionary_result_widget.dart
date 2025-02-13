@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:lingua/widgets/commons/common.dart';
+import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../models/word_model.dart';
@@ -20,21 +22,9 @@ class DictionaryResultWidget extends StatelessWidget {
     return FutureBuilder(
       future: wordMeans,
       builder: (context, snapshot) {
-        if (wordMeans == null) {
-          return const SizedBox.shrink();
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox(
-            height: 60.h,
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (snapshot.hasData) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return comnLoading();
+        } else {
           List<WordModel> words = snapshot.data!;
 
           for (int i = 0; i < words.length; i++) {
@@ -47,14 +37,13 @@ class DictionaryResultWidget extends StatelessWidget {
                   words[i].meaning += words[j].meaning;
                 }
 
-                log(words[i].meaning);
+                comnLog(words[i].meaning);
                 words.remove(words[j]);
                 j = 0;
               }
             }
 
-            if (words[i].meaning.indexOf('.') !=
-                words[i].meaning.lastIndexOf('.')) {
+            if (words[i].meaning.indexOf('.') != words[i].meaning.lastIndexOf('.')) {
               List spliited = words[i].meaning.split('.');
               String resultMeaning = '';
               for (int k = 0; k < spliited.length - 1; k++) {
@@ -78,16 +67,14 @@ class DictionaryResultWidget extends StatelessWidget {
               children: [
                 for (var wordMean in words)
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: 90.w,
                       decoration: ShapeDecoration(
                         color: Colors.white,
                         shape: RoundedRectangleBorder(
-                          side: const BorderSide(
-                              width: 1, color: Color(0xFFDEE2E6)),
+                          side: const BorderSide(width: 1, color: Color(0xFFDEE2E6)),
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
@@ -114,8 +101,7 @@ class DictionaryResultWidget extends StatelessWidget {
                                         decoration: ShapeDecoration(
                                           color: const Color(0xFF43698F),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(999),
+                                            borderRadius: BorderRadius.circular(999),
                                           ),
                                         ),
                                         child: Padding(
@@ -131,15 +117,11 @@ class DictionaryResultWidget extends StatelessWidget {
                                               //     : wordMean.pos,
                                               style: TextStyle(
                                                 color: const Color(0xFFF8F9FA),
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.0175,
+                                                fontSize:
+                                                    MediaQuery.of(context).size.height * 0.0175,
                                                 fontWeight: FontWeight.w400,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.00135,
+                                                height:
+                                                    MediaQuery.of(context).size.height * 0.00135,
                                               ),
                                             ),
                                           ),
@@ -174,7 +156,6 @@ class DictionaryResultWidget extends StatelessWidget {
             ),
           );
         }
-        return const SizedBox.shrink();
       },
     );
   }

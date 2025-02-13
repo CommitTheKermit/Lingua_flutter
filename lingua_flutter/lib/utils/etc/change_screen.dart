@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:lingua/main.dart';
 
 Future<void> changeScreen({
-  required BuildContext context,
   required Widget nextScreen,
   required bool isReplace,
 }) async {
   isReplace
       ? Navigator.pushReplacement(
-          context,
+          globalContext,
           PageRouteBuilder(
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
@@ -25,7 +25,7 @@ Future<void> changeScreen({
           ),
         )
       : Navigator.push(
-          context,
+    globalContext,
           PageRouteBuilder(
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {

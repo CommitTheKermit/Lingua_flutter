@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/utils/etc/error_toast.dart';
 import 'package:lingua/utils/shared_preferences/preferences.dart';
 import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,17 +12,18 @@ Future<dynamic> apiPost({
   required String uri,
   required body,
   dynamic argHeaders,
+  String? urlHeader,
 }) async {
-  late Headers headerObj;
+  late Headers headrerObj;
   late Response response;
   try {
     Dio dio = Dio(
       BaseOptions(
-        connectTimeout: const Duration(seconds: 20), // 연결 타임아웃 10초
-        receiveTimeout: const Duration(seconds: 20), // 데이터 수신 타임아웃 10초
+        connectTimeout: const Duration(seconds: 10), // 연결 타임아웃 10초
+        receiveTimeout: const Duration(seconds: 10), // 데이터 수신 타임아웃 10초
       ),
     );
-    String? ipAddress = await getIPAddress();
+    String? ipAdress = await getIPAddress();
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'auth-token': getPrefString('authToken') ?? '',
@@ -30,11 +31,11 @@ Future<dynamic> apiPost({
       'Connection': 'Keep-Alive',
       // 192.168.90.158
     };
-    if (ipAddress != null) {
-      headers['X-FORWARDED-FOR'] = ipAddress;
-      // if (const String.fromEnvironment("DEPLOY") != 'prod') {
-      //   headers['X-FORWARDED-FOR'] = '192.168.90.158';
-      // }
+    if (ipAdress != null) {
+      headers['X-FORWARDED-FOR'] = ipAdress;
+      if (const String.fromEnvironment("DEPLOY") != 'prod') {
+        headers['X-FORWARDED-FOR'] = '192.168.90.158';
+      }
     }
     if (argHeaders == null) {
       dio.options.headers = headers;
@@ -44,21 +45,17 @@ Future<dynamic> apiPost({
 
     if (body.runtimeType == FormData) {
       response = await dio.post(
-        '$baseApiUrl$baseApiPort/api$uri',
+        urlHeader != null ? '$urlHeader$uri' : '$baseApiUrl/api$uri',
         data: body,
       );
     } else {
       response = await dio.post(
-        '$baseApiUrl$baseApiPort/api$uri',
+        urlHeader != null ? '$urlHeader$uri' : '$baseApiUrl/api$uri',
         data: json.encode(body),
       );
     }
-    // response = await dio.post(
-    //   '$baseApiUrl$baseApiPort/api$uri',
-    //   data: body,
-    // );
 
-    headerObj = response.headers;
+    headrerObj = response.headers;
 
     if (response.statusCode == 403 &&
         response.data['message'] == 'Access Denied' &&
@@ -88,26 +85,25 @@ Future<dynamic> apiPost({
     throw Exception();
   }
 
-  if (headerObj["new_token"] != null) {
-    setPrefString('authToken', headerObj["new_token"].toString());
+  if (headrerObj["new_token"] != null) {
+    setPrefString('authToken', headrerObj["new_token"].toString());
   }
-  response.data['statusCode'] = response.statusCode;
+  response.data['responseStatusCode'] = response.statusCode;
   return response.data;
 }
 
-Future<dynamic> apiGet(
-    {required String uri, Map<String, String>? argHeaders}) async {
+Future<dynamic> apiGet({required String uri, Map<String, String>? argHeaders}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  String? ipAddress = await getIPAddress();
+  String? ipAdress = await getIPAddress();
   Map<String, String> headers = {
     'Content-Type': 'application/json',
     'auth-token': prefs.getString('authToken').toString(),
     'refresh-token': prefs.getString('refreshToken').toString()
   };
 
-  if (ipAddress != null) {
-    headers['X-FORWARDED-FOR'] = ipAddress;
+  if (ipAdress != null) {
+    headers['X-FORWARDED-FOR'] = ipAdress;
     if (const String.fromEnvironment("DEPLOY") != 'prod') {
       headers['X-FORWARDED-FOR'] = '192.168.90.158';
     }
@@ -124,7 +120,7 @@ Future<dynamic> apiGet(
     dio.options.headers = argHeaders;
   }
   Response response = await dio.get(
-    '$baseApiUrl$baseApiPort/api$uri',
+    '$baseApiUrl/api$uri',
   );
   var headrerObj = response.headers;
 

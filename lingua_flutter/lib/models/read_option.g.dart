@@ -6,19 +6,18 @@ part of 'read_option.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ReadOption _$ReadOptionFromJson(Map<String, dynamic> json) => ReadOption.full(
-      (json['optFontSize'] as num).toDouble(),
-      (json['optFontHeight'] as num).toDouble(),
-      json['optFontFamily'] as String,
-      json['optFontColor'] as int,
-      json['optBackgroundColor'] as int,
-    );
+ReadOption _$ReadOptionFromJson(Map<String, dynamic> json) => ReadOption()
+  ..optfontSize = (json['optfontSize'] as num).toDouble()
+  ..optFontHeight = (json['optFontHeight'] as num).toDouble()
+  ..optFontFamily = json['optFontFamily'] as String
+  ..optcolorFont = (json['optcolorFont'] as num).toInt()
+  ..optBackgroundColor = (json['optBackgroundColor'] as num).toInt();
 
 Map<String, dynamic> _$ReadOptionToJson(ReadOption instance) =>
     <String, dynamic>{
-      'optFontSize': instance.optFontSize,
+      'optfontSize': instance.optfontSize,
       'optFontHeight': instance.optFontHeight,
       'optFontFamily': instance.optFontFamily,
-      'optFontColor': instance.optFontColor,
+      'optcolorFont': instance.optcolorFont,
       'optBackgroundColor': instance.optBackgroundColor,
     };

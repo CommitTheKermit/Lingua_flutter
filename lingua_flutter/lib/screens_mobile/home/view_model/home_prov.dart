@@ -5,11 +5,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/models/user_model.dart';
+import 'package:lingua/models/context_preset.dart';
 import 'package:lingua/models/word_model.dart';
 import 'package:lingua/screens_mobile/home/model/read_model.dart';
 import 'package:lingua/utils/api/api_user.dart';
-import 'package:lingua/utils/api/api_util.dart';
 import 'package:lingua/utils/api_util.dart';
 import 'package:lingua/utils/file_process/translate_input_process.dart';
 import 'package:lingua/utils/shared_preferences/preferences.dart';
@@ -133,14 +132,14 @@ class HomeProv extends ChangeNotifier {
       });
 
       Timer(initialDelay, () {
-        periodicRefresh(email: UserModel.email).then((value) {
+        periodicRefresh(email: user.email).then((value) {
           model.requestQuota.value = value;
         });
         model.remainingTime.value = model.refreshPeriodSecond;
 
         model.serverRequestTimer = Timer.periodic(
             Duration(minutes: model.refreshPeriodMinute), (Timer t) {
-          periodicRefresh(email: UserModel.email).then((value) {
+          periodicRefresh(email: user.email).then((value) {
             model.requestQuota.value = value;
           });
           model.remainingTime.value = model.refreshPeriodSecond;
@@ -172,19 +171,19 @@ class HomeProv extends ChangeNotifier {
   Future<List<WordModel>> dictSearch(String argText) async {
     List<dynamic> returnValue;
     try {
-      Map result = await apiPost(
+      Response result = await apiPost(
         uri: '/dictionary/word',
         body: {
           'word': argText,
         },
       );
-      if (result['statusCode'] == 200) {
+      if (result.statusCode == 200) {
         // 서버가 성공적으로 응답하면 JSON을 파싱합니다.
-        returnValue = [result];
+        returnValue = result.data;
 
         // wordRecord(word: argText);
         return returnValue.map((data) => WordModel.fromJson(data)).toList();
-      } else if (result['statusCode'] == 401) {
+      } else if (result.statusCode == 401) {
         returnValue = [
           {
             "kor": "",
@@ -216,6 +215,7 @@ class HomeProv extends ChangeNotifier {
     }
     return [];
   }
+
   Future<String> requestTranslatedText(String argText) async {
     String apiKey = API_KEY; // 환경 변수나 별도 설정 파일에서 불러와야 함
 
@@ -235,21 +235,16 @@ class HomeProv extends ChangeNotifier {
     try {
       Response response = await dio.post(
         deeplUrl,
-        data:  jsonEncode({
+        data: jsonEncode({
           "text": [argText], // 함수 인자로 받은 텍스트
           "source_lang": "EN",
           "target_lang": "KO",
           "preserve_formatting": true,
+          "context": ContextPreset.warhammer40000.contextDesc,
         }),
       );
 
       if (response.statusCode == 200) {
-
-        // String decodedData = utf8.decode(response.bodyBytes);
-        // int start = decodedData.indexOf('"text":');
-        // decodedData = decodedData.substring(start + 8, decodedData.length - 4);
-        // // print(decodedData);
-        // return decodedData;
         return (response.data['translations'] as List).first['text'];
       } else {
         return 'error Failed with status code ${response.statusCode}';

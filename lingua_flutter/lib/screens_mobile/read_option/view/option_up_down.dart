@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class OptionUpDown extends StatefulWidget {
@@ -39,7 +39,7 @@ class _OptionUpDownState extends State<OptionUpDown> {
             ),
             child: Center(
               child: comnText(
-                labelText: widget.labelText,
+                widget.labelText,
                 fontSize: 2.h,
               ),
             ),

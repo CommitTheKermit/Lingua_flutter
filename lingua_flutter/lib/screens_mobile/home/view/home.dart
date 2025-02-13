@@ -1,21 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/models/user_model.dart';
 import 'package:lingua/screens_mobile/home/view/appbar/home_app_bar.dart';
 import 'package:lingua/screens_mobile/home/view/home_read_drawer.dart';
 import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
 import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/etc/exit_confirm.dart';
 import 'package:lingua/utils/file_process/translate_input_process.dart';
-import 'package:lingua/widgets/commons/common_divider.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:lingua/widgets/read_widgets/call_limit_widget.dart';
 import 'package:lingua/widgets/read_widgets/read_button_widget.dart';
 import 'package:lingua/widgets/read_widgets/text_field_widget.dart';
 import 'package:lingua/widgets/read_widgets/translated_field_widget.dart';
 import 'package:lingua/widgets/read_widgets/words_widget.dart';
-import 'package:lingua/utils/etc/error_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -39,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
         break;
       case AppLifecycleState.resumed:
         if (!readProv.model.STOP_REFRESH) {
-          periodicRefresh(email: UserModel.email).then((value) {
+          periodicRefresh(email: user.email).then((value) {
             readProv.model.requestQuota.value = value;
           });
         }
@@ -57,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen>
     readProv.model.refreshPeriodSecond =
         readProv.model.refreshPeriodMinute * 60;
     if (!readProv.model.STOP_REFRESH) {
-      periodicRefresh(email: UserModel.email).then((value) {
+      periodicRefresh(email: user.email).then((value) {
         readProv.model.requestQuota.value = value;
       });
     }
@@ -97,19 +95,15 @@ class _HomeScreenState extends State<HomeScreen>
           );
         } else {
           return Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(6.h),
-              child: const HomeAppBar(),
-            ),
-            drawer: const HomeReadDrawer(),
+            // resizeToAvoidBottomInset: false,
+
             body: PopScope(
               onPopInvoked: (didPop) async {
                 exitConfirm(context);
               },
               child: Column(
                 children: [
-                  commonDivider(),
+                  comnDivider(),
                   TextFieldWidget(
                     argText: readProv.model.originalSingleSentence.isNotEmpty
                         ? readProv.model.originalSingleSentence
@@ -123,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen>
                         : 0,
                   ),
                   readProv.model.isAllowTranslate
-                      ? commonDivider()
+                      ? comnDivider()
                       : const SizedBox.shrink(),
                   readProv.model.isAllowTranslate
                       ? Flexible(
@@ -161,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 );
                               } else {
                                 return TranslatedFieldWidget(
-                                  argText: value.isEmpty ? '번역 출력 부분' : value,
+                                  argText: value.isEmpty ? '번역 출력칸' : value,
                                   readOption: readProv.model.midOption,
                                 );
                               }
@@ -170,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen>
                         )
                       : const SizedBox.shrink(),
                   readProv.model.isAllowInput
-                      ? commonDivider()
+                      ? comnDivider()
                       : const SizedBox.shrink(),
                   readProv.model.isAllowInput
                       ? Flexible(
@@ -199,11 +193,11 @@ class _HomeScreenState extends State<HomeScreen>
                                       border: InputBorder.none,
                                       hintStyle: TextStyle(
                                         fontSize: readProv
-                                            .model.botOption.optFontSize,
+                                            .model.botOption.optfontSize,
                                         height: readProv
                                             .model.botOption.optFontHeight,
                                         color: Color(readProv
-                                            .model.botOption.optFontColor),
+                                            .model.botOption.optcolorFont),
                                         fontFamily: readProv
                                             .model.botOption.optFontFamily,
                                       )),
@@ -217,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         )
                       : const SizedBox.shrink(),
-                  commonDivider(),
+                  comnDivider(),
                   wordsWidget(
                     wordsScrollFlex: readProv.model.wordsScrollFlex,
                     words: readProv.model.words,
@@ -225,14 +219,14 @@ class _HomeScreenState extends State<HomeScreen>
                     originalSingleSentence:
                         readProv.model.originalSingleSentence,
                   ),
-                  commonDivider(),
+                  comnDivider(),
                   callLimitWidget(
                       callLimitFlex: readProv.model.callLimitFlex,
                       scrollTimerController:
                           readProv.model.scrollTimerController,
                       requestQuota: readProv.model.requestQuota,
                       remainingTime: readProv.model.remainingTime),
-                  commonDivider(),
+                  comnDivider(),
                   Flexible(
                     flex: readProv.model.buttonsFlex,
                     child: Container(
@@ -299,6 +293,11 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
             ),
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(6.h),
+              child: const HomeAppBar(),
+            ),
+            drawer: const HomeReadDrawer(),
           );
         }
       },

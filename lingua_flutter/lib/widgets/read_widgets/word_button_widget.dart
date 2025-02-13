@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
-import 'package:lingua/widgets/read_widgets/dialog/dialog_word_widget.dart';
+import 'package:lingua/widgets/commons/common.dart';
+import 'package:lingua/screens_mobile/home/view/dialog/dialog_word_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 // ignore: camel_case_types
@@ -40,8 +40,8 @@ class WordButtonWidget extends StatelessWidget {
             ),
             child: Center(
               child: comnText(
-                labelText: inButtonText,
-                fontColor: const Color(0xFFF8F9FA),
+                 inButtonText,
+                colorFont: const Color(0xFFF8F9FA),
                 fontSize: 2.h,
               ),
             ),

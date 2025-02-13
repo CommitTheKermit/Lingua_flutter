@@ -5,10 +5,9 @@ import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
 import 'package:lingua/screens_mobile/read_option/view/read_option.dart';
 import 'package:lingua/screens_mobile_old/bookmark_list_dialog.dart';
 import 'package:lingua/utils/bookmark_process/bookmark_util.dart';
-import 'package:lingua/utils/etc/error_toast.dart';
 import 'package:lingua/utils/shared_preferences/preferences.dart';
 import 'package:lingua/utils/string_process/pager.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:lingua/widgets/read_widgets/dialog/dialog_page_search.dart';
 import 'package:lingua/widgets/read_widgets/dialog/search_list_dialog.dart';
@@ -44,13 +43,13 @@ class _ReadModeScreenState extends State<ReadModeScreen>
   Future<String> initOption() async {
     await widget.readProv.model.readModeOption
         .loadOption(key: 'readModeOption');
-    index = double.parse(await getPrefString('readModeIndex') ?? '0');
+    index = double.parse(getPrefString('readModeIndex') ?? '0');
 
     bookmarks = await loadBookmarks();
 
     readTextStyle = TextStyle(
-      color: Color(widget.readProv.model.readModeOption.optFontColor),
-      fontSize: widget.readProv.model.readModeOption.optFontSize,
+      color: Color(widget.readProv.model.readModeOption.optcolorFont),
+      fontSize: widget.readProv.model.readModeOption.optfontSize,
       fontFamily: widget.readProv.model.readModeOption.optFontFamily,
       height: widget.readProv.model.readModeOption.optFontHeight,
     );
@@ -208,10 +207,10 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: comnText(
-                                    labelText: titleNovel, // 파일 제목 출력
+                                     titleNovel, // 파일 제목 출력
                                     fontSize: 2.5.h,
-                                    fontColor: const Color(0xFF1E4A75),
-                                    fontWeight: FontWeight.w500,
+                                    colorFont: const Color(0xFF1E4A75),
+                                    weightFont: FontWeight.w500,
                                   ),
                                 ),
                               ),
@@ -367,11 +366,11 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                         width: 2.2.w,
                                       ),
                                       comnText(
-                                        labelText:
+
                                             '현재 문서내 책갈피 ${bookmarkedLines.length}개',
                                         fontSize: 2.h,
-                                        fontWeight: FontWeight.w500,
-                                        fontColor: const Color(0xFF1E4A75),
+                                        weightFont: FontWeight.w500,
+                                        colorFont: const Color(0xFF1E4A75),
                                       ),
                                     ],
                                   ),
@@ -400,10 +399,10 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                     child: Row(
                                       children: [
                                         comnText(
-                                          labelText: '책갈피 목록',
+                                           '책갈피 목록',
                                           fontSize: 1.5.h,
-                                          fontWeight: FontWeight.w400,
-                                          fontColor: const Color(0xFF1E4A75),
+                                          weightFont: FontWeight.w400,
+                                          colorFont: const Color(0xFF1E4A75),
                                         ),
                                         Image.asset(
                                           'assets/images/icon_small_arrow.png',
@@ -490,19 +489,19 @@ class _ReadModeScreenState extends State<ReadModeScreen>
                                               MainAxisAlignment.center,
                                           children: [
                                             comnText(
-                                              labelText:
+
                                                   index.toStringAsFixed(0),
-                                              fontColor:
+                                              colorFont:
                                                   const Color(0xFF1E4A75),
                                               fontSize: 2.25.h,
-                                              fontWeight: FontWeight.w700,
+                                              weightFont: FontWeight.w700,
                                             ),
                                             comnText(
-                                              labelText: "/${pages.length - 1}",
-                                              fontColor:
+                                               "/${pages.length - 1}",
+                                              colorFont:
                                                   const Color(0xFF868E96),
                                               fontSize: 2.25.h,
-                                              fontWeight: FontWeight.w700,
+                                              weightFont: FontWeight.w700,
                                             )
                                           ],
                                         ),

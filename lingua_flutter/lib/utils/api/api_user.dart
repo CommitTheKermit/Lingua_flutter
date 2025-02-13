@@ -1,8 +1,8 @@
 import 'package:lingua/main.dart';
 import 'package:lingua/models/server_info.dart';
-import 'package:lingua/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 
 const String baseUrl = ServerInfo.baseUrl;
 const int timeoutSec = ServerInfo.timeoutSec;
@@ -18,9 +18,9 @@ Future<bool> signUp() {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode({
-      'email': UserModel.email,
-      'password': UserModel.password,
-      'phone_no': UserModel.phoneNo,
+      'email': user.email,
+      'password': user.password,
+      'phone_no': user.phoneNo,
     }),
   )
       .then((response) {
@@ -90,31 +90,7 @@ Future<String> emailVerify(String email, String code) async {
   );
 }
 
-Future<bool> login() {
-  final url = Uri.parse('$baseUrl/users/login');
 
-  return http
-      .post(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({
-      'email': UserModel.email,
-      'password': UserModel.password,
-    }),
-  )
-      .then((response) {
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }).timeout(
-    const Duration(seconds: timeoutSec),
-    onTimeout: () => false, // 3초 후에 실행될 대체값입니다.
-  );
-}
 
 Future<String> idFind(String phoneNo) async {
   final url = Uri.parse('$baseUrl/users/findemail');
@@ -190,7 +166,7 @@ Future<bool> pwChange({
     body: jsonEncode({
       'phone_no': phoneNo,
       'email': email,
-      'password': UserModel.password,
+      'password': user.password,
     }),
   )
       .then((response) {

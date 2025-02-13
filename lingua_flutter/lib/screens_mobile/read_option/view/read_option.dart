@@ -5,7 +5,7 @@ import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
 import 'package:lingua/screens_mobile/read_option/view/option_page.dart';
 import 'package:lingua/screens_mobile/read_option/view/single_tab_button.dart';
 import 'package:lingua/screens_mobile/read_option/view_model/read_option_prov.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -58,10 +58,10 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
       appBar: AppBar(
         centerTitle: true,
         title: comnText(
-          labelText: '읽기 옵션',
-          fontColor: const Color(0xFF171A1D),
+           '읽기 옵션',
+          colorFont: const Color(0xFF171A1D),
           fontSize: 2.25.h,
-          fontWeight: FontWeight.w700,
+          weightFont: FontWeight.w700,
         ),
         actions: [
           TextButton(

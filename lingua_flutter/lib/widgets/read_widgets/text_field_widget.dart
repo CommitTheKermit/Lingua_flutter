@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/main.dart';
 import 'package:lingua/models/read_option.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class TextFieldWidget extends StatefulWidget {
@@ -58,9 +57,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                     top: 1.h,
                   ),
                   child: comnText(
-                    labelText: '원문',
+                     '원문',
                     fontSize:2.h,
-                    fontColor: const Color(0xFF868E96),
+                    colorFont: const Color(0xFF868E96),
                   ),
                 ),
                 Padding(
@@ -69,9 +68,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                     top: 1.h,
                   ),
                   child: comnText(
-                      labelText: '${widget.currentIndex}/${widget.endIndex}',
+                       '${widget.currentIndex}/${widget.endIndex}',
                       fontSize:2.h,
-                      fontColor: const Color(0xFF1E4A75)),
+                      colorFont: const Color(0xFF1E4A75)),
                 ),
               ],
             ),
@@ -86,9 +85,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                   child: Text(
                     widget.argText,
                     style: TextStyle(
-                      fontSize: widget.readOption.optFontSize,
+                      fontSize: widget.readOption.optfontSize,
                       height: widget.readOption.optFontHeight,
-                      color: Color(widget.readOption.optFontColor),
+                      color: Color(widget.readOption.optcolorFont),
                       fontFamily: widget.readOption.optFontFamily,
                     ),
                   ),

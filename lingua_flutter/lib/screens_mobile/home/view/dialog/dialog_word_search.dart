@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/models/word_model.dart';
 import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
-import 'package:lingua/utils/api/api_util.dart';
 import 'package:lingua/widgets/read_widgets/dictionary_result_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

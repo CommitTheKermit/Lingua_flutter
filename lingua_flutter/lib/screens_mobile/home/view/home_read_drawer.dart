@@ -4,7 +4,6 @@ import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
 import 'package:lingua/screens_mobile/read_mode/view/read_mode.dart';
 import 'package:lingua/screens_mobile/read_option/view/read_option.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
-import 'package:lingua/utils/etc/error_toast.dart';
 import 'package:lingua/utils/file_process/file_process.dart';
 import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:lingua/widgets/read_widgets/read_drawer.dart';
@@ -57,10 +56,9 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
             ),
           ),
           onTap: readProv.model.isNovelLoaded
-              ? () {
+              ? () async {
                   Navigator.pop(context);
-                  changeScreen(
-                    context: context,
+                  await changeScreen(
                     nextScreen: ReadModeScreen(
                       readProv: readProv,
                     ),

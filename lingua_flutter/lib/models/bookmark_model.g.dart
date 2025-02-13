@@ -8,7 +8,7 @@ part of 'bookmark_model.dart';
 
 BookmarkModel _$BookmarkModelFromJson(Map<String, dynamic> json) =>
     BookmarkModel(
-      bookMarkedLine: json['bookMarkedLine'] as int,
+      bookMarkedLine: (json['bookMarkedLine'] as num).toInt(),
       bookMarkedPage: json['bookMarkedPage'] as String,
       bookMarkedTime: DateTime.parse(json['bookMarkedTime'] as String),
     );

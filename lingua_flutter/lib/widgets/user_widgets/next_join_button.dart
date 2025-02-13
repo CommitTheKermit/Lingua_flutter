@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class NextJoinButton extends StatelessWidget {
@@ -52,10 +52,10 @@ class NextJoinButton extends StatelessWidget {
           ),
           child: Center(
             child: comnText(
-              labelText: inButtonText,
+               inButtonText,
               fontSize: 2.25.h,
-              fontWeight: FontWeight.w700,
-              fontColor: const Color(0xFFF8F9FA),
+              weightFont:  FontWeight.w700,
+              colorFont: const Color(0xFFF8F9FA),
             ),
           ),
         ),

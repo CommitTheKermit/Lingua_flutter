@@ -43,7 +43,7 @@ class HomeModel {
   late Timer serverRequestTimer;
   late Timer countdownTimer;
   final int refreshPeriodMinute = 6;
-  late final int refreshPeriodSecond;
+  int refreshPeriodSecond = 0;
 
   String titleNovel = '';
 }

@@ -32,7 +32,7 @@ class ReadOptionModel {
     0xFFCFCED3,
     0xFFD1DCEA,
   ];
-  final fontColors = [
+  final colorFonts = [
     0xFFFFFFFF,
     0xFF4A4A4A,
     0xFF2A2A2A,

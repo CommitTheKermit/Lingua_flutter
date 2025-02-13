@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/models/read_option.dart';
 import 'package:lingua/screens_mobile/read_option/view_model/read_option_prov.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -30,7 +30,7 @@ class _OptionBackgroundSelectState extends State<OptionBackgroundSelect> {
           padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
           child: Center(
             child: comnText(
-              labelText: widget.labelText,
+              widget.labelText,
               fontSize: 2.h,
             ),
           ),
@@ -80,8 +80,7 @@ class _OptionBackgroundSelectState extends State<OptionBackgroundSelect> {
                                 widget.readOption.optBackgroundColor == value
                                     ? Icon(
                                         Icons.check,
-                                        color: optionProv.getComplementaryColor(
-                                            Color(value)),
+                                        color: optionProv.getComplementaryColor(Color(value)),
                                       )
                                     : const SizedBox.shrink(),
                               ],

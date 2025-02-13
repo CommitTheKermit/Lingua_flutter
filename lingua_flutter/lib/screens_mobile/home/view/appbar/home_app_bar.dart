@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/home/view/appbar/input_allow_button.dart';
 import 'package:lingua/screens_mobile/home/view/appbar/translate_allow_button.dart';
 import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
-import 'package:lingua/widgets/commons/common_text.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:lingua/screens_mobile/home/view/dialog/dialog_word_search.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -35,80 +35,68 @@ class _HomeAppBarState extends State<HomeAppBar> {
         SizedBox(
           width: 100.w,
           child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
+            // mainAxisSize: MainAxisSize.min,
+            // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 1.w),
-                child: Builder(
-                  builder: (BuildContext context) {
-                    return IconButton(
-                      icon: Image.asset(
-                        "assets/images/sort_button.png",
-                        height: 3.h,
-                        width: 3.h,
-                      ),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
-                      },
-                      tooltip: MaterialLocalizations.of(context)
-                          .openAppDrawerTooltip,
-                    );
+                child: IconButton(
+                  icon: Image.asset(
+                    "assets/images/sort_button.png",
+                    height: 3.h,
+                    width: 3.h,
+                  ),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer(); // Drawer를 엽니다.
                   },
+                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
               ),
-              SizedBox(
-                width: 40.w,
+              Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: comnText(
-                    labelText: readProv.model.titleNovel.isNotEmpty // 파일 제목 출력
+                    readProv.model.titleNovel.isNotEmpty // 파일 제목 출력
                         ? readProv.model.titleNovel
                         : '파일을 선택해주세요.',
-                    fontSize: 2.5.h,
-                    fontColor: const Color(0xFF1E4A75),
+                    fontSize: 16,
+                    colorFont: const Color(0xFF1E4A75),
                   ),
                 ),
               ),
-              const Spacer(),
-              SizedBox(
-                child: Row(
-                  children: [
-                    InputAllowButton(
-                      onPressedCallback: () {
-                        setState(() {});
-                      },
-                      assetName: "assets/images/edit_button.png",
-                      iconSize: 3.h,
+              Row(
+                children: [
+                  InputAllowButton(
+                    assetName: "assets/images/edit_button.png",
+                    iconSize: 3.h,
+                  ),
+                  TranslateAllowButton(
+                    onPressedCallback: () {
+                      setState(() {});
+                      if (readProv.model.isNovelLoaded) {
+                        readProv.lineShift(shiftAmount: 0);
+                      }
+                    },
+                    assetName: "assets/images/translate_button.png",
+                    iconSize: 3.h,
+                  ),
+                  IconButton(
+                    iconSize: 20,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (context) {
+                          return const DialogWordSearch();
+                        },
+                      );
+                    },
+                    icon: Image.asset(
+                      "assets/images/search_button.png",
+                      height: 3.h,
                     ),
-                    TranslateAllowButton(
-                      onPressedCallback: () {
-                        setState(() {});
-                        if (readProv.model.isNovelLoaded) {
-                          readProv.lineShift(shiftAmount: 0);
-                        }
-                      },
-                      assetName: "assets/images/translate_button.png",
-                      iconSize: 3.h,
-                    ),
-                    IconButton(
-                      iconSize: 20,
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (context) {
-                            return const DialogWordSearch();
-                          },
-                        );
-                      },
-                      icon: Image.asset(
-                        "assets/images/search_button.png",
-                        height: 3.h,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -144,7 +132,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
       //                 ? titleNovel
       //                 : '파일을 선택해주세요.',
       //             fontSize: height * 0.025,
-      //             fontColor: const Color(0xFF1E4A75),
+      //             colorFont: const Color(0xFF1E4A75),
       //           ),
       //         ),
       //       ),

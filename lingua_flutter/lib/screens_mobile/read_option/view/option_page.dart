@@ -6,7 +6,7 @@ import 'package:lingua/screens_mobile/read_option/view/option_font_select.dart';
 import 'package:lingua/screens_mobile/read_option/view/option_single_container.dart';
 import 'package:lingua/screens_mobile/read_option/view/option_up_down.dart';
 import 'package:lingua/screens_mobile/read_option/view_model/read_option_prov.dart';
-import 'package:lingua/widgets/commons/common_divider.dart';
+import 'package:lingua/widgets/commons/common.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -57,16 +57,16 @@ class _OptionPageState extends State<OptionPage> {
                 child: Text(
                   '적용 예시입니다.\n각 칸별 설정이 가능합니다.\n\nThis is an application example.\nEach column can be set',
                   style: TextStyle(
-                    fontSize: widget.readOption.optFontSize,
+                    fontSize: widget.readOption.optfontSize,
                     height: widget.readOption.optFontHeight,
                     fontFamily: widget.readOption.optFontFamily,
-                    color: Color(widget.readOption.optFontColor),
+                    color: Color(widget.readOption.optcolorFont),
                   ),
                 ),
               ),
             ),
           ),
-          commonDivider(),
+          comnDivider(),
           Container(
             width: 100.w,
             height: 4.5.h,
@@ -101,13 +101,13 @@ class _OptionPageState extends State<OptionPage> {
                 labelText: '배경색',
                 readOption: widget.readOption,
               ),
-              OptionFontColorSelect(
+              OptioncolorFontSelect(
                 labelText: '글자색',
                 readOption: widget.readOption,
               ),
             ],
           ),
-          commonDivider(),
+          comnDivider(),
           Expanded(
             child: OptionSingleContainer(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -115,13 +115,13 @@ class _OptionPageState extends State<OptionPage> {
               lines: [
                 OptionUpDown(
                   labelText: '글자 크기',
-                  argText: widget.readOption.optFontSize.toString(),
+                  argText: widget.readOption.optfontSize.toString(),
                   upButtonTap: () {
                     setState(() {
                       !optionProv.model.isChanged
                           ? optionProv.model.isChanged = true
                           : optionProv.model.isChanged;
-                      widget.readOption.optFontSize += 0.5;
+                      widget.readOption.optfontSize += 0.5;
                     });
                   },
                   downButtonTap: () {
@@ -129,13 +129,11 @@ class _OptionPageState extends State<OptionPage> {
                       !optionProv.model.isChanged
                           ? optionProv.model.isChanged = true
                           : optionProv.model.isChanged;
-                      widget.readOption.optFontSize -= 0.5;
+                      widget.readOption.optfontSize -= 0.5;
                     });
                   },
-                  upButtonVaild:
-                      widget.readOption.optFontSize < 30 ? true : false,
-                  downButtonValid:
-                      widget.readOption.optFontSize >= 10 ? true : false,
+                  upButtonVaild: widget.readOption.optfontSize < 30 ? true : false,
+                  downButtonValid: widget.readOption.optfontSize >= 10 ? true : false,
                 ),
                 OptionUpDown(
                   labelText: '줄 간격',
@@ -156,10 +154,8 @@ class _OptionPageState extends State<OptionPage> {
                       widget.readOption.optFontHeight -= 0.1;
                     });
                   },
-                  upButtonVaild:
-                      widget.readOption.optFontHeight <= 2.5 ? true : false,
-                  downButtonValid:
-                      widget.readOption.optFontHeight > 1 ? true : false,
+                  upButtonVaild: widget.readOption.optFontHeight <= 2.5 ? true : false,
+                  downButtonValid: widget.readOption.optFontHeight > 1 ? true : false,
                 ),
               ],
             ),

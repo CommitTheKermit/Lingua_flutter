@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:lingua/models/search_result_model.dart';
+import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:lingua/widgets/read_widgets/search_result_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -48,7 +49,7 @@ class _SearchListDialogState extends State<SearchListDialog> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: const Color(0xFF43698F),
-                    fontSize:2.25.h,
+                    fontSize: 2.25.h,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -56,8 +57,7 @@ class _SearchListDialogState extends State<SearchListDialog> {
         )
       ],
       contentPadding: EdgeInsets.zero,
-      insetPadding:
-          const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
+      insetPadding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
       title: Container(
         margin: EdgeInsets.only(bottom: 1.25.h),
         decoration: ShapeDecoration(
@@ -84,18 +84,15 @@ class _SearchListDialogState extends State<SearchListDialog> {
                 setState(() {
                   _searchResults.clear();
                   for (var page in widget.pages) {
-                    if (page
-                        .toLowerCase()
-                        .contains(_controller.text.toLowerCase())) {
+                    if (page.toLowerCase().contains(_controller.text.toLowerCase())) {
                       _searchResults.add(
                         SearchResultModel(
-                            pageNumber: widget.pages.indexOf(page),
-                            pageContent: page),
+                            pageNumber: widget.pages.indexOf(page), pageContent: page),
                       );
                     }
                   }
                 });
-                log(_searchResults.length.toString());
+                 comnLog(_searchResults.length.toString());
               },
               child: Image.asset(
                 "assets/images/icon_magnifier.png",
@@ -122,8 +119,8 @@ class _SearchListDialogState extends State<SearchListDialog> {
                 targetWord: _controller.text,
                 searchResult: result,
                 onTapMove: () {
-                  Navigator.pop(context,
-                      'move :${widget.pages[widget.pages.indexOf(result.pageContent)]}');
+                  Navigator.pop(
+                      context, 'move :${widget.pages[widget.pages.indexOf(result.pageContent)]}');
                 },
               ),
           ],

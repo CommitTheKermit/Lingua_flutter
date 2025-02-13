@@ -7,21 +7,21 @@ part 'read_option.g.dart';
 
 @JsonSerializable()
 class ReadOption {
-  double optFontSize = 25;
+  double optfontSize = 25;
   double optFontHeight = 1.7;
   String optFontFamily = 'Neo';
-  int optFontColor = 0xff000000;
+  int optcolorFont = 0xff000000;
   int optBackgroundColor = 0xffffffff;
 
 ReadOption();
 
-  ReadOption.full(this.optFontSize, this.optFontHeight, this.optFontFamily,
-      this.optFontColor, this.optBackgroundColor);
+  ReadOption.full(this.optfontSize, this.optFontHeight, this.optFontFamily,
+      this.optcolorFont, this.optBackgroundColor);
 
       
 
   ReadOption clone() {
-    return ReadOption.full(optFontSize, optFontHeight, optFontFamily, optFontColor,
+    return ReadOption.full(optfontSize, optFontHeight, optFontFamily, optcolorFont,
         optBackgroundColor);
   }
 
@@ -33,8 +33,8 @@ ReadOption();
     }
     Map<String, dynamic> json = jsonDecode(jsonString);
 
-    if (json['optFontSize'] != null) {
-      optFontSize = json['optFontSize'];
+    if (json['optfontSize'] != null) {
+      optfontSize = json['optfontSize'];
     }
     if (json['optFontHeight'] != null) {
       optFontHeight = json['optFontHeight'];
@@ -42,8 +42,8 @@ ReadOption();
     if (json['optFontFamily'] != null) {
       optFontFamily = json['optFontFamily'];
     }
-    if (json['optFontColor'] != null) {
-      optFontColor = json['optFontColor'];
+    if (json['optcolorFont'] != null) {
+      optcolorFont = json['optcolorFont'];
     }
     if (json['optBackgroundColor'] != null) {
       optBackgroundColor = json['optBackgroundColor'];
