@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/screens_mobile/login/view/login_screen.dart';
+import 'package:lingua/screens_mobile/login/view/login.dart';
 import 'package:lingua/screens_mobile/login/view_model/login_prov.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
 import 'package:lingua/widgets/commons/common.dart';

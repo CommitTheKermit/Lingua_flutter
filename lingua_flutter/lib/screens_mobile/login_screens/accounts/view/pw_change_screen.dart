@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
-import 'package:lingua/screens_mobile/login/view/login_screen.dart';
+import 'package:lingua/screens_mobile/login/view/login.dart';
 import 'package:lingua/screens_mobile/login/view_model/login_prov.dart';
 import 'package:lingua/utils/api/api_user.dart';
 import 'package:lingua/utils/uitl.dart';
@@ -61,7 +61,7 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-                labeledFormField(
+                LabeledFormField(
                   onSaved: (value) => _password = value!,
                   argText: '비밀번호',
                   validator: (value) {
@@ -76,7 +76,7 @@ class _PwChangeScreenState extends State<PwChangeScreen> {
                     return null;
                   },
                 ),
-                labeledFormField(
+                LabeledFormField(
                   onSaved: (value) => _passwordCheck = value!,
                   argText: '비밀번호 확인',
                   validator: (value) {

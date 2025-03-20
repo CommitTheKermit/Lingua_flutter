@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,9 +8,8 @@ import 'package:lingua/models/user_model.dart';
 import 'package:lingua/provider/main_provider.dart';
 import 'package:lingua/main/main_theme.dart';
 import 'package:lingua/mainframe/view/mainframe.dart';
-import 'package:lingua/screens_mobile/login/view/login_screen.dart';
+import 'package:lingua/screens_mobile/login/view/login.dart';
 import 'package:lingua/screens_mobile/login/view_model/login_prov.dart';
-import 'package:lingua/widgets/commons/common_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

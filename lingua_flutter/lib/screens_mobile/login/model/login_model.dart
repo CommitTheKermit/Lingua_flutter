@@ -10,7 +10,7 @@ class LoginModel{
 
   String password = '';
 
-  late bool isEmailRecord;
+  late bool isAutoLogin;
 
   String? recordedEmail = '';
 }

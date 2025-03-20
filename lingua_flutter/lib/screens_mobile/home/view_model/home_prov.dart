@@ -28,7 +28,7 @@ class HomeProv extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> initOption() async {
+  Future<String> firstLoad() async {
     await model.topOption.loadOption(key: 'topOption');
     await model.midOption.loadOption(key: 'midOption');
     await model.botOption.loadOption(key: 'botOption');
@@ -41,7 +41,6 @@ class HomeProv extends ChangeNotifier {
     model.isAllowInput = getPrefBool('isAllowInput') ?? true;
 
     model.isInitalized = true;
-    notify();
 
     return 'done';
   }
@@ -74,12 +73,10 @@ class HomeProv extends ChangeNotifier {
         return;
       }
 
-      String translatedString =
-          await requestTranslatedText(model.originalSingleSentence);
+      String translatedString = await requestTranslatedText(model.originalSingleSentence);
       model.requestQuota.value = model.requestQuota.value - 1;
 
-      translatedString =
-          translatedString.replaceAll(r'\n', '\n').replaceAll(r'\t', '\t');
+      translatedString = translatedString.replaceAll(r'\n', '\n').replaceAll(r'\t', '\t');
 
       //번역 기록 입력
       if (!translatedString.startsWith('error')) {
@@ -101,8 +98,7 @@ class HomeProv extends ChangeNotifier {
     model.callLimitFlex = 6;
     model.buttonsFlex = 7;
     if (!model.isAllowInput && !model.isAllowTranslate) {
-      model.originalTextFieldFlex +=
-          model.translatedTextFieldFlex + model.inputFieldFlex;
+      model.originalTextFieldFlex += model.translatedTextFieldFlex + model.inputFieldFlex;
     } else if (model.isAllowInput && !model.isAllowTranslate) {
       model.originalTextFieldFlex += model.translatedTextFieldFlex ~/ 2;
       model.inputFieldFlex += model.translatedTextFieldFlex ~/ 2;
@@ -123,8 +119,7 @@ class HomeProv extends ChangeNotifier {
       Duration initialDelay = nextRun.difference(now);
       model.remainingTime.value = initialDelay.inSeconds;
 
-      model.countdownTimer =
-          Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      model.countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
         if (model.remainingTime.value > 0) {
           model.remainingTime.value--;
         }
@@ -137,8 +132,8 @@ class HomeProv extends ChangeNotifier {
         });
         model.remainingTime.value = model.refreshPeriodSecond;
 
-        model.serverRequestTimer = Timer.periodic(
-            Duration(minutes: model.refreshPeriodMinute), (Timer t) {
+        model.serverRequestTimer =
+            Timer.periodic(Duration(minutes: model.refreshPeriodMinute), (Timer t) {
           periodicRefresh(email: user.email).then((value) {
             model.requestQuota.value = value;
           });
@@ -148,8 +143,7 @@ class HomeProv extends ChangeNotifier {
     }
   }
 
-  Future<dynamic> lineSearchDialog(
-      {required context, required int argIndex}) async {
+  Future<dynamic> lineSearchDialog({required context, required int argIndex}) async {
     final result = await comnShowDialog(
         dialog: DialogLineSearch(
       index: argIndex,
@@ -185,25 +179,13 @@ class HomeProv extends ChangeNotifier {
         return returnValue.map((data) => WordModel.fromJson(data)).toList();
       } else if (result.statusCode == 401) {
         returnValue = [
-          {
-            "kor": "",
-            "pos": "",
-            "meaning": "데이터에 단어가 존재하지 않습니다.",
-            "example": "",
-            "eng_mean": ""
-          },
+          {"kor": "", "pos": "", "meaning": "데이터에 단어가 존재하지 않습니다.", "example": "", "eng_mean": ""},
         ];
         return returnValue.map((data) => WordModel.fromJson(data)).toList();
       } else {
         // 서버가 200 이외의 상태 코드로 응답하면 예외를 발생시킵니다.
         returnValue = [
-          {
-            "kor": "",
-            "pos": "",
-            "meaning": "서버 오류",
-            "example": "",
-            "eng_mean": ""
-          },
+          {"kor": "", "pos": "", "meaning": "서버 오류", "example": "", "eng_mean": ""},
         ];
         return returnValue.map((data) => WordModel.fromJson(data)).toList();
       }

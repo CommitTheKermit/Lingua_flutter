@@ -13,29 +13,24 @@ class ReadOptionScreen extends StatefulWidget {
   const ReadOptionScreen({
     super.key,
     required this.startingTab,
-    required this.readProv,
   });
   final int startingTab;
-  final HomeProv readProv;
 
   @override
   State<ReadOptionScreen> createState() => _ReadOptionScreenState();
 }
 
-class _ReadOptionScreenState extends State<ReadOptionScreen>
-    with TickerProviderStateMixin {
-
-
+class _ReadOptionScreenState extends State<ReadOptionScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    ReadOptionProv optionProv =
-        Provider.of<ReadOptionProv>(globalContext, listen: false);
+    ReadOptionProv optionProv = Provider.of<ReadOptionProv>(globalContext, listen: false);
+    HomeProv homeProv = Provider.of<HomeProv>(globalContext, listen: false);
     optionProv.model.tabController = TabController(length: 4, vsync: this);
-    optionProv.model.topOption = widget.readProv.model.topOption;
-    optionProv.model.midOption = widget.readProv.model.midOption;
-    optionProv.model.botOption = widget.readProv.model.botOption;
-    optionProv.model.readModeOption = widget.readProv.model.readModeOption;
+    optionProv.model.topOption = homeProv.model.topOption;
+    optionProv.model.midOption = homeProv.model.midOption;
+    optionProv.model.botOption = homeProv.model.botOption;
+    optionProv.model.readModeOption = homeProv.model.readModeOption;
 
     setState(() {
       optionProv.model.tabController.animateTo(widget.startingTab);
@@ -45,8 +40,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
 
   @override
   void dispose() {
-    ReadOptionProv optionProv =
-        Provider.of<ReadOptionProv>(globalContext, listen: false);
+    ReadOptionProv optionProv = Provider.of<ReadOptionProv>(globalContext, listen: false);
     optionProv.model.tabController.dispose();
     super.dispose();
   }
@@ -58,7 +52,7 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
       appBar: AppBar(
         centerTitle: true,
         title: comnText(
-           '읽기 옵션',
+          '읽기 옵션',
           colorFont: const Color(0xFF171A1D),
           fontSize: 2.25.h,
           weightFont: FontWeight.w700,
@@ -174,7 +168,4 @@ class _ReadOptionScreenState extends State<ReadOptionScreen>
       ),
     );
   }
-
-
-
 }

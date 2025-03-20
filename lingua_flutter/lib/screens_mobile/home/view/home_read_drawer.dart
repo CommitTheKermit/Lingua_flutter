@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lingua/main.dart';
 import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
 import 'package:lingua/screens_mobile/read_mode/view/read_mode.dart';
+import 'package:lingua/screens_mobile/read_mode/view_model/read_mode_prov.dart';
 import 'package:lingua/screens_mobile/read_option/view/read_option.dart';
 import 'package:lingua/utils/etc/change_screen.dart';
 import 'package:lingua/utils/file_process/file_process.dart';
@@ -20,7 +21,7 @@ class HomeReadDrawer extends StatefulWidget {
 class _HomeReadDrawerState extends State<HomeReadDrawer> {
   @override
   Widget build(BuildContext context) {
-    HomeProv readProv = Provider.of<HomeProv>(context);
+    HomeProv homeProv = Provider.of<HomeProv>(context);
 
     return ReadDrawer(
       listTiles: [
@@ -40,7 +41,7 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
             try {
               showToast('.txt 파일만 불러올 수 있습니다.');
               originalSentences = await filePickAndRead();
-              readProv.loadInitialIndex();
+              homeProv.loadInitialIndex();
             } catch (e) {}
           },
         ),
@@ -55,18 +56,19 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
               fontSize: 16,
             ),
           ),
-          onTap: readProv.model.isNovelLoaded
+          onTap: homeProv.model.isNovelLoaded
               ? () async {
                   Navigator.pop(context);
                   await changeScreen(
-                    nextScreen: ReadModeScreen(
-                      readProv: readProv,
+                    nextScreen: ChangeNotifierProvider(
+                      create: (_) => ReadModeProv(),
+                      child: ReadModeScreen(),
                     ),
                     isReplace: false,
                   );
                 }
               : () {
-                  showToast( '파일을 먼저 불러와주세요.');
+                  showToast('파일을 먼저 불러와주세요.');
                 },
         ),
         ListTile(
@@ -85,27 +87,23 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
             String? result = await Navigator.push(
               context,
               PageRouteBuilder(
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   var begin = const Offset(0.0, 0.0);
                   var end = Offset.zero;
                   var curve = Curves.ease;
-                  var tween = Tween(begin: begin, end: end)
-                      .chain(CurveTween(curve: curve));
+                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
                   return SlideTransition(
                     position: animation.drive(tween),
                     child: child,
                   );
                 },
-                pageBuilder: (context, anmation, secondaryAnimation) =>
-                    ReadOptionScreen(
+                pageBuilder: (context, anmation, secondaryAnimation) => const ReadOptionScreen(
                   startingTab: 0,
-                  readProv: readProv,
                 ),
               ),
             );
             if (result != null) {
-              await readProv.initOption();
+              await homeProv.firstLoad();
             }
           },
         ),
@@ -120,16 +118,16 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
               fontSize: 16,
             ),
           ),
-          onTap: readProv.model.isNovelLoaded
+          onTap: homeProv.model.isNovelLoaded
               ? () {
                   Navigator.pop(context);
-                  readProv.lineSearchDialog(
+                  homeProv.lineSearchDialog(
                     context: context,
-                    argIndex: readProv.model.index,
+                    argIndex: homeProv.model.index,
                   );
                 }
               : () {
-                  showToast( '파일을 먼저 불러와주세요.');
+                  showToast('파일을 먼저 불러와주세요.');
                 },
         ),
         ListTile(
@@ -146,9 +144,9 @@ class _HomeReadDrawerState extends State<HomeReadDrawer> {
           onTap: () async {
             try {
               await saveFile(fileName: 'fileName');
-              showToast( '저장 완료. 다운로드 폴더를 확인해보세요!');
+              showToast('저장 완료. 다운로드 폴더를 확인해보세요!');
             } catch (e) {
-              showToast( '저장 오류 발생');
+              showToast('저장 오류 발생');
             }
           },
         ),

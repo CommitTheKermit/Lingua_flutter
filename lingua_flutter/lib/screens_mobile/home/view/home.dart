@@ -50,10 +50,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
-
     HomeProv readProv = Provider.of<HomeProv>(navKey.currentContext!, listen: false);
-    readProv.model.refreshPeriodSecond =
-        readProv.model.refreshPeriodMinute * 60;
+    readProv.model.refreshPeriodSecond = readProv.model.refreshPeriodMinute * 60;
     if (!readProv.model.STOP_REFRESH) {
       periodicRefresh(email: user.email).then((value) {
         readProv.model.requestQuota.value = value;
@@ -62,20 +60,13 @@ class _HomeScreenState extends State<HomeScreen>
 
     WidgetsBinding.instance.addObserver(this);
     readProv.model.index = 0;
-    readProv.model.futureOption = readProv.initOption();
+    readProv.model.futureOption = readProv.firstLoad();
     readProv.schedulePeriodicTask();
     super.initState();
   }
 
   @override
   void dispose() {
-    HomeProv readProv = Provider.of<HomeProv>(globalContext, listen: false);
-    readProv.model.scrollController.dispose();
-    readProv.model.scrollTimerController.dispose();
-    readProv.model.serverRequestTimer.cancel();
-    readProv.model.countdownTimer.cancel();
-    readProv.model.requestQuota.dispose();
-    readProv.model.machineTranslated.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -89,10 +80,8 @@ class _HomeScreenState extends State<HomeScreen>
     return FutureBuilder(
       future: readProv.model.futureOption,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+        if (snapshot.connectionState != ConnectionState.done) {
+          return comnLoading();
         } else {
           return Scaffold(
             // resizeToAvoidBottomInset: false,
@@ -110,15 +99,10 @@ class _HomeScreenState extends State<HomeScreen>
                         : '원문 출력칸',
                     flexValue: readProv.model.originalTextFieldFlex,
                     readOption: readProv.model.topOption,
-                    currentIndex:
-                        readProv.model.isNovelLoaded ? readProv.model.index : 0,
-                    endIndex: readProv.model.isNovelLoaded
-                        ? originalSentences.length
-                        : 0,
+                    currentIndex: readProv.model.isNovelLoaded ? readProv.model.index : 0,
+                    endIndex: readProv.model.isNovelLoaded ? originalSentences.length : 0,
                   ),
-                  readProv.model.isAllowTranslate
-                      ? comnDivider()
-                      : const SizedBox.shrink(),
+                  readProv.model.isAllowTranslate ? comnDivider() : const SizedBox.shrink(),
                   readProv.model.isAllowTranslate
                       ? Flexible(
                           fit: FlexFit.tight,
@@ -137,8 +121,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     ),
                                     Positioned(
                                       child: Container(
-                                        constraints:
-                                            const BoxConstraints.expand(),
+                                        constraints: const BoxConstraints.expand(),
                                         decoration: BoxDecoration(
                                           color: Colors.black.withOpacity(
                                             0.5,
@@ -163,9 +146,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         )
                       : const SizedBox.shrink(),
-                  readProv.model.isAllowInput
-                      ? comnDivider()
-                      : const SizedBox.shrink(),
+                  readProv.model.isAllowInput ? comnDivider() : const SizedBox.shrink(),
                   readProv.model.isAllowInput
                       ? Flexible(
                           fit: FlexFit.tight,
@@ -173,13 +154,11 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Container(
                             width: 100.w,
                             decoration: BoxDecoration(
-                              color: Color(
-                                  readProv.model.botOption.optBackgroundColor),
+                              color: Color(readProv.model.botOption.optBackgroundColor),
                             ),
                             child: SingleChildScrollView(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                 child: TextFormField(
                                   controller: readProv.model.inputController,
                                   style: const TextStyle(
@@ -192,14 +171,10 @@ class _HomeScreenState extends State<HomeScreen>
                                       hintText: '번역문 입력칸',
                                       border: InputBorder.none,
                                       hintStyle: TextStyle(
-                                        fontSize: readProv
-                                            .model.botOption.optfontSize,
-                                        height: readProv
-                                            .model.botOption.optFontHeight,
-                                        color: Color(readProv
-                                            .model.botOption.optcolorFont),
-                                        fontFamily: readProv
-                                            .model.botOption.optFontFamily,
+                                        fontSize: readProv.model.botOption.optfontSize,
+                                        height: readProv.model.botOption.optFontHeight,
+                                        color: Color(readProv.model.botOption.optcolorFont),
+                                        fontFamily: readProv.model.botOption.optFontFamily,
                                       )),
                                   validator: (value) {
                                     readProv.model.translatedSentence = value!;
@@ -216,14 +191,12 @@ class _HomeScreenState extends State<HomeScreen>
                     wordsScrollFlex: readProv.model.wordsScrollFlex,
                     words: readProv.model.words,
                     scrollController: readProv.model.scrollController,
-                    originalSingleSentence:
-                        readProv.model.originalSingleSentence,
+                    originalSingleSentence: readProv.model.originalSingleSentence,
                   ),
                   comnDivider(),
                   callLimitWidget(
                       callLimitFlex: readProv.model.callLimitFlex,
-                      scrollTimerController:
-                          readProv.model.scrollTimerController,
+                      scrollTimerController: readProv.model.scrollTimerController,
                       requestQuota: readProv.model.requestQuota,
                       remainingTime: readProv.model.remainingTime),
                   comnDivider(),
@@ -241,8 +214,8 @@ class _HomeScreenState extends State<HomeScreen>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ReadButtonWidget(
-                              indexLimit: readProv.model.index == 0 &&
-                                  !readProv.model.isNovelLoaded,
+                              indexLimit:
+                                  readProv.model.index == 0 && !readProv.model.isNovelLoaded,
                               onTapFunc: readProv.model.index == 0
                                   ? () {}
                                   : () {
@@ -252,11 +225,9 @@ class _HomeScreenState extends State<HomeScreen>
                               imageFileOn: 'assets/images/on_prev_button.png',
                             ),
                             ReadButtonWidget(
-                              indexLimit: readProv.model.index ==
-                                      originalSentences.length &&
+                              indexLimit: readProv.model.index == originalSentences.length &&
                                   !readProv.model.isNovelLoaded,
-                              onTapFunc: readProv.model.index ==
-                                      originalSentences.length
+                              onTapFunc: readProv.model.index == originalSentences.length
                                   ? () {}
                                   : () {
                                       readProv.lineShift(
@@ -269,20 +240,16 @@ class _HomeScreenState extends State<HomeScreen>
                             ReadButtonWidget(
                               indexLimit: !readProv.model.isNovelLoaded,
                               onTapFunc: () {
-                                if (readProv
-                                    .model.inputController.text.isNotEmpty) {
-                                  inputJson[readProv
-                                          .model.originalSingleSentence] =
+                                if (readProv.model.inputController.text.isNotEmpty) {
+                                  inputJson[readProv.model.originalSingleSentence] =
                                       readProv.model.inputController.text;
                                   saveMapToFile(
-                                      map: inputJson,
-                                      filename: '${titleNovel}_input.json');
+                                      map: inputJson, filename: '${titleNovel}_input.json');
                                 } else {
                                   showToast('입력칸이 비어 있습니다.');
                                 }
                               },
-                              imageFileOff:
-                                  'assets/images/off_enter_button.png',
+                              imageFileOff: 'assets/images/off_enter_button.png',
                               imageFileOn: 'assets/images/on_enter_button.png',
                             ),
                           ],

@@ -8,87 +8,7 @@ const String baseUrl = ServerInfo.baseUrl;
 const int timeoutSec = ServerInfo.timeoutSec;
 late String? cookie;
 
-Future<bool> signUp() {
-  final url = Uri.parse('$baseUrl/users/signup');
 
-  return http
-      .post(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({
-      'email': user.email,
-      'password': user.password,
-      'phone_no': user.phoneNo,
-    }),
-  )
-      .then((response) {
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }).timeout(
-    const Duration(seconds: timeoutSec),
-    onTimeout: () => false, // 3초 후에 실행될 대체값입니다.
-  );
-}
-
-Future<String> emailSend(String email) async {
-  final url = Uri.parse('$baseUrl/users/mailsend');
-
-  return await http
-      .post(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({'email': email}),
-  )
-      .then((response) {
-    return response.statusCode.toString();
-  }).timeout(
-    const Duration(seconds: timeoutSec),
-    onTimeout: () => '400', // 3초 후에 실행될 대체값입니다.
-  );
-}
-
-Future<String> emailVerify(String email, String code) async {
-  final url = Uri.parse('$baseUrl/users/mailverify');
-  // final response = await http.post(
-  //   url,
-  //   headers: <String, String>{
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //   },
-  //   body: jsonEncode({'user_code': code}),
-  // );
-  //
-  // if (response.statusCode == 200) {
-  //   // 서버가 성공적으로 응답하면 JSON을 파싱합니다.
-  //   return true;
-  // } else {
-  //   return false;
-  // }
-
-  return await http
-      .post(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({
-      'email': email,
-      'user_code': code,
-    }),
-  )
-      .then((response) {
-    return response.statusCode.toString();
-  }).timeout(
-    const Duration(seconds: timeoutSec),
-    onTimeout: () => '400', // 3초 후에 실행될 대체값입니다.
-  );
-}
 
 
 
@@ -251,4 +171,5 @@ Future<bool> setQuota({
   }).timeout(const Duration(seconds: timeoutSec), onTimeout: () {
     return false;
   });
+
 }

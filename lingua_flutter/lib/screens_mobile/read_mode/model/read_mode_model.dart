@@ -14,4 +14,6 @@ class ReadModeModel {
 
   List<BookmarkModel> bookmarks = [];
   Set<int> bookmarkedLines = {};
+
+  Future? futureLoad;
 }

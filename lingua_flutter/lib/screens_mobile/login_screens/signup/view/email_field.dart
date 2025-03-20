@@ -1,181 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:lingua/screens_mobile/login_screens/accounts/view/pw_change_screen.dart';
-import 'package:lingua/utils/api/api_user.dart';
+import 'package:lingua/main.dart';
+import 'package:lingua/screens_mobile/login_screens/signup/view_model/sign_up_prov.dart';
 import 'package:lingua/utils/etc/validators.dart';
-import 'package:lingua/utils/uitl.dart';
-import 'package:lingua/widgets/commons/comn_dialog.dart';
-import 'package:lingua/widgets/read_widgets/fields/labeled_form_field.dart';
-import 'package:lingua/widgets/user_widgets/form_button.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class PwFindScreen extends StatefulWidget {
-  const PwFindScreen({super.key});
-
-  @override
-  State<PwFindScreen> createState() => _PwFindScreenState();
-}
-
-class _PwFindScreenState extends State<PwFindScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController textEditingController = TextEditingController();
-
-  bool isVerifeid = false;
-  bool isSent = false;
-  bool isFormComplete = false;
-  bool isLoading = false;
-  bool _isShowTextField = false;
-  bool isShowEmail = false;
-  bool isValidEmail = false;
-
-  bool isPhoneNumberValid = false;
-
-  String _selectedDomain = '';
-
-  String _email = '';
-  String _phoneNo = '';
-
-  final _domains = [
-    'naver.com',
-    'gmail.com',
-    'daum.net',
-    'nate.com',
-    'hanmail.net',
-    '직접입력',
-  ];
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      _selectedDomain = _domains[0];
-    });
-  }
+class EmailField extends StatelessWidget {
+  const EmailField({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              LabeledFormField(
-                onSaved: (value) => _email = value!,
-                argText: '전화번호',
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return null;
-                  }
-                  if (!Validators.isValidPhoneNumber(value)) {
-                    return null;
-                  }
-                  _phoneNo = value;
-                  return null;
-                },
-                onChanged: (p0) {
-                  if (Validators.isValidPhoneNumber(p0)) {
-                    setState(() {
-                      isPhoneNumberValid = true;
-                    });
-                  } else {
-                    setState(() {
-                      isPhoneNumberValid = false;
-                    });
-                  }
-                },
-              ),
-              // labeledFormField(
-              //   onSaved: (value) => _email = value!,
-              //   argText: '이메일',
-              //   validator: (value) {
-              //     if (value!.isEmpty) {
-              //       return '';
-              //     }
-              //     if (!Validators.isValidEmail(value)) {
-              //       return '';
-              //     }
-              //     _email = value.toLowerCase();
-              //     return null;
-              //   },
-              // ),
-
-              emailField(
-                argText: '이메일',
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: CompleteFormButton(
-                    backgroundColor: isPhoneNumberValid && isValidEmail
-                        ? const Color(0xFF1E4A75)
-                        : const Color(0xFFDEE2E6),
-                    onPressed: isPhoneNumberValid && isValidEmail ? _submit : () {},
-                    argText: '찾기',
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
-          ),
-        ),
-        if (isLoading)
-          const Center(
-            child: CircularProgressIndicator(),
-          ),
-      ],
-    );
-  }
-
-  void _submit() async {
-    setState(() {
-      isLoading = true;
-    });
-    bool condition;
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      condition = await pwFind(_phoneNo, _email);
-
-      if (condition && mounted) {
-        isVerifeid = true;
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              var begin = const Offset(0.0, 0.0);
-              var end = Offset.zero;
-              var curve = Curves.ease;
-              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              return SlideTransition(
-                position: animation.drive(tween),
-                child: child,
-              );
-            },
-            pageBuilder: (context, anmation, secondaryAnimation) => PwChangeScreen(
-              email: _email,
-              phoneNo: _phoneNo,
-            ),
-          ),
-        );
-      } else {
-        await comnShowDialog(
-            dialog: const ComnDialog(
-          type: ComnDialogType.single,
-          title: '실패',
-          contents: '전화번호와 이메일을 다시 확인해보세요.',
-        ));
-      }
-    }
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  Widget emailField({
-    required String argText,
-  }) {
+    SignUpProv signUpProv = Provider.of<SignUpProv>(context);
     return Padding(
       padding: EdgeInsets.only(top: 1.5.h),
       child: Column(
@@ -186,11 +23,10 @@ class _PwFindScreenState extends State<PwFindScreen> {
               bottom: 1.h,
             ),
             child: Text(
-              argText,
+              '이메일 인증',
               style: TextStyle(
                 color: const Color(0xFF868E96),
                 fontSize: 2.h,
-                fontFamily: 'Noto Sans KR',
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -201,7 +37,7 @@ class _PwFindScreenState extends State<PwFindScreen> {
             decoration: const BoxDecoration(
               color: Colors.transparent,
             ),
-            child: !_isShowTextField
+            child: !signUpProv.model.isShowTextField
                 ? Row(
                     children: [
                       Container(
@@ -214,25 +50,22 @@ class _PwFindScreenState extends State<PwFindScreen> {
                           ),
                         ),
                         child: TextFormField(
-                          onSaved: (value) => _email = '${value!}@$_selectedDomain',
-                          onChanged: (p0) {
-                            if (Validators.isValidEmail(
-                              '$p0@$_selectedDomain',
-                            )) {
-                              setState(() {
-                                isValidEmail = true;
-                                _email = '$p0@$_selectedDomain';
-                              });
-                            } else {
-                              setState(() {
-                                isValidEmail = false;
-                              });
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              signUpProv.model.isValidEmail = false;
+                              return '이메일을 입력해주세요.';
                             }
+                            if (!Validators.isValidEmail(
+                                '$value@${signUpProv.model.selectedDomain}')) {
+                              signUpProv.model.isValidEmail = false;
+                              return '잘못된 이메일 형식입니다.';
+                            }
+                            signUpProv.model.isValidEmail = true;
+                            user.email = '$value@${signUpProv.model.selectedDomain}';
+                            return null;
                           },
-                          onTap: () {
-                            setState(() {
-                              isShowEmail = true;
-                            });
+                          onChanged: (p0) {
+                            signUpProv.model.formKey.currentState!.validate();
                           },
                           style: TextStyle(
                             color: const Color(0xFF868E96),
@@ -244,6 +77,7 @@ class _PwFindScreenState extends State<PwFindScreen> {
                             border: OutlineInputBorder(
                               borderSide: BorderSide.none,
                             ),
+                            errorStyle: TextStyle(fontSize: 0),
                           ),
                         ),
                       ),
@@ -270,14 +104,15 @@ class _PwFindScreenState extends State<PwFindScreen> {
                           ),
                         ),
                         child: DropdownButton(
+                          dropdownColor: Colors.white,
                           underline: const SizedBox.shrink(),
                           isExpanded: true,
                           icon: Image.asset(
                             'assets/images/dropbox_down.png',
                             height: 2.h,
                           ),
-                          value: _selectedDomain,
-                          items: _domains
+                          value: signUpProv.model.selectedDomain,
+                          items: signUpProv.model.domains
                               .map((e) => DropdownMenuItem(
                                     value: e, // 선택 시 onChanged 를 통해 반환할 value
                                     child: Padding(
@@ -296,13 +131,14 @@ class _PwFindScreenState extends State<PwFindScreen> {
                               .toList(),
                           onChanged: (value) {
                             // items 의 DropdownMenuItem 의 value 반환
-                            setState(() {
-                              _selectedDomain = value!;
-                              if (_selectedDomain == '직접입력') {
-                                _isShowTextField = true;
-                                _email = '';
-                              }
-                            });
+
+                            signUpProv.model.selectedDomain = value!;
+                            signUpProv.model.formKey.currentState!.validate();
+                            if (signUpProv.model.selectedDomain == '직접입력') {
+                              signUpProv.model.isShowTextField = true;
+                              signUpProv.model.email = '';
+                            }
+                            signUpProv.notify();
                           },
                         ),
                       ),
@@ -323,24 +159,29 @@ class _PwFindScreenState extends State<PwFindScreen> {
                                 ),
                               ),
                               child: TextFormField(
-                                onSaved: (value) => _email = value!,
-                                onChanged: (p0) {
-                                  if (Validators.isValidEmail(p0)) {
-                                    setState(() {
-                                      isValidEmail = true;
-                                      _email = '$p0@$_selectedDomain';
-                                    });
-                                  } else {
-                                    setState(() {
-                                      isValidEmail = false;
-                                    });
+                                onSaved: (value) => signUpProv.model.email = value!,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    signUpProv.model.isValidEmail = false;
+                                    return '이메일을 입력해주세요.';
                                   }
+                                  if (!Validators.isValidEmail(value)) {
+                                    signUpProv.model.isValidEmail = false;
+                                    return '잘못된 이메일 형식입니다.';
+                                  }
+                                  signUpProv.model.isValidEmail = true;
+                                  user.email = value;
+                                  return null;
+                                },
+                                onChanged: (p0) {
+                                  signUpProv.model.formKey.currentState!.validate();
                                 },
                                 style: TextStyle(
                                   color: const Color(0xFF868E96),
                                   fontSize: 2.h,
                                 ),
                                 decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
                                   fillColor: Colors.transparent,
                                   hintText: '이메일',
                                   hintStyle: TextStyle(
@@ -371,8 +212,10 @@ class _PwFindScreenState extends State<PwFindScreen> {
                                 'assets/images/dropbox_down.png',
                                 height: 2.h,
                               ),
-                              value: !_isShowTextField ? _selectedDomain : null,
-                              items: _domains
+                              value: !signUpProv.model.isShowTextField
+                                  ? signUpProv.model.selectedDomain
+                                  : null,
+                              items: signUpProv.model.domains
                                   .map((e) => DropdownMenuItem(
                                         value: e, // 선택 시 onChanged 를 통해 반환할 value
                                         child: Padding(
@@ -391,11 +234,13 @@ class _PwFindScreenState extends State<PwFindScreen> {
                                   .toList(),
                               onChanged: (value) {
                                 // items 의 DropdownMenuItem 의 value 반환
-                                _selectedDomain = value!;
-                                if (_selectedDomain != '직접입력') {
-                                  _isShowTextField = false;
+
+                                signUpProv.model.selectedDomain = value!;
+                                signUpProv.model.formKey.currentState!.validate();
+                                if (signUpProv.model.selectedDomain != '직접입력') {
+                                  signUpProv.model.isShowTextField = false;
                                 }
-                                setState(() {});
+                                signUpProv.notify();
                               },
                             ),
                           ),

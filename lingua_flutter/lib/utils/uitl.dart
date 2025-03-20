@@ -20,6 +20,7 @@ Future comnApiPost({
   required Function(Map<String, dynamic> result) onGet,
   required dynamic prov,
   String? urlHeader,
+  Function()? errorHandle,
 }) async {
   try {
     Map<String, dynamic> result = await apiPost(
@@ -27,9 +28,13 @@ Future comnApiPost({
       body: body,
       urlHeader: urlHeader,
     );
-    await onGet.call(result);
+    dynamic resultValue = await onGet.call(result);
 
-    return true;
+    if (resultValue != null) {
+      return resultValue;
+    } else {
+      return true;
+    }
   } catch (e, stackTrace) {
     FlutterError.reportError(
       FlutterErrorDetails(
@@ -37,13 +42,19 @@ Future comnApiPost({
         stack: stackTrace,
       ),
     );
-    await comnShowNetworkErrorDialog(onTap: () {
-      prov.clear();
-      prov.notify();
-    });
+    if (errorHandle == null) {
+      await comnShowNetworkErrorDialog(onTap: () {
+        prov.clear();
+        prov.notify();
+      });
+    } else {
+      errorHandle.call();
+    }
+
     return false;
   }
 }
+
 Future comnShowNetworkErrorDialog({
   required Function() onTap,
   String? content,
@@ -67,4 +78,3 @@ extension RequestResultJudge on Map {
     }
   }
 }
-

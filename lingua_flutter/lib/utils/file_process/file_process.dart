@@ -65,9 +65,10 @@ Future<String?> fileRead(String path) async {
 
   List<String> splitIntoSentences(String text) {
     // 문장 부호를 기준으로 텍스트를 분리합니다.
-    var sentenceEndings = RegExp(r'[.!?’]');
-    var sentences = <String>[];
-    var start = 0;
+    // RegExp sentenceEndings = RegExp(r'[.!?’]');
+    RegExp sentenceEndings = RegExp(r'[.!?]');
+    List<String> sentences = <String>[];
+    int start = 0;
     bool commaFlag = false;
     String lastSentence;
 

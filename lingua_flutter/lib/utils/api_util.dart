@@ -29,6 +29,8 @@ Future<dynamic> apiPost({
       'auth-token': getPrefString('authToken') ?? '',
       'refresh-token': getPrefString('refreshToken') ?? '',
       'Connection': 'Keep-Alive',
+      "Authorization": "Bearer ${getPrefString('authToken')}",
+
       // 192.168.90.158
     };
     if (ipAdress != null) {

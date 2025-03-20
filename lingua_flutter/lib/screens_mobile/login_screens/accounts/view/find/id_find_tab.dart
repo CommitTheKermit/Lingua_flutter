@@ -48,7 +48,7 @@ class _IdFindScreenState extends State<IdFindScreen> {
               key: _formKey,
               child: Column(
                 children: [
-                  labeledFormField(
+                  LabeledFormField(
                     argText: '휴대폰 번호',
                     hintText: '‘-’를 제외한 숫자만 입력해 주세요.',
                     onSaved: (value) => phoneNo = value!,
