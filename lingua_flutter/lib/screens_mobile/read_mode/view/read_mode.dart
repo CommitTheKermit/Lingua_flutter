@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingua/screens_mobile/home/view_model/home_prov.dart';
+import 'package:lingua/screens_mobile/read_mode/view/read_content.dart';
 import 'package:lingua/screens_mobile/read_mode/view/read_mode_bottom_bar.dart';
 import 'package:lingua/screens_mobile/read_mode/view/read_mode_top_bar.dart';
 import 'package:lingua/screens_mobile/read_mode/view_model/read_mode_prov.dart';
@@ -84,20 +85,10 @@ class _ReadModeScreenState extends State<ReadModeScreen> with TickerProviderStat
                         color: Color(homeProv.model.readModeOption.optBackgroundColor),
                         // color: Colors.red
                       ),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0),
-                                child: Text(
-                                  readProv.model.pages[readProv.model.index.toInt()],
-                                  style: readProv.model.readTextStyle,
-                                ),
-                              ),
-                            ),
-                          ),
+                          ReadContent(),
                         ],
                       ),
                     ),

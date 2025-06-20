@@ -8,6 +8,7 @@ import 'package:lingua/models/user_model.dart';
 import 'package:lingua/provider/main_provider.dart';
 import 'package:lingua/main/main_theme.dart';
 import 'package:lingua/mainframe/view/mainframe.dart';
+import 'package:lingua/screens_mobile/home/view/home.dart';
 import 'package:lingua/screens_mobile/login/view/login.dart';
 import 'package:lingua/screens_mobile/login/view_model/login_prov.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -77,12 +78,14 @@ class _AppLinguaState extends State<AppLingua> {
         supportedLocales: const [
           Locale('ko', 'KR'),
         ],
-        initialRoute: '/',
+        // initialRoute: '/',
+        initialRoute: '/home',
         routes: {
           '/': (context) => Mainframe(
                 child:
-                    ChangeNotifierProvider(create: (context) => LoginProv(), child: LoginScreen()),
+                    ChangeNotifierProvider(create: (context) => LoginProv(), child: const LoginScreen()),
               ),
+          '/home': (context) => const HomeScreen(),
         },
         builder: (context, child) => ResponsiveSizer(
           builder: (context, orientation, screenType) {
